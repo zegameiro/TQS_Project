@@ -31,3 +31,20 @@ body {
     text-wrap: balance;
   }
 }
+
+
+.img-home {
+  background-image: url('../../public/images/logo-color.png');
+  background-position: center;
+  height: 70vh;
+  background-size: 100vw;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: end;
+}
+
+.button-home {
+  background-color: #1F0F53;
+  color: #FFDB99;
+}
