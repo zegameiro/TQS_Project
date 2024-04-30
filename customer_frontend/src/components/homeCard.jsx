@@ -1,8 +1,17 @@
-import { Card, CardFooter, CardHeader, Image, Button } from "@nextui-org/react";
+'use client';
+
+import { Card, CardFooter, Image, Button } from "@nextui-org/react";
 
 export default function HomeCard({ text }) {
 
-    let url = "/images/" + text.replace(" ", "-").toLowerCase() + ".jpg"
+    let link = text.replace(" ", "-").toLowerCase()
+
+    let imageURL = "/images/" + link + ".jpg"
+
+    const handleClickButton = () => {
+        console.log("Button pressed")
+        window.location.href = link
+    };
 
     return (
         <div style={{ width: '30vw' }}>
@@ -11,10 +20,10 @@ export default function HomeCard({ text }) {
                     removeWrapper
                     alt={text}
                     className="z-0 w-full h-full object-cover"
-                    src={url}
+                    src={imageURL}
                 />
                 <CardFooter className="absolute bottom-0 grid place-items-center w-full">
-                    <Button radius="full" size="lg" variant="shadow" className="button-home">{text}</Button>
+                    <Button radius="full" size="lg" variant="shadow" className="button-blue" onPress={handleClickButton} >{text}</Button>
                 </CardFooter>
             </Card>
         </div>

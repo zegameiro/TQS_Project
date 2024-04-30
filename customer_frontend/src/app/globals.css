@@ -18,12 +18,9 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
+  background: linear-gradient(to bottom,
       transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+      rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
 }
 
 @layer utilities {
@@ -44,7 +41,24 @@ body {
   align-items: end;
 }
 
-.button-home {
+.button-blue {
   background-color: #1F0F53;
   color: #FFDB99;
+}
+
+/* make reservation */
+.reservation-section {
+  height: 70vh;
+  margin: 0 15vw;
+  border: 2px solid #1F0F53;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 20px;
+  background-color: white
+}
+
+.reservation-form {
+  overflow-y: auto;
+  scrollbar-width: thin;
+  height: 50vh;
 }
