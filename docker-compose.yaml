@@ -44,7 +44,7 @@ services:
       - ./backend:/backend
 
     ports:
-      - "8080:8080"
+      - 8080:8080
     
     networks:
       - backend
@@ -53,11 +53,6 @@ services:
 
     depends_on:
       - backend
-
-    environment:
-      - NODE_ENV=development
-      - CHOKIDAR_USEPOLLING=true
-      - WATCHPACK_POLLING=true
 
     build: 
       context: ./customer_frontend
@@ -68,10 +63,11 @@ services:
     restart: unless-stopped
 
     volumes:
-      - ./customer_frontend:/customer_frontend
+      - ./customer_frontend:/app
+      - modules:/app/node_modules
 
-    ports:
-      - "3001:3001"
+    environment:
+      - NEXT_PUBLIC_SERVER_URL=http://localhost
 
     networks:
       - frontend
@@ -90,10 +86,11 @@ services:
     restart: unless-stopped
 
     volumes:
-      - ./staff_frontend:/staff_frontend
+      - ./staff_frontend:/app
+      - modules:/app/node_modules
 
-    ports:
-      - "3002:3002"
+    environment:
+      - NEXT_PUBLIC_SERVER_URL=http://localhost
 
     networks:
       - frontend
@@ -112,10 +109,14 @@ services:
     restart: unless-stopped
 
     volumes:
-      - ./screens_frontend:/screens_frontend
+      - ./screens_frontend:/app
+      - modules:/app/node_modules
+
+    environment:
+      - NEXT_PUBLIC_SERVER_URL=http://localhost
 
     ports:
-      - "3003:3003"
+      - 3003:3003
 
     networks:
       - frontend
@@ -125,10 +126,13 @@ services:
     image: nginx:latest
 
     ports: 
-      - "80:80"
+      - 80:80
 
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - type: bind
+        source: ./nginx/nginx.conf
+        target: /etc/nginx/conf.d/default.conf
+        read_only: true
 
     depends_on:
       - customer_portal_app
@@ -142,6 +146,7 @@ services:
 
 volumes:
   pg_data:
+  modules:
 
 networks:
 
