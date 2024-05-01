@@ -8,13 +8,13 @@ import { Button, Progress } from "@nextui-org/react";
 import ChooseService from "@/components/make-reservation/chooseService";
 import PickTimeSlot from "@/components/make-reservation/pickTimeSlot";
 import Payment from "@/components/make-reservation/payment";
-import Confirmation from "@/components/make-reservation/confirmation";
+import Reservation from "@/components/make-reservation/reservation";
 
 
 export default function MakeReservation() {
 
-    const steps = ["Choose service(s)", "Pick a Time Slot", "Payment", "Here it is your confirmation"]
-    const components = [<ChooseService />, <PickTimeSlot />, <Payment />, <Confirmation />]
+    const steps = ["Choose service(s)", "Pick a Time Slot", "Payment", "Here it is your reservation"]
+    const components = [<ChooseService />, <PickTimeSlot />, <Payment />, <Reservation />]
     const [currentStep, setCurrentStep] = useState(0)
 
     const handleClickBack = () => {
@@ -23,8 +23,11 @@ export default function MakeReservation() {
     };
 
     const handleClickNext = () => {
-        console.log("Button pressed")
         setCurrentStep(currentStep + 1)
+    }
+
+    const handleClickHome = () => {
+        window.location.href = "/"
     }
 
     function hasPreviousButton() {
@@ -39,6 +42,10 @@ export default function MakeReservation() {
         return currentStep === steps.length - 2;
     }
 
+    function isLastStep() {
+        return currentStep === steps.length - 1;
+    }
+
 
     return (
         <main>
@@ -49,14 +56,20 @@ export default function MakeReservation() {
                     {components[currentStep]}
                 </div>
 
-                <div style={{ margin: '0 5vw', display: 'flex', flexDirection: 'row' }}>
-                    <div style={{ width: '50vw' }}>
-                        {hasPreviousButton() && <Button size="lg" className="button-blue" onPress={handleClickBack}>Back</Button>}
+                {!isLastStep() ? (
+                    <div style={{ margin: '0 5vw', display: 'flex', flexDirection: 'row' }}>
+                        <div style={{ width: '50vw' }}>
+                            {hasPreviousButton() && <Button size="lg" className="button-blue" onPress={handleClickBack}>Back</Button>}
+                        </div>
+                        <div style={{ width: '50vw', display: 'flex', justifyContent: 'flex-end' }}>
+                            {hasNextButton() && <Button size="lg" className="button-blue" onPress={handleClickNext}>{isConcludeButton() ? "Conclude" : "Next"}</Button>}
+                        </div>
                     </div>
-                    <div style={{ width: '50vw', display: 'flex', justifyContent: 'flex-end' }}>
-                        {hasNextButton() && <Button size="lg" className="button-blue" onPress={handleClickNext}>{isConcludeButton() ? "Conclude" : "Next"}</Button>}
+                ) : (
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <Button size="lg" className="button-blue" onPress={handleClickHome}>Home</Button>
                     </div>
-                </div>
+                )}
 
             </div>
 

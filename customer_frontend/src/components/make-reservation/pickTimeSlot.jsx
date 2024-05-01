@@ -3,7 +3,7 @@ export default function PickTimeSlot() {
 
     return (
         <main>
-            lalalala
+            TO DO
         </main>
     )
 }

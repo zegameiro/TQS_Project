@@ -9,7 +9,6 @@ export default function HomeCard({ text }) {
     let imageURL = "/images/" + link + ".jpg"
 
     const handleClickButton = () => {
-        console.log("Button pressed")
         window.location.href = link
     };
 
