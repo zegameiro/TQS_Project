@@ -65,9 +65,13 @@ services:
     volumes:
       - ./customer_frontend:/app
       - modules:/app/node_modules
+      - ./customer_frontend/.next
 
     environment:
       - NEXT_PUBLIC_SERVER_URL=http://localhost
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
 
     networks:
       - frontend
