@@ -24,7 +24,7 @@ public class Room {
   
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
+  private Long id;
   private String name;
   
   @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)

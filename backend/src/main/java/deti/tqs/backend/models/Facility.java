@@ -22,12 +22,12 @@ public class Facility {
   
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
+  private Long id;
 
   @OneToMany(mappedBy = "facility", cascade = CascadeType.ALL)
   private List<Room> rooms;
 
   @OneToMany(mappedBy = "facility", cascade = CascadeType.ALL)
   private List<Reservation> reservations;
-  
+
 }

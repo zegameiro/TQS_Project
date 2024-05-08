@@ -21,7 +21,7 @@ public class Reservation {
   
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
+  private Long id;
 
   @Column(nullable = false)
   private long timestamp;
@@ -38,6 +38,6 @@ public class Reservation {
 
   @ManyToOne
   @JoinColumn(nullable = false)
-  private Costumer costumer;
+  private Customer costumer;
 
 }

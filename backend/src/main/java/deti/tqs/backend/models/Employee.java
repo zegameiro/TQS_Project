@@ -23,7 +23,7 @@ public class Employee {
   
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
+  private Long id;
 
   @Column(nullable = false)
   private boolean isAdmin;
@@ -39,5 +39,5 @@ public class Employee {
 
   @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
   private List<Speciality> specialities;
-  
+
 }
