@@ -18,12 +18,12 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-@Table(name = "COSTUMER")
+@Table(name = "CUSTOMER")
 public class Customer {
   
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private long id;
 
   @Column(nullable = false)
   private String name;
@@ -34,7 +34,7 @@ public class Customer {
   @Column(nullable = false)
   private String phoneNumber;
 
-  @OneToMany(mappedBy = "costumer", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
   private List<Reservation> reservations;
 
 }

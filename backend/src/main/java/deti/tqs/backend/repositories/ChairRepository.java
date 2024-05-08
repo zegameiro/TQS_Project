@@ -6,4 +6,6 @@ import deti.tqs.backend.models.Chair;
 
 public interface ChairRepository extends JpaRepository<Chair, Long> {
   
+  Chair findById(long id);
+
 }

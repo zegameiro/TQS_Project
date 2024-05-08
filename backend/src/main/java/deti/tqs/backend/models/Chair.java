@@ -21,7 +21,7 @@ public class Chair {
   
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private long id;
 
   @Column(nullable = false)
   private String name;
@@ -30,7 +30,7 @@ public class Chair {
   private boolean available;
 
   @ManyToOne
-  @JoinColumn(nullable = false)
+  @JoinColumn
   private Room room; 
 
 }

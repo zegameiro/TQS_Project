@@ -8,6 +8,6 @@ import deti.tqs.backend.models.Reservation;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
   
-  List<Reservation> findByCustomerId(Long userId);
+  List<Reservation> findByCustomer_Id(Long customerId);
 
 }

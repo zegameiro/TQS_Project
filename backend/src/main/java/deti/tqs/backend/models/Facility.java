@@ -22,7 +22,7 @@ public class Facility {
   
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private long id;
 
   @OneToMany(mappedBy = "facility", cascade = CascadeType.ALL)
   private List<Room> rooms;
