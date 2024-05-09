@@ -6,8 +6,6 @@ services:
 
     image: postgres:16.2
 
-    container_name: "beauty_plaza_db"
-
     environment:
       POSTGRES_DB: beauty_plaza
       POSTGRES_PASSWORD: password_tqs
@@ -55,7 +53,7 @@ services:
       - backend
 
     build: 
-      context: ./customer_frontend
+      context: ./customer_app
       dockerfile: Dockerfile
 
     container_name: "beauty_plaza_customer_portal"
@@ -63,14 +61,11 @@ services:
     restart: unless-stopped
 
     volumes:
-      - ./customer_frontend:/app
-      - modules:/app/node_modules
+      - ./customer_app:/customer_app
+      - modules:/customer_app/node_modules
 
-    environment:
-      - NEXT_PUBLIC_SERVER_URL=http://localhost
-      - NODE_ENV=development
-      - CHOKIDAR_USEPOLLING=true
-      - WATCHPACK_POLLING=true
+    ports:
+      - 3001:3001
 
     networks:
       - frontend
@@ -81,7 +76,7 @@ services:
       - backend
 
     build: 
-      context: ./staff_frontend
+      context: ./staff_app
       dockerfile: Dockerfile
 
     container_name: "beauty_plaza_staff_portal"
@@ -89,11 +84,11 @@ services:
     restart: unless-stopped
 
     volumes:
-      - ./staff_frontend:/app
-      - modules:/app/node_modules
-
-    environment:
-      - NEXT_PUBLIC_SERVER_URL=http://localhost
+      - ./staff_app:/staff_app
+      - modules:/staff_app/node_modules
+    
+    ports:
+      - 3002:3002
 
     networks:
       - frontend
@@ -104,7 +99,7 @@ services:
       - backend
 
     build:
-      context: ./screens_frontend
+      context: ./digital_screen
       dockerfile: Dockerfile
     
     container_name: "beauty_plaza_screens"
@@ -112,11 +107,8 @@ services:
     restart: unless-stopped
 
     volumes:
-      - ./screens_frontend:/app
-      - modules:/app/node_modules
-
-    environment:
-      - NEXT_PUBLIC_SERVER_URL=http://localhost
+      - ./digital_screen:/digital_screen
+      - modules:/digital_screen/node_modules
 
     ports:
       - 3003:3003
