@@ -28,8 +28,6 @@ export default function NavbarComponent() {
               luissantos@beautyplaza.pt
             </span>
           </Dropdown.Header>
-          <Dropdown.Item>Dashboard</Dropdown.Item>
-          <Dropdown.Item>AdminPage</Dropdown.Item>
           <Dropdown.Divider />
           <Dropdown.Item>Sign out</Dropdown.Item>
         </Dropdown>
@@ -40,8 +38,7 @@ export default function NavbarComponent() {
         <Navbar.Link href="/dashboard" className="text-[#FFDB99]">
           Dashboard
         </Navbar.Link>
-        <Navbar.Link href="/admin" className="text-white">Admin Page</Navbar.Link>
-        <Navbar.Link href="#" className="text-white">Settings</Navbar.Link>
+        <Navbar.Link href="/admin" className="text-[#FFDB99]">Admin Page</Navbar.Link>
       </Navbar.Collapse>
     </Navbar>
   )
