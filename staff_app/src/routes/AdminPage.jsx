@@ -3,7 +3,7 @@ import NavbarComponent from "../components/Navbar"
 
 export default function AdminPage() {
   return (
-    <>
+    <div>
       <NavbarComponent />
       <div className="overflow-x-auto">
         <Table hoverable>
@@ -64,6 +64,6 @@ export default function AdminPage() {
           </Table.Body>
         </Table>
       </div>
-    </>
+    </div>
   )
 }
