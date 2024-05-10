@@ -1,41 +1,48 @@
-import { Avatar, Dropdown, Navbar } from "flowbite-react";
+import { Avatar, Dropdown, Navbar } from "flowbite-react"
 
 export default function NavbarComponent() {
   return (
-    <Navbar fluid rounded>
+    <Navbar fluid className="bg-[#1F0F53]">
       <Navbar.Brand href="logo-black-no-background.svg">
-        <img src="/icon.svg" className="mr-3 h-6 sm:h-9" alt="BeautyPlaza Logo" />
-        <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">BeautyPlaza</span>
+        <img
+          src="/icon.svg"
+          className="mr-3 h-6 sm:h-9"
+          alt="BeautyPlaza Logo"
+        />
       </Navbar.Brand>
       <div className="flex md:order-2">
         <Dropdown
           arrowIcon={false}
           inline
           label={
-            <Avatar alt="User settings" img="https://flowbite.com/docs/images/people/profile-picture-5.jpg" rounded />
+            <Avatar
+              alt="User settings"
+              img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+              rounded
+            />
           }
         >
           <Dropdown.Header>
-            <span className="block text-sm">Bonnie Green</span>
-            <span className="block truncate text-sm font-medium">name@flowbite.com</span>
+            <span className="block text-sm">Luís Santos</span>
+            <span className="block truncate text-sm font-medium">
+              luissantos@beautyplaza.pt
+            </span>
           </Dropdown.Header>
           <Dropdown.Item>Dashboard</Dropdown.Item>
-          <Dropdown.Item>Settings</Dropdown.Item>
-          <Dropdown.Item>Earnings</Dropdown.Item>
+          <Dropdown.Item>AdminPage</Dropdown.Item>
           <Dropdown.Divider />
           <Dropdown.Item>Sign out</Dropdown.Item>
         </Dropdown>
         <Navbar.Toggle />
       </div>
       <Navbar.Collapse>
-        <Navbar.Link href="#" active>
-          Home
+        {/* TODO não usar href, apenas aqui para protótipo */}
+        <Navbar.Link href="/dashboard" className="text-[#FFDB99]">
+          Dashboard
         </Navbar.Link>
-        <Navbar.Link href="#">About</Navbar.Link>
-        <Navbar.Link href="#">Services</Navbar.Link>
-        <Navbar.Link href="#">Pricing</Navbar.Link>
-        <Navbar.Link href="#">Contact</Navbar.Link>
+        <Navbar.Link href="/admin" className="text-white">Admin Page</Navbar.Link>
+        <Navbar.Link href="#" className="text-white">Settings</Navbar.Link>
       </Navbar.Collapse>
     </Navbar>
-  );
+  )
 }

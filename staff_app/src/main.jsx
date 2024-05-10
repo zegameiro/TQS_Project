@@ -3,8 +3,9 @@ import ReactDOM from "react-dom/client"
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import ErrorPage from "./error-page.jsx"
 import "./index.css"
-import Login from "./routes/Login.jsx"
 import AdminPage from "./routes/AdminPage.jsx"
+import Login from "./routes/Login.jsx"
+import WorkerPage from "./routes/WorkerPage.jsx"
 
 const router = createBrowserRouter([
   {
@@ -14,8 +15,12 @@ const router = createBrowserRouter([
   },
   {
     path: "/admin",
-    element: <AdminPage />
-  }
+    element: <AdminPage />,
+  },
+  {
+    path: "/dashboard",
+    element: <WorkerPage />,
+  },
 ])
 
 ReactDOM.createRoot(document.getElementById("root")).render(
