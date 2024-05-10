@@ -1,13 +1,30 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import { NextUIProvider } from '@nextui-org/react'
-import App from './App.jsx'
-import './index.css'
+import React from "react"
+import ReactDOM from "react-dom/client"
+import { createBrowserRouter, RouterProvider } from "react-router-dom"
+import ErrorPage from "./error-page.jsx"
+import "./index.css"
+import AdminPage from "./routes/AdminPage.jsx"
+import Login from "./routes/Login.jsx"
+import WorkerPage from "./routes/WorkerPage.jsx"
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Login />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/admin",
+    element: <AdminPage />,
+  },
+  {
+    path: "/dashboard",
+    element: <WorkerPage />,
+  },
+])
+
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <NextUIProvider>
-      <App />
-    </NextUIProvider>
-  </React.StrictMode>,
+    <RouterProvider router={router} />
+  </React.StrictMode>
 )
