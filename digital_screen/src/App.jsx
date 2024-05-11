@@ -191,14 +191,14 @@ function App() {
             <h1 className="text-primary" style={{ fontSize: '2rem', marginBottom: '3vh', fontWeight:'bold' }}>On queue</h1>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <div style={{ width: '50%' }}>
-                {onQueueReservations.slice(0, 13).map((reservation) => (
+                {onQueueReservations.slice(0, Math.ceil(onQueueReservations.length / 2)).map((reservation) => (
                   <div key={reservation.id} style={{ height: '5.5vh', fontSize: '2.5vh' }}>
                     {String(reservation.hours).padStart(2, '0')}:{String(reservation.minutes).padStart(2, '0')} <span style={{ fontWeight: 'bold', marginLeft: '1rem' }}>{reservation.name}</span>
                   </div>
                 ))}
               </div>
               <div style={{ width: '50%' }}>
-                {onQueueReservations.slice(13).map((reservation) => (
+                {onQueueReservations.slice(Math.ceil(onQueueReservations.length / 2)).map((reservation) => (
                   <div key={reservation.id} style={{ height: '5.5vh', fontSize: '2.5vh' }}>
                     {String(reservation.hours).padStart(2, '0')}:{String(reservation.minutes).padStart(2, '0')} <span style={{ fontWeight: 'bold', marginLeft: '1rem' }}>{reservation.name}</span>
                   </div>
