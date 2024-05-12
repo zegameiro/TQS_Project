@@ -14,35 +14,162 @@ const HomePage = () => {
   const categories = [
     {
       title: "Basic Hairdresser",
-      services: ["Hair Cut", "Beard Trimming"],
+      services: [
+        {
+          name: "Hair Cut",
+          price: 10,
+        },
+        {
+          name: "Beard Trimming",
+          price: 5,
+        },
+        {
+          name: "Washing",
+          price: 5,
+        },
+        {
+          name: "Brushing",
+          price: 5,
+        },
+      ],
       image: BasicHairDresser,
     },
     {
       title: "Complex Hairdresser",
-      services: ["Extensions", "Coloring", "Straightening/Curling"],
+      services: [
+        {
+          name: "Extensions",
+          price: 50,
+        },
+        {
+          name: "Coloring",
+          price: 30,
+        },
+        {
+          name: "Discoloration",
+          price: 30,
+        },
+        {
+          name: "Straightening/Curling",
+          price: 30,
+        },
+        {
+          name: "Perm",
+          price: 30,
+        },
+      ],
       image: ComplexHairDresser,
     },
     {
       title: "Makeup",
-      services: ["Eyebrows", "Eyelashes"],
+      services: [
+        {
+          name: "Eyebrows",
+          price: 5,
+        },
+        {
+          name: "Eyelashes",
+          price: 5,
+        },
+        {
+          name: "Lips",
+          price: 5,
+        },
+        {
+          name: "Full Face",
+          price: 20,
+        },
+        {
+          name: "Special Occasions",
+          price: 30,
+        },
+      ],
       image: Makeup,
     },
     {
       title: "Depilation",
-      services: ["Wax hair removal", "Laser hair removal"],
+      services: [
+        {
+          name: "Wax hair removal",
+          price: 10,
+        },
+        {
+          name: "Laser hair removal",
+          price: 50,
+        },
+        {
+          name: "Tweezers",
+          price: 5,
+        },
+        {
+          name: "Thread",
+          price: 5,
+        },
+        {
+          name: "Epilator",
+          price: 5,
+        },
+        {
+          name: "Sugaring",
+          price: 10,
+        },
+      ],
       image: Depilation,
     },
     {
       title: "Manicure/Pedicure",
-      services: ["Manicure", "Pedicure"],
+      services: [
+        {
+          name: "Manicure",
+          price: 30,
+        },
+        {
+          name: "Pedicure",
+          price: 30,
+        },
+      ],
       image: Manicure,
     },
     {
       title: "Spa",
-      services: ["Massages", "Facial treatments", "Body treatments", "Dermatological treatments", "Sauna", "Jacuzzi", "Turkish bath", "Pools"],
+      services: [
+        {
+          name: "Massages",
+          price: 20,
+        },
+        {
+          name: "Facial treatments",
+          price: 15,
+        },
+        {
+          name: "Body treatments",
+          price: 20,
+        },
+        {
+          name: "Dermatological treatments",
+          price: 30,
+        },
+        {
+          name: "Sauna",
+          price: 25,
+        },
+        {
+          name: "Jacuzzi",
+          price: 25,
+        },
+        {
+          name: "Turkish bath",
+          price: 25,
+        },
+        {
+          name: "Pools",
+          price: 20,
+        },
+      ],
       image: Massager,
     },
   ]
+  localStorage.setItem("categories", JSON.stringify(categories));
 
   const locations = [
     {
@@ -87,10 +214,11 @@ const HomePage = () => {
             <h2 className="font-semibold text-4xl text-center">{service.location}</h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-5 mb-8 items-center justify-center sm:px-10 md:px-20">
               {
-                service.categories.map((service, index) => (
+                service.categories.map((category, index) => (
                   <div key={index} className="flex flex-col p-4">
                     <ServiceCard
-                      service={service}
+                      service={category}
+                      location={service.location}
                     />
                   </div>
                 ))

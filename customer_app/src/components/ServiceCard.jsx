@@ -1,7 +1,7 @@
 import { Card, CardHeader, CardBody, Image, Button } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 
-const ServiceCard = ({ service }) => {
+const ServiceCard = ({ service, location }) => {
 
   const navigate = useNavigate();
 
@@ -21,7 +21,7 @@ const ServiceCard = ({ service }) => {
           src={service?.image}
           width={270}
         />
-        <Button color="primary" className="text-white" onClick={() => navigate('/reservation')}>
+        <Button color="primary" className="text-white" onClick={() => navigate('/reservation?'+location+'+'+service.title)}>
           Choose service
         </Button>
       </CardBody>
