@@ -11,7 +11,7 @@ const ServiceCard = ({ service }) => {
       <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
         <p className="text-tiny uppercase font-bold">{service?.title}</p>
         <small className="text-default-500">{service?.location}</small>
-        <h4 className="font-bold text-large">{service?.description} - {service?.price}€</h4>
+        <h4 className="font-bold text-large">{service?.description}</h4>
       </CardHeader>
 
       <CardBody className="overflow-visible py-2 items-center gap-4">
