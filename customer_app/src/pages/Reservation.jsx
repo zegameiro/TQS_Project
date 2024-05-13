@@ -4,16 +4,16 @@ import { Button, Progress } from "@nextui-org/react";
 
 import NavbarFixed from "../components/NavbarFixed"
 import ChooseService from "../components/make-reservation/chooseService";
-// import PickTimeSlot from "@/components/make-reservation/pickTimeSlot";
-// import Payment from "@/components/make-reservation/payment";
-// import Reservation from "@/components/make-reservation/reservation";
+import PickTimeSlot from "../components/make-reservation/pickTimeSlot";
+import Payment from "../components/make-reservation/payment";
+import Confirmation from "../components/make-reservation/confirmation";
 
 import { useNavigate } from "react-router-dom";
 
 const Reservation = () => {
 
   const steps = ["Choose services", "Pick a Time Slot", "Payment", "Here it is your reservation"]
-  const components = [<ChooseService />, <ChooseService />, <ChooseService />, <ChooseService />]
+  const components = [<ChooseService />, <PickTimeSlot />, <Payment />, <Confirmation />]
   const [currentStep, setCurrentStep] = useState(0)
 
   // get URL
@@ -64,7 +64,7 @@ const Reservation = () => {
 
       <div className="m-5">
         <h1 style={{ textAlign: 'center', color: '#1F0F53', fontSize: '40px', fontWeight: 'bold' }}>{steps[currentStep]}</h1>
-        <div className="w-[70%] ml-[15%] mt-5 mb-10 h-[50vh] p-5 border-primary" style={{ border: '.125rem solid #220f67', borderRadius: '1rem' }}>
+        <div className="w-[70%] ml-[15%] mt-5 mb-10 h-[50vh] p-10 border-primary" style={{ border: '.125rem solid #220f67', borderRadius: '1rem' }}>
           {
             currentStep === 0 ? <ChooseService services={selectedCategory.services}/> : components[currentStep]
           }

@@ -12,7 +12,7 @@ const ChooseService = ({ services = [] }) => {
     const chunkedServices = chunkArray(services, 3);
 
     return (
-        <div style={{ marginBottom: '5vh' }}>
+        <div>
             {chunkedServices.map((chunk, index) => ( 
                 <CheckboxGroup key={index} orientation="horizontal" style={{ display: 'flex' }}>
                     {chunk.map((service, serviceIndex) => (
