@@ -3,13 +3,20 @@ import { Input } from "@nextui-org/react";
 import PaymentLabel from "./paymentLabel";
 import { Select, SelectItem } from "@nextui-org/react";
 
-const Payment = () => {
+const Payment = ({services, selectedServices}) => {
 
-    let payment_methods = [
+    const payment_methods = [
         { label: "Bank Transaction", value: "bank" },
         { label: "Paypal", value: "paypal" },
         { label: "MB WAY", value: "mb_way" },
     ]
+
+    let priceToPay = 0;
+    let v;
+    selectedServices.forEach(service => {
+        v = services.find(s => s.name === service);
+        priceToPay += v.price;
+    });
 
     const [paymentMethod, setPaymentMethod] = useState('');
 
@@ -34,7 +41,7 @@ const Payment = () => {
                 <div style={{ width: '45vw' }}>
                     <div>
                         <span style={{ fontSize: '4vh', color: '#1F0F53' }}>Total to Pay</span>
-                        <span style={{ fontSize: '4vh', color: '#1F0F53', float: 'right' }}>€ 100</span>
+                        <span style={{ fontSize: '4vh', color: '#1F0F53', float: 'right' }}>€ {priceToPay}</span>
                     </div>
                     <div style={{ marginTop: '3vh' }}>
                         <Select

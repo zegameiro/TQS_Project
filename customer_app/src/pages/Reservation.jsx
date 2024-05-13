@@ -16,6 +16,8 @@ const Reservation = () => {
   const components = [<ChooseService />, <PickTimeSlot />, <Payment />, <Confirmation />]
   const [currentStep, setCurrentStep] = useState(0)
 
+  const [selectedServices, setSelectedServices] = useState([]);
+
   // get URL
   const url = window.location.href.split('?')[1];
   const location = url.split('+')[0];
@@ -66,7 +68,9 @@ const Reservation = () => {
         <h1 style={{ textAlign: 'center', color: '#1F0F53', fontSize: '40px', fontWeight: 'bold' }}>{steps[currentStep]}</h1>
         <div className="w-[70%] ml-[15%] mt-5 mb-10 h-[50vh] p-10 border-primary" style={{ border: '.125rem solid #220f67', borderRadius: '1rem' }}>
           {
-            currentStep === 0 ? <ChooseService services={selectedCategory.services}/> : components[currentStep]
+            currentStep === 0 ? <ChooseService services={selectedCategory.services} selectedServices={selectedServices} setSelectedServices={setSelectedServices} /> :
+            currentStep === 2 ? <Payment services = {selectedCategory.services} selectedServices = {selectedServices} /> :
+             components[currentStep]
           }
         </div>
 
