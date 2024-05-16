@@ -212,7 +212,7 @@ const HomePage = () => {
         </div>
         {services.map((service, index) => (
           (selectedLocation === "" || selectedLocation === service.location) &&
-          <div key={index}>
+          <div key={index} className="mb-10">
             <h2 className="font-semibold text-4xl text-center">{service.location}</h2>
             <SwiperServices data={service.categories} />
           </div>
