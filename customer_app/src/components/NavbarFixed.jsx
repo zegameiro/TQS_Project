@@ -18,18 +18,25 @@ import { useNavigate } from "react-router-dom";
 const NavbarFixed = () => {
   const navigate = useNavigate();
 
-  const menuItems = [
-    "Profile",
-    "Dashboard",
-    "Activity",
-    "Analytics",
-    "System",
-    "Deployments",
-    "My Settings",
-    "Team Settings",
-    "Help & Feedback",
-    "Log Out",
-  ];
+  /* 
+    const menuItems = [
+      "Profile",
+      "Dashboard",
+      "Activity",
+      "Analytics",
+      "System",
+      "Deployments",
+      "My Settings",
+      "Team Settings",
+      "Help & Feedback",
+      "Log Out",
+    ];  
+   */
+
+  // get URL
+
+  const url = window.location.pathname;
+
 
   return (
     <Navbar disableAnimation isBordered className="p-4 bg-primary">
@@ -49,19 +56,26 @@ const NavbarFixed = () => {
           className="w-40 h-30 text-lg bg-primary cursor-pointer hover:shadow-lg"
           onClick={() => navigate("/")}
         />
-        <NavbarItem>
-          <Link color="foreground" href="#" className="text-white">
-            Features
+        <NavbarItem
+          {...url === "/" && { isActive: true }}
+        >
+          <Link href="/"
+            {...url === "/" ?
+              { color: "warning" } :
+              { className: "text-white" }}
+          >
+            Make Reservation
           </Link>
         </NavbarItem>
-        <NavbarItem isActive>
-          <Link href="#" aria-current="page" color="warning">
-            Customers
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link color="foreground" href="#" className="text-white">
-            Integrations
+        <NavbarItem
+          {...url === "/reservation-check" && { isActive: true }}
+        >
+          <Link href="/reservation-check"
+            {...url === "/reservation-check" ?
+              { color: "warning" } :
+              { className: "text-white" }}
+          >
+            Check Reservation
           </Link>
         </NavbarItem>
       </NavbarContent>
@@ -79,6 +93,7 @@ const NavbarFixed = () => {
         </NavbarItem>
       </NavbarContent>
 
+      {/*
       <NavbarMenu>
         {menuItems.map((item, index) => (
           <NavbarMenuItem key={`${item}-${index}`}>
@@ -88,8 +103,8 @@ const NavbarFixed = () => {
                 index === 2
                   ? "warning"
                   : index === menuItems.length - 1
-                  ? "danger"
-                  : "foreground"
+                    ? "danger"
+                    : "foreground"
               }
               href="#"
               size="lg"
@@ -99,7 +114,8 @@ const NavbarFixed = () => {
           </NavbarMenuItem>
         ))}
       </NavbarMenu>
-    </Navbar>
+      */}
+    </Navbar >
   );
 };
 
