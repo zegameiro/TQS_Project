@@ -88,7 +88,7 @@ class TestFacilityController {
 
   @Test
   @DisplayName("Test create a facility with success")
-  public void testCreateFacilityWithSuccess() throws Exception {
+  void testCreateFacilityWithSuccess() throws Exception {
     
     when(facilityService.save(any())).thenReturn(f1);
 
@@ -157,7 +157,7 @@ class TestFacilityController {
 
   @Test
   @DisplayName("Test retrieve a facility with success by its id")
-  public void testGetFacilityByIdWithSuccess() throws Exception {
+  void testGetFacilityByIdWithSuccess() throws Exception {
 
     mvc.perform(get("/api/facility/" + f2.getId()).contentType(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())
@@ -173,7 +173,7 @@ class TestFacilityController {
 
   @Test
   @DisplayName("Test retrieve a facility that does not exist")
-  public void testGetNonExistingFacility() throws Exception {
+  void testGetNonExistingFacility() throws Exception {
 
     mvc.perform(get("/api/facility/412314").contentType(MediaType.APPLICATION_JSON))
       .andExpect(status().isNotFound())
@@ -185,7 +185,7 @@ class TestFacilityController {
 
   @Test
   @DisplayName("Test retrieve all facilities")
-  public void testGetAllAvailableFacilities() throws Exception {
+  void testGetAllAvailableFacilities() throws Exception {
       
     mvc.perform(get("/api/facility/all").contentType(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk())

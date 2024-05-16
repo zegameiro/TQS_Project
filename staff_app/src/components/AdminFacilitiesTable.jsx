@@ -1,13 +1,10 @@
+import { useQuery } from "@tanstack/react-query"
 import { Button, Table } from "flowbite-react"
 import { useState } from "react"
 import { IoIosAddCircle } from "react-icons/io"
-import AdminFacilityModal from "./AdminFacilityModal"
-
-import { useQuery } from "@tanstack/react-query"
-
-import { getTest, getAllFacilities } from "../../actions/getActions"
-
+import { getAllFacilities } from "../../actions/getActions"
 import axios from "../../api"
+import AdminFacilityModal from "./AdminFacilityModal"
 
 export default function AdminFacilitiesTable() {
   const [isOpenModal, setIsOpenModal] = useState(false)
@@ -22,11 +19,6 @@ export default function AdminFacilitiesTable() {
     setFacilityData(null)
     setIsOpenModal(true)
   }
-
-  const testConnection = useQuery({
-    queryKey: ["test"],
-    queryFn: () => getTest(axios),
-  })
 
   const allFacilities = useQuery({
     queryKey: ["allFacilities"],
@@ -56,35 +48,39 @@ export default function AdminFacilitiesTable() {
           </Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
-          <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-              1
-            </Table.Cell>
-            <Table.Cell>BeautyPlaza Aveiro</Table.Cell>
-            <Table.Cell>Aveiro</Table.Cell>
-            <Table.Cell>Avenida Dr. Lourenço Peixinho</Table.Cell>
-            <Table.Cell>3800-160</Table.Cell>
-            <Table.Cell>234123456</Table.Cell>
-            <Table.Cell>TODO rooms</Table.Cell>
-            <Table.Cell>TODO reservations</Table.Cell>
-            <Table.Cell>
-              <span
-                className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
-                onClick={() =>
-                  // TODO: redo this to not repeat the data
-                  openEditModal({
-                    name: "BeautyPlaza Aveiro",
-                    city: "Aveiro",
-                    streetName: "Avenida Dr. Lourenço Peixinho",
-                    postalCode: "3800-160",
-                    phoneNumber: "234123456",
-                  })
-                }
-              >
-                Edit
-              </span>
-            </Table.Cell>
-          </Table.Row>
+          {allFacilities.data?.map((facility) => (
+            <Table.Row
+              key={facility.id}
+              className="bg-white dark:border-gray-700 dark:bg-gray-800"
+            >
+              <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                {facility.id}
+              </Table.Cell>
+              <Table.Cell>{facility.name}</Table.Cell>
+              <Table.Cell>{facility.city}</Table.Cell>
+              <Table.Cell>{facility.streetName}</Table.Cell>
+              <Table.Cell>{facility.postalCode}</Table.Cell>
+              <Table.Cell>{facility.phoneNumber}</Table.Cell>
+              <Table.Cell>{facility.rooms ?? "-"}</Table.Cell>
+              <Table.Cell>{facility.reservations ?? "-"}</Table.Cell>
+              <Table.Cell>
+                <span
+                  className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
+                  onClick={() =>
+                    openEditModal({
+                      name: facility.name,
+                      city: facility.city,
+                      streetName: facility.streetName,
+                      postalCode: facility.postalCode,
+                      phoneNumber: facility.phoneNumber,
+                    })
+                  }
+                >
+                  Edit
+                </span>
+              </Table.Cell>
+            </Table.Row>
+          ))}
         </Table.Body>
       </Table>
       <AdminFacilityModal

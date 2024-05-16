@@ -88,7 +88,7 @@ class TestFacilityRepository {
 
     assertAll(
       () -> assertThat(facilities).isNotNull(),
-      () -> assertThat(facilities.size()).isEqualTo(4),
+      () -> assertThat(facilities).hasSize(4),
       () -> assertThat(facilities.get(0).getName()).isEqualTo(f1.getName()),
       () -> assertThat(facilities.get(1).getName()).isEqualTo(f2.getName()),
       () -> assertThat(facilities.get(2).getName()).isEqualTo(f3.getName()),
@@ -99,7 +99,7 @@ class TestFacilityRepository {
 
   @Test
   @DisplayName("Test find a facility that doesn't exist")
-  public void testFindFacilityThatDoesntExist() {
+  void testFindFacilityThatDoesntExist() {
 
     Facility f = facilityRepository.findById(1L);
 
