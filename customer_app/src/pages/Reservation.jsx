@@ -18,6 +18,15 @@ const Reservation = () => {
 
   const [selectedServices, setSelectedServices] = useState([]);
 
+  // client data
+  const [clientName, setClientName] = useState("");
+  const [clientEmail, setClientEmail] = useState("");
+  const [clientPhone, setClientPhone] = useState("");
+  const [clientAddress, setClientAddress] = useState("");
+
+  // payment methods
+  const [paymentMethod, setPaymentMethod] = useState("");
+
   // get URL
   const url = window.location.href.split('?')[1];
   const location = url.split('+')[0];
@@ -37,10 +46,20 @@ const Reservation = () => {
   }
 
   const handleClickBack = () => {
+    document.getElementById("warning-label").innerHTML = "";
     setCurrentStep(currentStep - 1)
   };
 
   const handleClickNext = () => {
+    if (currentStep === 0 && selectedServices.length === 0) {
+      document.getElementById("warning-label").innerHTML = "Please select at least one service";
+      return;
+    }
+    if (currentStep === 2 && (clientName === "" || clientEmail === "" || clientPhone === "" || clientAddress === "" || paymentMethod === "")) {
+      document.getElementById("warning-label").innerHTML = "Please fill all the fields";
+      return;
+    }
+    document.getElementById("warning-label").innerHTML = "";
     setCurrentStep(currentStep + 1)
   }
 
@@ -69,17 +88,20 @@ const Reservation = () => {
         <div className="w-[70%] ml-[15%] mt-5 mb-10 h-[50vh] p-10 border-primary" style={{ border: '.125rem solid #220f67', borderRadius: '1rem' }}>
           {
             currentStep === 0 ? <ChooseService services={selectedCategory.services} selectedServices={selectedServices} setSelectedServices={setSelectedServices} /> :
-            currentStep === 2 ? <Payment services = {selectedCategory.services} selectedServices = {selectedServices} /> :
-             components[currentStep]
+              currentStep === 2 ? <Payment services={selectedCategory.services} selectedServices={selectedServices} selectedPaymentData={[clientName, clientEmail, clientPhone, clientAddress, paymentMethod]} setSelectedPaymentData={[setClientName, setClientEmail, setClientPhone, setClientAddress, setPaymentMethod]} /> :
+                components[currentStep]
           }
         </div>
 
         {!isLastStep() ? (
           <div style={{ margin: '0 5vw', display: 'flex', flexDirection: 'row' }}>
-            <div style={{ width: '50vw' }}>
+            <div style={{ width: '25vw' }}>
               {hasPreviousButton() && <Button size="lg" className="button-blue" onPress={handleClickBack}>Back</Button>}
             </div>
-            <div style={{ width: '50vw', display: 'flex', justifyContent: 'flex-end' }}>
+            <div style={{ width: '50vw', textAlign: 'center' }}>
+              <span id="warning-label" className="text-danger font-bold text-xl"></span>
+            </div>
+            <div style={{ width: '25vw', display: 'flex', justifyContent: 'flex-end' }}>
               {hasNextButton() && <Button size="lg" className="button-blue" onPress={handleClickNext}>{isConcludeButton() ? "Conclude" : "Next"}</Button>}
             </div>
           </div>

@@ -3,12 +3,19 @@ import { Input } from "@nextui-org/react";
 import PaymentLabel from "./paymentLabel";
 import { Select, SelectItem } from "@nextui-org/react";
 
-const Payment = ({services, selectedServices}) => {
+const Payment = ({ services, selectedServices, selectedPaymentData, setSelectedPaymentData }) => {
 
     const payment_methods = [
-        { label: "Bank Transaction", value: "bank" },
-        { label: "Paypal", value: "paypal" },
-        { label: "MB WAY", value: "mb_way" },
+        { label: "Bank Transaction", value: "Bank Transaction" },
+        { label: "Paypal", value: "Paypal" },
+        { label: "MB WAY", value: "MB WAY" },
+    ]
+
+    const paymentLabels = [
+        { label: "Name", type: "name" },
+        { label: "Email", type: "email" },
+        { label: "Phone", type: "tel" },
+        { label: "Address", type: "text" },
     ]
 
     let priceToPay = 0;
@@ -18,23 +25,17 @@ const Payment = ({services, selectedServices}) => {
         priceToPay += v.price;
     });
 
-    const [paymentMethod, setPaymentMethod] = useState('');
-
-    const handlePaymentMethodChange = (incoming) => {
-        let value = incoming.target.value;
-        setPaymentMethod(value);
-    };
-
 
 
     return (
         <div>
             <div style={{ display: 'flex', flexDirection: 'row' }}>
                 <div style={{ width: '45vw' }}>
-                    <PaymentLabel label_="Name" type_="name" />
-                    <PaymentLabel label_="Email" type_="email" />
-                    <PaymentLabel label_="Phone" type_="tel" />
-                    <PaymentLabel label_="Address" type_="text" />
+                    {paymentLabels.map((label, index) => {
+                        return (
+                            <PaymentLabel key={index} label_={label.label} type_={label.type} selectedValue={selectedPaymentData[index]} setSelectedValue={(value) => setSelectedPaymentData[index](value)} />
+                        )
+                    })}
                 </div>
                 <div style={{ width: '10vw' }}>
                 </div>
@@ -48,19 +49,14 @@ const Payment = ({services, selectedServices}) => {
                             items={payment_methods}
                             label="Payment Method"
                             variant="bordered"
-                            onChange={handlePaymentMethodChange}
+                            defaultSelectedKeys={[selectedPaymentData[4]]}
+                            onChange={(event) => setSelectedPaymentData[4](event.target.value)}
                         >
                             {(method) => <SelectItem key={method.value}>{method.label}</SelectItem>}
                         </Select>
                     </div>
-                    <div style={{ marginTop: '2.5vh' }}>
-                        {paymentMethod === "mb_way" &&
-                            <Input variant="bordered" type={"tel"} label={"Number"} />
-                        }
-                    </div>
                 </div>
             </div>
-
         </div>
     );
 }
