@@ -18,7 +18,7 @@ class TestChairRepository {
   private ChairRepository chairRepository;
 
   @Autowired
-  public TestChairRepository(ChairRepository chairRepository) {
+  TestChairRepository(ChairRepository chairRepository) {
     this.chairRepository = chairRepository;
   }
 
