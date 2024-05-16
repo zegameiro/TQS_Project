@@ -111,7 +111,7 @@ class TestFacilityController {
 
   @Test
   @DisplayName("Test create a facility with missing fields")
-  public void testCrateFacilityWithMissingFields() throws Exception {
+  void testCrateFacilityWithMissingFields() throws Exception {
 
     when(facilityService.save(any())).thenThrow(ResponseStatusException.class);
 
@@ -132,7 +132,7 @@ class TestFacilityController {
 
   @Test
   @DisplayName("Test create a facility with a name that already exists")
-  public void testCreateFacilityWithExistingName() throws Exception {
+  void testCreateFacilityWithExistingName() throws Exception {
 
     when(facilityService.save(any())).thenThrow(new IllegalArgumentException("Facility with this name already exists"));
 
