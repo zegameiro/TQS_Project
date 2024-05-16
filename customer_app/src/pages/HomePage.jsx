@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { Select, SelectItem } from "@nextui-org/react";
 
 import NavbarFixed from "../components/NavbarFixed"
-import ServiceCard from "../components/ServiceCard";
 
 import { BasicHairDresser, ComplexHairDresser, Makeup, Depilation, Manicure, Massager } from "../images";
+import SwiperServices from "../components/SwiperServices";
+import ServiceCard from "../components/ServiceCard";
+
 
 const HomePage = () => {
 
@@ -212,18 +214,7 @@ const HomePage = () => {
           (selectedLocation === "" || selectedLocation === service.location) &&
           <div key={index}>
             <h2 className="font-semibold text-4xl text-center">{service.location}</h2>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-5 mb-8 items-center justify-center sm:px-10 md:px-20">
-              {
-                service.categories.map((category, index) => (
-                  <div key={index} className="flex flex-col p-4">
-                    <ServiceCard
-                      service={category}
-                      location={service.location}
-                    />
-                  </div>
-                ))
-              }
-            </div>
+            <SwiperServices data={service.categories} />
           </div>
         ))
         }
