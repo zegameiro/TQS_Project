@@ -3,7 +3,7 @@ import { Input } from "@nextui-org/react";
 import PaymentLabel from "./paymentLabel";
 import { Select, SelectItem } from "@nextui-org/react";
 
-const Payment = ({ services, selectedServices, selectedPaymentData, setSelectedPaymentData }) => {
+const Payment = ({ services, selectedServices, selectedPaymentData, setSelectedPaymentData, setPriceToPay}) => {
 
     const payment_methods = [
         { label: "Bank Transaction", value: "Bank Transaction" },
@@ -24,6 +24,7 @@ const Payment = ({ services, selectedServices, selectedPaymentData, setSelectedP
         v = services.find(s => s.name === service);
         priceToPay += v.price;
     });
+    setPriceToPay(priceToPay);
 
 
 

@@ -11,7 +11,7 @@ import 'swiper/css/navigation';
 // import required modules
 import { Navigation } from 'swiper/modules';
 
-export default function SwiperServices({ data }) {
+export default function SwiperServices({ data, location }) {
 
     return (
         <div className='p-10'>
@@ -28,7 +28,7 @@ export default function SwiperServices({ data }) {
                         <div className="flex flex-col px-10 py-0">
                             <ServiceCard
                                 service={category}
-                                location={"location"}
+                                location={location}
                             />
                         </div>
                     </SwiperSlide>

@@ -24,8 +24,9 @@ const Reservation = () => {
   const [clientPhone, setClientPhone] = useState("");
   const [clientAddress, setClientAddress] = useState("");
 
-  // payment methods
+  // payment
   const [paymentMethod, setPaymentMethod] = useState("");
+  const [priceToPay, setPriceToPay] = useState(0);
 
   // get URL
   const url = window.location.href.split('?')[1];
@@ -85,11 +86,12 @@ const Reservation = () => {
 
       <div className="m-5">
         <h1 style={{ textAlign: 'center', color: '#1F0F53', fontSize: '40px', fontWeight: 'bold' }}>{steps[currentStep]}</h1>
-        <div className="w-[70%] ml-[15%] mt-5 mb-10 h-[50vh] p-10 border-primary" style={{ border: '.125rem solid #220f67', borderRadius: '1rem' }}>
+        <div className="w-[70%] ml-[15%] mt-5 mb-10 h-[50vh] p-10 border-primary" style={{ border: '.125rem solid #220f67', borderRadius: '1rem', overflowY:'auto' }}>
           {
             currentStep === 0 ? <ChooseService services={selectedCategory.services} selectedServices={selectedServices} setSelectedServices={setSelectedServices} /> :
-              currentStep === 2 ? <Payment services={selectedCategory.services} selectedServices={selectedServices} selectedPaymentData={[clientName, clientEmail, clientPhone, clientAddress, paymentMethod]} setSelectedPaymentData={[setClientName, setClientEmail, setClientPhone, setClientAddress, setPaymentMethod]} /> :
-                components[currentStep]
+              currentStep === 2 ? <Payment services={selectedCategory.services} selectedServices={selectedServices} selectedPaymentData={[clientName, clientEmail, clientPhone, clientAddress, paymentMethod]} setSelectedPaymentData={[setClientName, setClientEmail, setClientPhone, setClientAddress, setPaymentMethod]} setPriceToPay={setPriceToPay} /> :
+                currentStep === 3 ? <Confirmation reservationDetails={{location, service, selectedServices}} userData={[clientName, clientEmail, clientPhone, clientAddress]} payment={{paymentMethod, priceToPay}} /> :
+                  components[currentStep]
           }
         </div>
 

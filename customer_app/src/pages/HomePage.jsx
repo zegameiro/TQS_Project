@@ -214,7 +214,7 @@ const HomePage = () => {
           (selectedLocation === "" || selectedLocation === service.location) &&
           <div key={index} className="mb-10">
             <h2 className="font-semibold text-4xl text-center">{service.location}</h2>
-            <SwiperServices data={service.categories} />
+            <SwiperServices data={service.categories} location={service.location} />
           </div>
         ))
         }
