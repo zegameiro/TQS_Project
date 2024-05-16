@@ -1,8 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { Button, Label, Modal, TextInput } from "flowbite-react"
 import PropTypes from "prop-types"
+import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { addNewFacility } from "../../actions/postActions"
+import { editFacility } from "../../actions/putActions"
 import axios from "../../api"
 
 AdminFacilityModal.propTypes = {
@@ -24,11 +26,13 @@ export default function AdminFacilityModal({
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm()
 
   const onCloseModal = () => {
     setOpenModal(false)
+    reset()
   }
 
   const addFacilityMutation = useMutation({
@@ -39,10 +43,32 @@ export default function AdminFacilityModal({
     },
   })
 
+  const editFacilityMutation = useMutation({
+    mutationKey: ["editFacility"],
+    mutationFn: (facilityData) => editFacility(axios, facilityData),
+    onSuccess: () => {
+      queryClient.refetchQueries("allFacilities")
+    },
+  })
+
   const onSubmit = (data) => {
-    addFacilityMutation.mutate(data)
+    if (mode === "create") {
+      addFacilityMutation.mutate(data)
+    } else if (mode === "edit") {
+      editFacilityMutation.mutate(data)
+    }
     onCloseModal()
   }
+
+  useEffect(() => {
+    if (mode === "edit" && facilityData) {
+      Object.keys(facilityData).forEach((key) => {
+        setValue(key, facilityData[key])
+      })
+    } else {
+      reset()
+    }
+  }, [facilityData, mode, setValue, reset])
 
   return (
     <Modal show={openModal} size="lg" onClose={onCloseModal} popup>
@@ -64,7 +90,7 @@ export default function AdminFacilityModal({
                   minLength: { value: 5, message: "The name is too short" },
                 })}
                 id="name"
-                placeholder="The facilities name"
+                placeholder="The facility's name"
               />
               {errors.name && (
                 <span className="text-red-500">{errors.name?.message}</span>
@@ -81,7 +107,7 @@ export default function AdminFacilityModal({
                   minLength: { value: 5, message: "The city is too short" },
                 })}
                 id="city"
-                placeholder="The facilities city"
+                placeholder="The facility's city"
               />
               {errors.city && (
                 <span className="text-red-500">{errors.city?.message}</span>
