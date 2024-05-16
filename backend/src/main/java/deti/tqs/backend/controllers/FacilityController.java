@@ -73,8 +73,10 @@ public class FacilityController {
 
   @GetMapping("/test")
   public ResponseEntity<String> test() {
+
     logger.info("ENTERRED TEST");
     return ResponseEntity.status(HttpStatus.OK).body("Test");
+    
   }
 
 

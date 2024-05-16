@@ -8,6 +8,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.is;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -40,6 +43,7 @@ class TestFacilityController {
   private Facility f1 = new Facility();
   private Facility f2 = new Facility();
   private Facility f3 = new Facility();
+  private Facility f4 = new Facility();
 
   @BeforeEach
   void setUp() {
@@ -61,13 +65,24 @@ class TestFacilityController {
     f3.setId(3L);
     f3.setName("Facility 3");
     f3.setCity("Leiria");
+    f3.setPhoneNumber("987654321");
     f3.setStreetName("Rua da Batalha");
     f3.setPostalCode("3928-291");
+
+    f4.setId(4L);
+    f4.setName("Facility 4");
+    f4.setCity("Lisboa");
+    f4.setPhoneNumber("982641741");
+    f4.setStreetName("Rua de Lisboa");
+    f4.setPostalCode("1000-001");
+
 
     when(facilityService.save(any())).thenReturn(f1);
 
     when(facilityService.getFacilityById(f2.getId())).thenReturn(f2);
     when(facilityService.getFacilityById(412314L)).thenReturn(null);
+
+    when(facilityService.getAllFacilities()).thenReturn(List.of(f1, f2, f3, f4));
 
   }
 
@@ -78,10 +93,10 @@ class TestFacilityController {
     mvc.perform(
       post("/api/facility/admin/add")
       .contentType(MediaType.APPLICATION_JSON)
-      .content("{\"name\": \"Facility 1\"" + 
-          "\"city\": \"Aveiro\"" +
-          "\"streetName\": \"Rua de Aveiro\"" + 
-          "\"postalCode\": \"3810-193\"" +
+      .content("{\"name\": \"Facility 1\"," + 
+          "\"city\": \"Aveiro\"," +
+          "\"streetName\": \"Rua de Aveiro\"," + 
+          "\"postalCode\": \"3810-193\"," +
           "\"phoneNumber\": \"123456789\" }"
     ))
       .andExpect(status().isCreated())
@@ -117,6 +132,22 @@ class TestFacilityController {
       .andExpect(jsonPath("$").doesNotExist());
 
     verify(facilityService, times(1)).getFacilityById(412314L);
+
+  }
+
+  @Test
+  @DisplayName("Test retrieve all facilities")
+  public void testGetAllAvailableFacilities() throws Exception {
+      
+    mvc.perform(get("/api/facility/all").contentType(MediaType.APPLICATION_JSON))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.length()", is(4)))
+      .andExpect(jsonPath("$[0].name", is("Facility 1")))
+      .andExpect(jsonPath("$[1].name", is("Facility 2")))
+      .andExpect(jsonPath("$[2].name", is("Facility 3")))
+      .andExpect(jsonPath("$[3].name", is("Facility 4")));
+
+    verify(facilityService, times(1)).getAllFacilities();
 
   }
 
