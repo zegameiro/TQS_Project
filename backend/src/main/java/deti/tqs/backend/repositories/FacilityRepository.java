@@ -17,4 +17,6 @@ public interface FacilityRepository extends JpaRepository<Facility, Long> {
   @Query("SELECT f FROM Facility f WHERE f.city LIKE %?1%")
   List<Facility> findByCity(String city);
 
+  Facility findByName(String name);
+
 }

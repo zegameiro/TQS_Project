@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,6 +23,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.web.server.ResponseStatusException;
 
 import deti.tqs.backend.models.Facility;
 import deti.tqs.backend.services.FacilityService;
@@ -76,9 +79,6 @@ class TestFacilityController {
     f4.setStreetName("Rua de Lisboa");
     f4.setPostalCode("1000-001");
 
-
-    when(facilityService.save(any())).thenReturn(f1);
-
     when(facilityService.getFacilityById(f2.getId())).thenReturn(f2);
     when(facilityService.getFacilityById(412314L)).thenReturn(null);
 
@@ -90,6 +90,8 @@ class TestFacilityController {
   @DisplayName("Test create a facility with success")
   public void testCreateFacilityWithSuccess() throws Exception {
     
+    when(facilityService.save(any())).thenReturn(f1);
+
     mvc.perform(
       post("/api/facility/admin/add")
       .contentType(MediaType.APPLICATION_JSON)
@@ -105,6 +107,52 @@ class TestFacilityController {
 
     verify(facilityService, times(1)).save(any());
 
+  }
+
+  @Test
+  @DisplayName("Test create a facility with missing fields")
+  public void testCrateFacilityWithMissingFields() throws Exception {
+
+    when(facilityService.save(any())).thenThrow(ResponseStatusException.class);
+
+    mvc.perform(
+      post("/api/facility/admin/add")
+      .contentType(MediaType.APPLICATION_JSON)
+      .content("{ \"name\": \"Facility 4\"," + 
+        "\"city\": \"Aveiro\"," +
+        "\"streetName\": \"Rua de Aveiro\"," + 
+        "\"postalCode\": \"3810-193\"}"
+    ))
+      .andExpect(status().isBadRequest())
+      .andExpect(jsonPath("$").doesNotExist());
+
+    verify(facilityService, times(0)).save(any());
+
+  }
+
+  @Test
+  @DisplayName("Test create a facility with a name that already exists")
+  public void testCreateFacilityWithExistingName() throws Exception {
+
+    when(facilityService.save(any())).thenThrow(new IllegalArgumentException("Facility with this name already exists"));
+
+    MvcResult res = mvc.perform(
+      post("/api/facility/admin/add")
+      .contentType(MediaType.APPLICATION_JSON)
+      .content(
+        "{\"name\": \"Facility 2\"," + 
+        "\"city\": \"Porto\"," +
+        "\"streetName\": \"Rua do Porto\"," + 
+        "\"postalCode\": \"4000-007\"," +
+        "\"phoneNumber\": \"987654321\" }"
+      )
+    )
+    .andExpect(status().isConflict())
+    .andReturn();
+
+    assertNull(res.getModelAndView());
+
+    verify(facilityService, times(1)).save(any());
   }
 
   @Test

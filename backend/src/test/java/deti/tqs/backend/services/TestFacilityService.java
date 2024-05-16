@@ -2,14 +2,18 @@ package deti.tqs.backend.services;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -56,6 +60,7 @@ class TestFacilityService {
   }
 
   @Test
+  @DisplayName("When saving a valid facility, it should return the facility saved")
   void whenSaveValidFacility_thenFacilityShouldBeReturn() {
     
     when(facilityService.save(fac1)).thenReturn(fac1);
@@ -73,6 +78,28 @@ class TestFacilityService {
   }
 
   @Test
+  @DisplayName("When saving a facility with a name that already exists, it should throw an exception")
+  void whenSaveFacilityWithExistingName_thenThrowException() {
+
+    Facility f = new Facility();
+    f.setName("Facility 3");
+    f.setCity("Lisboa");
+    f.setPhoneNumber("823741291");
+    f.setPostalCode("1938-092");
+    f.setStreetName("Rua de Lisboa");
+
+    when(facilityRepository.findByName("Facility 3")).thenReturn(fac3);
+    
+    assertThatThrownBy(() -> facilityService.save(f))
+      .isInstanceOf(IllegalArgumentException.class)
+      .hasMessage("Facility with this name already exists");
+    
+    verify(facilityRepository, never()).save(any());
+
+  }
+
+  @Test
+  @DisplayName("WHen searching for a valid facility ID, it should return the facility with that ID")
   void whenSearchValidFacilityID_thenReturnValidFacility() {
 
     fac3.setId(3L);
@@ -87,6 +114,7 @@ class TestFacilityService {
   }
 
   @Test
+  @DisplayName("When searching for an invalid facility ID, it should return null")
   void whenInvalidFacilityID_thenReturnNull() {
 
     when(facilityService.getFacilityById(100L)).thenReturn(null);
@@ -99,6 +127,7 @@ class TestFacilityService {
   }
 
   @Test
+  @DisplayName("When searching for all facilities, it should return all facilities")
   void whenSearchAllFacilities_thenReturnAllFacilities() {
 
     when(facilityService.getAllFacilities()).thenReturn(List.of(fac1, fac2, fac3));
@@ -107,6 +136,34 @@ class TestFacilityService {
     assertThat(facilities).isNotNull().hasSize(3).contains(fac1, fac2, fac3);
 
     verify(facilityRepository, times(1)).findAll();
+
+  }
+
+  @Test
+  @DisplayName("When searching for a facility by name, it should return the facility with that name")
+  void whenSearchFacilityName_ThenReturnCorrectFacility() {
+
+    when(facilityService.getFacilityByName("Facility 2")).thenReturn(fac2);
+
+    Facility foundFacility = facilityService.getFacilityByName("Facility 2");
+
+    assertThat(foundFacility).isNotNull().isEqualTo(fac2);
+
+    verify(facilityRepository, times(1)).findByName("Facility 2");
+
+  }
+
+  @Test
+  @DisplayName("When searching for a facility by name that does not exist, it should return null")
+  void whenSearchNonExistingFacilityName_ThenReturnNull() {
+
+    when(facilityService.getFacilityByName("Facility ABCDE")).thenReturn(null);
+
+    Facility foundFacility = facilityService.getFacilityByName("Facility ABCDE");
+
+    assertThat(foundFacility).isNull();
+
+    verify(facilityRepository, times(1)).findByName(anyString());
 
   }
 

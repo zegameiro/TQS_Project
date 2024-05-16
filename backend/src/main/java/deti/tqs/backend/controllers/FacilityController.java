@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import deti.tqs.backend.dtos.FacilitySchema;
 import deti.tqs.backend.models.Facility;
@@ -36,6 +37,9 @@ public class FacilityController {
 
     logger.info("Creating facility");
 
+    if(facilitySchema.name() == null || facilitySchema.city() == null || facilitySchema.streetName() == null || facilitySchema.postalCode() == null || facilitySchema.phoneNumber() == null)
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing parameters");
+
     Facility f = new Facility();
 
     f.setName(facilitySchema.name());
@@ -44,7 +48,17 @@ public class FacilityController {
     f.setPostalCode(facilitySchema.postalCode());
     f.setPhoneNumber(facilitySchema.phoneNumber());
 
-    Facility savedFacility = facilityService.save(f);
+    Facility savedFacility = null;
+
+    try {
+      
+      savedFacility = facilityService.save(f);
+      
+    } catch (IllegalArgumentException e) {
+
+      return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+
+    }
 
     return ResponseEntity.status(HttpStatus.CREATED).body(savedFacility);
 
@@ -70,14 +84,5 @@ public class FacilityController {
     return ResponseEntity.status(HttpStatus.OK).body(facilities);
 
   }
-
-  @GetMapping("/test")
-  public ResponseEntity<String> test() {
-
-    logger.info("ENTERRED TEST");
-    return ResponseEntity.status(HttpStatus.OK).body("Test");
-    
-  }
-
 
 }
