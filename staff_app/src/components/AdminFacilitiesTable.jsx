@@ -3,6 +3,12 @@ import { useState } from "react"
 import { IoIosAddCircle } from "react-icons/io"
 import AdminFacilityModal from "./AdminFacilityModal"
 
+import { useQuery } from "@tanstack/react-query"
+
+import { getTest, getAllFacilities } from "../../actions/getActions"
+
+import axios from "../../api"
+
 export default function AdminFacilitiesTable() {
   const [isOpenModal, setIsOpenModal] = useState(false)
   const [facilityData, setFacilityData] = useState(null)
@@ -16,6 +22,16 @@ export default function AdminFacilitiesTable() {
     setFacilityData(null)
     setIsOpenModal(true)
   }
+
+  const testConnection = useQuery({
+    queryKey: ["test"],
+    queryFn: () => getTest(axios),
+  })
+
+  const allFacilities = useQuery({
+    queryKey: ["allFacilities"],
+    queryFn: () => getAllFacilities(axios),
+  })
 
   return (
     <>
