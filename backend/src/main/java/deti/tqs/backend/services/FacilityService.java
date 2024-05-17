@@ -44,6 +44,17 @@ public class FacilityService {
 
   }
 
+  public void delete(long id) {
+      
+    Facility found = facilityRepository.findById(id);
+
+    if (found == null)
+      throw new IllegalArgumentException("Facility not found");
+
+    facilityRepository.delete(found);
+
+  }
+
   public Facility getFacilityById(long id) {
 
     return facilityRepository.findById(id);
