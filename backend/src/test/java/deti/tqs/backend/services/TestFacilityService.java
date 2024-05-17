@@ -220,4 +220,36 @@ class TestFacilityService {
 
   }
 
+  @Test
+  @DisplayName("When deleting a facility with a valid ID, it should delete the facility")
+  void whenDeleteFacilityWithValidID_ThenDeleteFacility() {
+
+    when(facilityRepository.findById(fac1.getId())).thenReturn(fac1);
+
+    facilityService.delete(fac1.getId());
+    
+    List<Facility> facilities = facilityService.getAllFacilities();
+
+    assertThat(facilities).isNotNull().hasSize(0);
+
+    verify(facilityRepository, times(1)).findById(anyLong());
+    verify(facilityRepository, times(1)).delete(any());
+
+  }
+
+  @Test
+  @DisplayName("When deleting a facility with an invalid ID, it should throw an exception")
+  void whenDeleteFacilityWithInvalidID_ThenThrowException() {
+
+    when(facilityRepository.findById(100L)).thenReturn(null);
+
+    assertThatThrownBy(() -> facilityService.delete(100L))
+      .isInstanceOf(IllegalArgumentException.class)
+      .hasMessage("Facility not found");
+
+    verify(facilityRepository, times(1)).findById(anyLong());
+    verify(facilityRepository, never()).delete(any());
+
+  }
+
 }

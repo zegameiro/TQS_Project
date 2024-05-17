@@ -1,10 +1,12 @@
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useMutation } from "@tanstack/react-query"
 import { Button, Table } from "flowbite-react"
 import { useState } from "react"
 import { IoIosAddCircle } from "react-icons/io"
 import { getAllFacilities } from "../../actions/getActions"
+import { deleteFacility } from "../../actions/deleteActions"
 import axios from "../../api"
 import AdminFacilityModal from "./AdminFacilityModal"
+import { FaEdit, FaTrashAlt } from "react-icons/fa";
 
 export default function AdminFacilitiesTable() {
   const [isOpenModal, setIsOpenModal] = useState(false)
@@ -23,6 +25,12 @@ export default function AdminFacilitiesTable() {
   const allFacilities = useQuery({
     queryKey: ["allFacilities"],
     queryFn: () => getAllFacilities(axios),
+  })
+
+  const deleteFacilityMutation = useMutation({
+    mutationKey: ["deleteFacility"],
+    mutationFn: (id) => deleteFacility(axios, id),
+    onSuccess: () => allFacilities.refetch()
   })
 
   return (
@@ -44,7 +52,10 @@ export default function AdminFacilitiesTable() {
           <Table.HeadCell>Rooms</Table.HeadCell>
           <Table.HeadCell>Reservations</Table.HeadCell>
           <Table.HeadCell>
-            <span className="sr-only">Edit</span>
+            Edit
+          </Table.HeadCell>
+          <Table.HeadCell>
+            Delete
           </Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
@@ -64,12 +75,14 @@ export default function AdminFacilitiesTable() {
               <Table.Cell>{facility.rooms ?? "-"}</Table.Cell>
               <Table.Cell>{facility.reservations ?? "-"}</Table.Cell>
               <Table.Cell>
-                <span
-                  className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
-                  onClick={() => openEditModal(facility)}
-                >
-                  Edit
-                </span>
+                <Button onClick={() => openEditModal(facility)}>
+                  <FaEdit />
+                </Button>
+              </Table.Cell>
+              <Table.Cell>
+                <Button className="btn-sm bg-red-500 items-center hover:bg-red-600" onClick={() => deleteFacilityMutation.mutate(facility.id)}>
+                  <FaTrashAlt />
+                </Button>
               </Table.Cell>
             </Table.Row>
           ))}

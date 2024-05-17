@@ -2,9 +2,12 @@ package deti.tqs.backend.controllers;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -245,6 +248,33 @@ class TestFacilityController {
       .andExpect(jsonPath("$").doesNotExist());
 
     verify(facilityService, times(1)).update(any(), anyLong());
+
+  }
+
+  @Test
+  @DisplayName("Test delete a facility with success")
+  void testDeleteFacilityWithSuccess() throws Exception {
+
+    long exampleId = 1L;
+    doNothing().when(facilityService).delete(anyLong());
+
+    mvc.perform(delete("/api/facility/admin/delete?id=" + exampleId))
+      .andExpect(status().isOk());
+
+    verify(facilityService).delete(anyLong());
+  
+  }
+
+  @Test
+  @DisplayName("Test delete a facility that does not exist")
+  void testDeleteNonExistingFacility() throws Exception {
+
+    doThrow(new IllegalArgumentException("Facility not found")).when(facilityService).delete(anyLong());
+
+    mvc.perform(delete("/api/facility/admin/delete?id=412314"))
+      .andExpect(status().isNotFound());
+
+    verify(facilityService).delete(anyLong());
 
   }
 
