@@ -9,6 +9,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
 
@@ -164,6 +165,58 @@ class TestFacilityService {
     assertThat(foundFacility).isNull();
 
     verify(facilityRepository, times(1)).findByName(anyString());
+
+  }
+
+  @Test
+  @DisplayName("When updating a facility with a valid ID, it should return the updated facility")
+  void whenUpdateFacilityWithValidID_ThenReturnUpdatedFacility() {
+
+    Facility f = new Facility();
+    f.setId(fac1.getId());
+    f.setName("Facility Number 1");
+    f.setCity("Aveiro");
+    f.setPhoneNumber("987245124");
+    f.setPostalCode("3810-193");
+    f.setStreetName("Rua de Aveiro Nº 14532");
+
+    when(facilityRepository.findById(fac1.getId())).thenReturn(fac1);
+    when(facilityRepository.save(fac1)).thenReturn(f);
+
+    Facility updatedFacility = facilityService.update(f, fac1.getId());
+
+    assertAll(
+      () -> assertThat(updatedFacility).isNotNull().isEqualTo(f),
+      () -> assertThat(updatedFacility.getName()).isEqualTo(f.getName()),
+      () -> assertThat(updatedFacility.getStreetName()).isEqualTo(f.getStreetName()),
+      () -> assertThat(updatedFacility.getPhoneNumber()).isEqualTo(f.getPhoneNumber())
+    );
+
+    verify(facilityRepository, times(1)).findById(anyLong());
+    verify(facilityRepository, times(1)).save(any());
+
+  }
+
+  @Test
+  @DisplayName("When updating a facility with an invalid ID, it should throw an exception")
+  void whenUpdateFacilityWithInvalidID_ThenThrowException() {
+
+    Facility f = new Facility();
+    f.setId(100L);
+    f.setName("Facility Number 1");
+    f.setCity("Aveiro");
+    f.setPhoneNumber("987245124");
+    f.setPostalCode("3810-193");
+    f.setStreetName("Rua de Aveiro Nº 14532");
+
+    when(facilityRepository.findById(100L)).thenReturn(null);
+
+    assertThatThrownBy(() -> facilityService.update(f, 100L))
+      .isInstanceOf(IllegalArgumentException.class)
+      .hasMessage("Facility not found");
+
+    verify(facilityRepository, times(1)).findById(anyLong());
+    verify(facilityRepository, never()).save(any());
 
   }
 

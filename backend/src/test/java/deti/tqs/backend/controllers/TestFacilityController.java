@@ -1,11 +1,13 @@
 package deti.tqs.backend.controllers;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -196,6 +198,53 @@ class TestFacilityController {
       .andExpect(jsonPath("$[3].name", is("Facility 4")));
 
     verify(facilityService, times(1)).getAllFacilities();
+
+  }
+
+  @Test
+  @DisplayName("Test update a facility with success")
+  void testUpdateFacilityWithSuccess() throws Exception {
+
+    f4.setId(2);
+
+    when(facilityService.update(any(), anyLong())).thenReturn(f4);
+
+    mvc.perform(
+      put("/api/facility/admin/update?id=" + 2)
+      .contentType(MediaType.APPLICATION_JSON)
+      .content("{\"name\": \"Facility 4\"," + 
+        "\"city\": \"Lisboa\"," +
+        "\"streetName\": \"Rua de Lisboa\"," + 
+        "\"postalCode\": \"1000-001\"," +
+        "\"phoneNumber\": \"982641741\" }"
+    ))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.id", is(2)))
+      .andExpect(jsonPath("$.name", is("Facility 4")));
+
+    verify(facilityService, times(1)).update(any(), anyLong());
+
+  }
+
+  @Test
+  @DisplayName("Test update a facility that does not exist")
+  void testUpdateNonExistingFacility() throws Exception {
+
+    when(facilityService.update(any(), anyLong())).thenThrow(new IllegalArgumentException("Facility not found"));
+
+    mvc.perform(
+      put("/api/facility/admin/update?id=412314")
+      .contentType(MediaType.APPLICATION_JSON)
+      .content("{\"name\": \"Facility 4\"," + 
+        "\"city\": \"Lisboa\"," +
+        "\"streetName\": \"Rua de Lisboa\"," + 
+        "\"postalCode\": \"1000-001\"," +
+        "\"phoneNumber\": \"982641741\" }"
+    ))
+      .andExpect(status().isNotFound())
+      .andExpect(jsonPath("$").doesNotExist());
+
+    verify(facilityService, times(1)).update(any(), anyLong());
 
   }
 
