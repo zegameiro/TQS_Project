@@ -5,12 +5,6 @@ import { Select, SelectItem } from "@nextui-org/react";
 
 const Payment = ({ services, selectedServices, selectedPaymentData, setSelectedPaymentData, setPriceToPay}) => {
 
-    const payment_methods = [
-        { label: "Bank Transaction", value: "Bank Transaction" },
-        { label: "Paypal", value: "Paypal" },
-        { label: "MB WAY", value: "MB WAY" },
-    ]
-
     const paymentLabels = [
         { label: "Name", type: "name" },
         { label: "Email", type: "email" },
@@ -44,17 +38,6 @@ const Payment = ({ services, selectedServices, selectedPaymentData, setSelectedP
                     <div>
                         <span style={{ fontSize: '4vh', color: '#1F0F53' }}>Total to Pay</span>
                         <span style={{ fontSize: '4vh', color: '#1F0F53', float: 'right' }}>€ {priceToPay}</span>
-                    </div>
-                    <div style={{ marginTop: '3vh' }}>
-                        <Select
-                            items={payment_methods}
-                            label="Payment Method"
-                            variant="bordered"
-                            defaultSelectedKeys={[selectedPaymentData[4]]}
-                            onChange={(event) => setSelectedPaymentData[4](event.target.value)}
-                        >
-                            {(method) => <SelectItem key={method.value}>{method.label}</SelectItem>}
-                        </Select>
                     </div>
                 </div>
             </div>
