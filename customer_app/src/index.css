@@ -7,3 +7,12 @@
 .swiper-button-next {
     color: #220f67
 }
+
+.check-reservation .text-medium {
+    font-size: 2rem;
+    height: 3.5rem;
+}
+
+.button {
+    height: 4rem !important;
+}
