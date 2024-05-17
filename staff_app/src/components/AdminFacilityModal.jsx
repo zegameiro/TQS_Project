@@ -45,7 +45,7 @@ export default function AdminFacilityModal({
 
   const editFacilityMutation = useMutation({
     mutationKey: ["editFacility"],
-    mutationFn: (facilityData) => editFacility(axios, facilityData),
+    mutationFn: (facilityData) => editFacility(axios, facilityData, facilityData.id),
     onSuccess: () => {
       queryClient.refetchQueries("allFacilities")
     },
