@@ -10,8 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -61,6 +63,34 @@ public class FacilityController {
     }
 
     return ResponseEntity.status(HttpStatus.CREATED).body(savedFacility);
+
+  }
+
+  @PutMapping("/admin/update")
+  public ResponseEntity<Facility> updateFacility(@RequestBody(required = true) FacilitySchema facilitySchema, @RequestParam(required = true) long id) {
+
+    logger.info("Updating facility");
+
+    Facility f = new Facility();
+    f.setName(facilitySchema.name());
+    f.setCity(facilitySchema.city());
+    f.setStreetName(facilitySchema.streetName());
+    f.setPostalCode(facilitySchema.postalCode());
+    f.setPhoneNumber(facilitySchema.phoneNumber());
+
+    Facility updatedFacility = null;
+
+    try {
+      
+      updatedFacility = facilityService.update(f, id);
+      
+    } catch (IllegalArgumentException e) {
+
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+
+    }
+
+    return ResponseEntity.status(HttpStatus.OK).body(updatedFacility);
 
   }
 

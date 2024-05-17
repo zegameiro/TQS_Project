@@ -66,15 +66,7 @@ export default function AdminFacilitiesTable() {
               <Table.Cell>
                 <span
                   className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
-                  onClick={() =>
-                    openEditModal({
-                      name: facility.name,
-                      city: facility.city,
-                      streetName: facility.streetName,
-                      postalCode: facility.postalCode,
-                      phoneNumber: facility.phoneNumber,
-                    })
-                  }
+                  onClick={() => openEditModal(facility)}
                 >
                   Edit
                 </span>
