@@ -1,4 +1,6 @@
-import { Button } from "@nextui-org/react";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
+
+import React, { useState } from "react";
 
 const ReservationField = ({ label, value }) => {
     let isPrice = false;
@@ -18,6 +20,13 @@ const ReservationField = ({ label, value }) => {
 const GetReservation = ({ token, allReservations, setCurrentStep }) => {
 
     const reservation = allReservations.find(reservation => reservation.id === token);
+
+    // Modal
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+    const handleCancel = () => {
+        alert("Reservation canceled");
+    }
 
     return (
         <>
@@ -52,7 +61,7 @@ const GetReservation = ({ token, allReservations, setCurrentStep }) => {
 
                     <div className="mt-5" style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                         <Button color="primary" className="text-white m-1 mt-8" size="lg" onClick={() => setCurrentStep(0)}>Search Another Reservation</Button>
-                        <Button color="danger" className="text-white m-1 mt-8" size="lg">Cancel Reservation</Button>
+                        <Button color="danger" className="text-white m-1 mt-8" size="lg" onPress={onOpen}>Cancel Reservation</Button>
                     </div>
                 </>
             ) : (
@@ -60,8 +69,25 @@ const GetReservation = ({ token, allReservations, setCurrentStep }) => {
                     <h1 className="text-5xl text-danger font-bold">Reservation not found</h1>
                     <Button color="primary" className="text-white mt-[20vh]" size="lg" onClick={() => setCurrentStep(0)}>Back</Button>
                 </div>
-            )
-            }
+            )}
+
+            <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+                <ModalContent>
+                    {(onClose) => (
+                        <>
+                            <ModalHeader className="flex flex-col gap-1">Confirm Cancelation</ModalHeader>
+                            <ModalBody>
+                                <p>Are you sure you want to cancel this reservation?</p>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button color="danger" variant="light" onClick={handleCancel} onPress={onClose}>
+                                    Yes, cancel
+                                </Button>
+                            </ModalFooter>
+                        </>
+                    )}
+                </ModalContent>
+            </Modal >
         </>
     );
 }
