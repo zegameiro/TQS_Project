@@ -39,28 +39,28 @@ const NavbarFixed = () => {
 
 
   return (
-    <Navbar disableAnimation isBordered className="p-4 bg-primary">
+    <Navbar disableAnimation isBordered className="p-4 bg-primary" maxWidth="2xl" >
       <NavbarContent className="sm:hidden text-white" justify="start">
         <NavbarMenuToggle />
       </NavbarContent>
 
-      <NavbarContent className="sm:hidden pr-3" justify="center">
+      <NavbarContent className="sm:hidden pr-3">
         <NavbarBrand>
           <p className="font-bold text-inherit text-white">Beauty Plaza</p>
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent className="hidden sm:flex gap-4" justify="center">
+      <NavbarContent className="hidden sm:flex gap-4">
         <Avatar
           src={LogoNoBackground}
           className="w-40 h-30 text-lg bg-primary cursor-pointer hover:shadow-lg"
           onClick={() => navigate("/")}
         />
         <NavbarItem
-          {...url === "/" && { isActive: true }}
+          {...(url === "/" || url.startsWith("/reservation?")) && { isActive: true }}
         >
           <Link href="/"
-            {...url === "/" ?
+            {...(url === "/" || url.startsWith("/reservation?")) ?
               { color: "warning" } :
               { className: "text-white" }}
           >
@@ -80,6 +80,8 @@ const NavbarFixed = () => {
         </NavbarItem>
       </NavbarContent>
 
+
+      {/*
       <NavbarContent justify="end">
         <NavbarItem className="hidden lg:flex">
           <Link href="#" className="text-white">
@@ -93,7 +95,6 @@ const NavbarFixed = () => {
         </NavbarItem>
       </NavbarContent>
 
-      {/*
       <NavbarMenu>
         {menuItems.map((item, index) => (
           <NavbarMenuItem key={`${item}-${index}`}>
