@@ -39,15 +39,18 @@ public class SecurityConfiguration {
 
   @Bean
   SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+
+    String apiFacilityadmin = "/api/facility/admin/*";
+
     return httpSecurity
       .cors(cors -> cors.configurationSource(corsConfigurationSource()))
       .csrf(csrf -> csrf.disable())
       .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
       .authorizeHttpRequests(authorize -> authorize
         .requestMatchers(HttpMethod.GET, "/api/facility/*").permitAll()
-        .requestMatchers(HttpMethod.POST, "/api/facility/admin/*").permitAll()
-        .requestMatchers(HttpMethod.PUT, "/api/facility/admin/*").permitAll()
-        .requestMatchers(HttpMethod.DELETE, "/api/facility/admin/*").permitAll()
+        .requestMatchers(HttpMethod.POST, apiFacilityadmin).permitAll()
+        .requestMatchers(HttpMethod.PUT, apiFacilityadmin).permitAll()
+        .requestMatchers(HttpMethod.DELETE, apiFacilityadmin).permitAll()
         .requestMatchers(HttpMethod.GET, "/docs").permitAll()
         .requestMatchers(HttpMethod.GET, "/swagger-ui/*").permitAll()
         .requestMatchers(HttpMethod.GET, "/v3/api-docs/*").permitAll()
