@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import deti.tqs.backend.controllers.FacilityController;
 import deti.tqs.backend.models.Facility;
 import deti.tqs.backend.services.FacilityService;
+import jakarta.persistence.EntityNotFoundException;
 
 @WebMvcTest(FacilityController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -89,7 +90,7 @@ public class UpdateFacilityTests {
   @DisplayName("Test update a facility that does not exist")
   void testUpdateNonExistingFacility() throws Exception {
 
-    when(facilityService.update(any(), anyLong())).thenThrow(new IllegalArgumentException("Facility not found"));
+    when(facilityService.update(any(), anyLong())).thenThrow(new EntityNotFoundException("Facility not found"));
 
     mvc.perform(
       put("/api/facility/admin/update?id=412314")

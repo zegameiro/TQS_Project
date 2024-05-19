@@ -21,6 +21,7 @@ import deti.tqs.backend.dtos.FacilitySchema;
 import deti.tqs.backend.models.Facility;
 import deti.tqs.backend.services.FacilityService;
 import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 
 @RestController
 @RequestMapping("/api/facility")
@@ -85,7 +86,7 @@ public class FacilityController {
       
       updatedFacility = facilityService.update(f, id);
       
-    } catch (IllegalArgumentException e) {
+    } catch (EntityNotFoundException e) {
 
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
