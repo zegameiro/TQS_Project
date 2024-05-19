@@ -1,20 +1,11 @@
-body {
-    /* background-color: #FFDB99; */
-}
-
-table {
-    /* background-color: white; */
-}
-
-td,
 th {
     font-size: 3vh !important;
-    padding: 1.75vh !important;
+    height: 7vh !important;
 }
 
 td {
-    font-size: 4vh !important;
-    padding: 2.5vh !important;
+    font-size: 3.25vh !important;
+    height: 8vh !important;
 }
 
 
