@@ -94,11 +94,11 @@ class SearchFacilityTestsIT {
       .as(HashMap.class);
 
     assertAll(
-      () -> assertThat(response.get("name")).isEqualTo("Facility 3"),
-      () -> assertThat(response.get("city")).isEqualTo("Leiria"),
-      () -> assertThat(response.get("phoneNumber")).isEqualTo("893721821"),
-      () -> assertThat(response.get("postalCode")).isEqualTo("8915-029"),
-      () -> assertThat(response.get("streetName")).isEqualTo("Rua da Batalha")
+      () -> assertThat(response).containsEntry("name", "Facility 3"),
+      () -> assertThat(response).containsEntry("city", "Leiria"),
+      () -> assertThat(response).containsEntry("phoneNumber", "893721821"),
+      () -> assertThat(response).containsEntry("postalCode", "8915-029"),
+      () -> assertThat(response).containsEntry("streetName", "Rua da Batalha")
     );
 
   }

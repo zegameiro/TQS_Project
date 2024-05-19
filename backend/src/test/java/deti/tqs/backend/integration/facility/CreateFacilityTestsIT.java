@@ -76,11 +76,11 @@ class CreateFacilityTestsIT {
       .as(HashMap.class);
 
     assertAll(
-      () -> assertThat(response.get("name")).isEqualTo(f1.getName()),
-      () -> assertThat(response.get("city")).isEqualTo(f1.getCity()),
-      () -> assertThat(response.get("phoneNumber")).isEqualTo(f1.getPhoneNumber()),
-      () -> assertThat(response.get("postalCode")).isEqualTo(f1.getPostalCode()),
-      () -> assertThat(response.get("streetName")).isEqualTo(f1.getStreetName())
+      () -> assertThat(response).containsEntry("name", f1.getName()),
+      () -> assertThat(response).containsEntry("city", f1.getCity()),
+      () -> assertThat(response).containsEntry("phoneNumber", f1.getPhoneNumber()),
+      () -> assertThat(response).containsEntry("postalCode", f1.getPostalCode()),
+      () -> assertThat(response).containsEntry("streetName", f1.getStreetName())
     );
 
   }
