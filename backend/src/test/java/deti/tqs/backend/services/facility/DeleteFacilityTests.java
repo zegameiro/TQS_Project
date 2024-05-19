@@ -45,7 +45,7 @@ public class DeleteFacilityTests {
    */
 
   @BeforeEach
-  void setUp() {
+  void setUp() throws Exception {
 
     fac1.setName("Facility 1");
     fac1.setCity("Aveiro");

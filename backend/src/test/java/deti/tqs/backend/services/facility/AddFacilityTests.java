@@ -19,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import deti.tqs.backend.models.Facility;
 import deti.tqs.backend.repositories.FacilityRepository;
 import deti.tqs.backend.services.FacilityService;
+import jakarta.persistence.EntityExistsException;
 
 @ExtendWith(MockitoExtension.class)
 class AddFacilityTests {
@@ -38,6 +39,7 @@ class AddFacilityTests {
    * 
    *  1. Save a valid facility
    *  2. Save a facility with a name that already exists
+   *  3. Save a facility with missing fields
    * 
   */
 
@@ -66,7 +68,7 @@ class AddFacilityTests {
 
   @Test
   @DisplayName("When saving a valid facility, it should return the facility saved")
-  void whenSaveValidFacility_thenFacilityShouldBeReturn() {
+  void whenSaveValidFacility_thenFacilityShouldBeReturn() throws Exception {
     
     when(facilityService.save(fac1)).thenReturn(fac1);
 
@@ -96,9 +98,26 @@ class AddFacilityTests {
     when(facilityRepository.findByName("Facility 3")).thenReturn(fac3);
     
     assertThatThrownBy(() -> facilityService.save(f))
-      .isInstanceOf(IllegalArgumentException.class)
+      .isInstanceOf(EntityExistsException.class)
       .hasMessage("Facility with this name already exists");
     
+    verify(facilityRepository, never()).save(any());
+
+  }
+
+  @Test
+  @DisplayName("When saving a facility with missing fields, it should throw an exception")
+  void whenSaveFacilityWithMissingFields_thenThrowException() {
+
+    Facility f = new Facility();
+    f.setName("Facility 4");
+    f.setCity("Aveiro");
+    f.setPostalCode("3810-193");
+
+    assertThatThrownBy(() -> facilityService.save(f))
+      .isInstanceOf(NoSuchFieldException.class)
+      .hasMessage("Facility must have all fields filled");
+
     verify(facilityRepository, never()).save(any());
 
   }

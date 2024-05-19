@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import deti.tqs.backend.dtos.FacilitySchema;
 import deti.tqs.backend.models.Facility;
 import deti.tqs.backend.services.FacilityService;
+import jakarta.persistence.EntityExistsException;
 
 @RestController
 @RequestMapping("/api/facility")
@@ -36,12 +36,12 @@ public class FacilityController {
   }
 
   @PostMapping("/admin/add")
-  public ResponseEntity<Facility> createFacility(@RequestBody(required = true) FacilitySchema facilitySchema) {
+  public ResponseEntity<Facility> createFacility(@RequestBody(required = true) FacilitySchema facilitySchema) throws Exception {
+
+    if (facilitySchema.name() == null || facilitySchema.city() == null || facilitySchema.phoneNumber() == null || facilitySchema.postalCode() == null || facilitySchema.streetName() == null)
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 
     logger.info("Creating facility");
-
-    if(facilitySchema.name() == null || facilitySchema.city() == null || facilitySchema.streetName() == null || facilitySchema.postalCode() == null || facilitySchema.phoneNumber() == null)
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing parameters");
 
     Facility f = new Facility();
 
@@ -55,12 +55,12 @@ public class FacilityController {
 
     try {
       
-      savedFacility = facilityService.save(f);
-      
-    } catch (IllegalArgumentException e) {
+      savedFacility = facilityService.save(f);  
+
+    } catch (EntityExistsException e) {
 
       return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
-
+      
     }
 
     return ResponseEntity.status(HttpStatus.CREATED).body(savedFacility);
