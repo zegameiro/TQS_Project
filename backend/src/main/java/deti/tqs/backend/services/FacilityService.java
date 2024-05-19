@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 
 import deti.tqs.backend.models.Facility;
 import deti.tqs.backend.repositories.FacilityRepository;
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class FacilityService {
@@ -16,12 +18,17 @@ public class FacilityService {
     this.facilityRepository = facilityRepository;
   }
 
-  public Facility save(Facility facility) {
+  public Facility save(Facility facility) throws Exception {
 
     Facility found = facilityRepository.findByName(facility.getName());
     
+    // Check if a facility with the same name already exists
     if (found != null)
-      throw new IllegalArgumentException("Facility with this name already exists");
+      throw new EntityExistsException("Facility with this name already exists");
+
+    // Check if there are some fields missing
+    if(facility.getName() == null || facility.getCity() == null || facility.getPhoneNumber() == null || facility.getPostalCode() == null || facility.getStreetName() == null)
+      throw new NoSuchFieldException("Facility must have all fields filled");
 
     return facilityRepository.save(facility);
 
@@ -32,7 +39,7 @@ public class FacilityService {
     Facility found = facilityRepository.findById(id);
 
     if (found == null)
-      throw new IllegalArgumentException("Facility not found");
+      throw new EntityNotFoundException("Facility not found");
 
     found.setName(facility.getName() != found.getName() ? facility.getName() : found.getName());
     found.setCity(facility.getCity() != found.getCity() ? facility.getCity() : found.getCity());

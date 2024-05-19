@@ -20,11 +20,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.web.server.ResponseStatusException;
 
 import deti.tqs.backend.controllers.FacilityController;
 import deti.tqs.backend.models.Facility;
 import deti.tqs.backend.services.FacilityService;
+import jakarta.persistence.EntityExistsException;
 
 @WebMvcTest(FacilityController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -90,7 +90,7 @@ public class CreateFacilityTests {
   @DisplayName("Test create a facility with missing fields")
   void testCrateFacilityWithMissingFields() throws Exception {
 
-    when(facilityService.save(any())).thenThrow(ResponseStatusException.class);
+    when(facilityService.save(any())).thenThrow(NoSuchFieldException.class);
 
     mvc.perform(
       post("/api/facility/admin/add")
@@ -111,7 +111,7 @@ public class CreateFacilityTests {
   @DisplayName("Test create a facility with a name that already exists")
   void testCreateFacilityWithExistingName() throws Exception {
 
-    when(facilityService.save(any())).thenThrow(new IllegalArgumentException("Facility with this name already exists"));
+    when(facilityService.save(any())).thenThrow(new EntityExistsException("Facility with this name already exists"));
 
     MvcResult res = mvc.perform(
       post("/api/facility/admin/add")
@@ -127,7 +127,7 @@ public class CreateFacilityTests {
     .andExpect(status().isConflict())
     .andReturn();
 
-    assertNull(res.getModelAndView());
+    assertNull(res.getModelAndView()); // Check if the response is empty
 
     verify(facilityService, times(1)).save(any());
   }

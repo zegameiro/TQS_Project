@@ -21,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import deti.tqs.backend.models.Facility;
 import deti.tqs.backend.repositories.FacilityRepository;
 import deti.tqs.backend.services.FacilityService;
+import jakarta.persistence.EntityNotFoundException;
 
 @ExtendWith(MockitoExtension.class)
 public class UpdateFacilityTests {
@@ -110,7 +111,7 @@ public class UpdateFacilityTests {
     when(facilityRepository.findById(100L)).thenReturn(null);
 
     assertThatThrownBy(() -> facilityService.update(f, 100L))
-      .isInstanceOf(IllegalArgumentException.class)
+      .isInstanceOf(EntityNotFoundException.class)
       .hasMessage("Facility not found");
 
     verify(facilityRepository, times(1)).findById(anyLong());
