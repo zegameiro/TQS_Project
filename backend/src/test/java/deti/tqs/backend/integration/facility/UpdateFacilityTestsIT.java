@@ -55,6 +55,7 @@ public class UpdateFacilityTestsIT {
     f6.setPhoneNumber("837103912");
     f6.setPostalCode("7245-201");
     f6.setStreetName("Rua de Santarém");
+    f6.setMaxRoomsCapacity(39);
 
     // Create the facility
     Facility createdFacility = 
@@ -79,6 +80,7 @@ public class UpdateFacilityTestsIT {
     f6.setCity("Lagos");
     f6.setPostalCode("1263-291");
     f6.setStreetName("Rua de Lagos");
+    f6.setMaxRoomsCapacity(12);
 
     Facility updatedFacility = 
       given()
@@ -114,6 +116,7 @@ public class UpdateFacilityTestsIT {
     f7.setPhoneNumber("837103912");
     f7.setPostalCode("7245-201");
     f7.setStreetName("Rua de Santarém");
+    f7.setMaxRoomsCapacity(12);
 
     // Update the facility
     given()
