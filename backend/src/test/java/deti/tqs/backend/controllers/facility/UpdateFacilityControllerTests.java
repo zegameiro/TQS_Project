@@ -27,12 +27,12 @@ import jakarta.persistence.EntityNotFoundException;
 
 @WebMvcTest(FacilityController.class)
 @AutoConfigureMockMvc(addFilters = false)
-public class UpdateFacilityTests {
+class UpdateFacilityControllerTests {
 
   private MockMvc mvc;
 
   @Autowired
-  UpdateFacilityTests(MockMvc mvc) {
+  UpdateFacilityControllerTests(MockMvc mvc) {
     this.mvc = mvc;
   }
 
@@ -58,6 +58,7 @@ public class UpdateFacilityTests {
     f.setPhoneNumber("982641741");
     f.setStreetName("Rua de Lisboa");
     f.setPostalCode("1000-001");
+    f.setMaxRoomsCapacity(30);
 
   }
 
@@ -76,7 +77,8 @@ public class UpdateFacilityTests {
         "\"city\": \"Lisboa\"," +
         "\"streetName\": \"Rua de Lisboa\"," + 
         "\"postalCode\": \"1000-001\"," +
-        "\"phoneNumber\": \"982641741\" }"
+        "\"phoneNumber\": \"982641741\" ," +
+        "\"maxRoomsCapacity\": 30 }"
     ))
       .andExpect(status().isOk())
       .andExpect(jsonPath("$.id", is(2)))

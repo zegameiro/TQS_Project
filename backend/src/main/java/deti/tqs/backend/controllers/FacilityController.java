@@ -51,6 +51,7 @@ public class FacilityController {
     f.setStreetName(facilitySchema.streetName());
     f.setPostalCode(facilitySchema.postalCode());
     f.setPhoneNumber(facilitySchema.phoneNumber());
+    f.setMaxRoomsCapacity(facilitySchema.maxRoomsCapacity());
 
     Facility savedFacility = null;
 
@@ -62,6 +63,10 @@ public class FacilityController {
 
       return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
       
+    } catch (IllegalArgumentException e) {
+
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+
     }
 
     return ResponseEntity.status(HttpStatus.CREATED).body(savedFacility);
@@ -79,6 +84,7 @@ public class FacilityController {
     f.setStreetName(facilitySchema.streetName());
     f.setPostalCode(facilitySchema.postalCode());
     f.setPhoneNumber(facilitySchema.phoneNumber());
+    f.setMaxRoomsCapacity(facilitySchema.maxRoomsCapacity());
 
     Facility updatedFacility = null;
 

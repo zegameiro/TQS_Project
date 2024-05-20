@@ -40,6 +40,9 @@ public class Facility {
   @Column(nullable = false)
   private String phoneNumber;
 
+  @Column(nullable = false)
+  private int maxRoomsCapacity;
+
   @OneToMany(mappedBy = "facility", cascade = CascadeType.ALL)
   private List<Room> rooms;
 

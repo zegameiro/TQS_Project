@@ -12,28 +12,27 @@ import deti.tqs.backend.models.Facility;
 import deti.tqs.backend.repositories.FacilityRepository;
 
 @DataJpaTest
-public class AddFacilityTests {
-  
+class DeleteFacilityRepositoryTests {
+
   private FacilityRepository facilityRepository;
 
   @Autowired
-  AddFacilityTests(FacilityRepository facilityRepository) {
+  DeleteFacilityRepositoryTests(FacilityRepository facilityRepository) {
     this.facilityRepository = facilityRepository;
   }
 
   /*
    * NECESSARY TESTS
    * 
-   *  1. Save a facility with success and find it by id
+   *  1. Save a facility with success and delete it
    * 
    */
 
   @Test
-  @DisplayName("Test save a facility with success and find it by id")
-  void testSaveFacilityWithSuccess() {
+  @DisplayName("Test save a facility with success and delete it")
+  void testSaveFacilityAndDeleteIt() {
 
     Facility f = new Facility();
-
     f.setName("Facility 1");
     f.setCity("Aveiro");
     f.setPhoneNumber("123456789");
@@ -46,13 +45,15 @@ public class AddFacilityTests {
 
     assertAll(
       () -> assertThat(foundFacility).isNotNull(),
-      () -> assertThat(foundFacility.getName()).isEqualTo(f.getName()),
-      () -> assertThat(foundFacility.getCity()).isEqualTo(f.getCity()),
-      () -> assertThat(foundFacility.getPhoneNumber()).isEqualTo(f.getPhoneNumber()),
-      () -> assertThat(foundFacility.getPostalCode()).isEqualTo(f.getPostalCode()),
-      () -> assertThat(foundFacility.getStreetName()).isEqualTo(f.getStreetName())
+      () -> assertThat(foundFacility.getName()).isEqualTo(f.getName())
     );
 
-  }
+    facilityRepository.delete(f);
 
+    Facility deletedFacility = facilityRepository.findById(f.getId());
+
+    assertThat(deletedFacility).isNull();
+
+  }
+  
 }

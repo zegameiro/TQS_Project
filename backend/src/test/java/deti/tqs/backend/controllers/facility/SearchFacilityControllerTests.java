@@ -26,12 +26,12 @@ import deti.tqs.backend.services.FacilityService;
 
 @WebMvcTest(FacilityController.class)
 @AutoConfigureMockMvc(addFilters = false)
-public class SearchFacilityTests {
+public class SearchFacilityControllerTests {
 
   private MockMvc mvc;
 
   @Autowired
-  SearchFacilityTests(MockMvc mvc) {
+  SearchFacilityControllerTests(MockMvc mvc) {
     this.mvc = mvc;
   }
 
@@ -61,6 +61,7 @@ public class SearchFacilityTests {
     f1.setPhoneNumber("123456789");
     f1.setPostalCode("3810-193");
     f1.setStreetName("Rua de Aveiro");
+    f1.setMaxRoomsCapacity(10);
 
     f2.setId(2L);
     f2.setName("Facility 2");
@@ -68,6 +69,7 @@ public class SearchFacilityTests {
     f2.setPhoneNumber("987654321");
     f2.setPostalCode("4000-007");
     f2.setStreetName("Rua do Porto");
+    f2.setMaxRoomsCapacity(20);
 
     f3.setId(3L);
     f3.setName("Facility 3");
@@ -75,6 +77,7 @@ public class SearchFacilityTests {
     f3.setPhoneNumber("987654321");
     f3.setStreetName("Rua da Batalha");
     f3.setPostalCode("3928-291");
+    f3.setMaxRoomsCapacity(30);
 
     f4.setId(4L);
     f4.setName("Facility 4");
@@ -82,6 +85,7 @@ public class SearchFacilityTests {
     f4.setPhoneNumber("982641741");
     f4.setStreetName("Rua de Lisboa");
     f4.setPostalCode("1000-001");
+    f4.setMaxRoomsCapacity(40);
 
     when(facilityService.getFacilityById(f2.getId())).thenReturn(f2);
     when(facilityService.getFacilityById(412314L)).thenReturn(null);

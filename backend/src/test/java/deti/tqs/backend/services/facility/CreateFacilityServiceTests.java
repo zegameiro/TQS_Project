@@ -22,7 +22,7 @@ import deti.tqs.backend.services.FacilityService;
 import jakarta.persistence.EntityExistsException;
 
 @ExtendWith(MockitoExtension.class)
-class AddFacilityTests {
+class CreateFacilityServiceTests {
   
   @Mock
   private FacilityRepository facilityRepository;
@@ -40,6 +40,7 @@ class AddFacilityTests {
    *  1. Save a valid facility
    *  2. Save a facility with a name that already exists
    *  3. Save a facility with missing fields
+   *  4. Save a facility with an invalid capacity
    * 
   */
 
@@ -51,18 +52,21 @@ class AddFacilityTests {
     fac1.setPhoneNumber("123456789");
     fac1.setPostalCode("3810-193");
     fac1.setStreetName("Rua de Aveiro");
+    fac1.setMaxRoomsCapacity(10);
 
     fac2.setName("Facility 2");
     fac2.setCity("Porto");
     fac2.setPhoneNumber("987654321");
     fac2.setPostalCode("4000-007");
     fac2.setStreetName("Rua do Porto");
+    fac2.setMaxRoomsCapacity(20);
 
     fac3.setName("Facility 3");
     fac3.setCity("Lisboa");
     fac3.setPhoneNumber("823741291");
     fac3.setPostalCode("1938-092");
     fac3.setStreetName("Rua de Lisboa");
+    fac3.setMaxRoomsCapacity(30);
 
   }
 
@@ -117,6 +121,26 @@ class AddFacilityTests {
     assertThatThrownBy(() -> facilityService.save(f))
       .isInstanceOf(NoSuchFieldException.class)
       .hasMessage("Facility must have all fields filled");
+
+    verify(facilityRepository, never()).save(any());
+
+  }
+
+  @Test
+  @DisplayName("When saving a facility with an invalid capacity, it should throw an exception")
+  void whenSaveFacilityWithInvalidCapacity_thenThrowException() {
+
+    Facility f = new Facility();
+    f.setName("Facility 4");
+    f.setCity("Aveiro");
+    f.setPhoneNumber("123456789");
+    f.setPostalCode("3810-193");
+    f.setStreetName("Rua de Aveiro");
+    f.setMaxRoomsCapacity(-1);
+
+    assertThatThrownBy(() -> facilityService.save(f))
+      .isInstanceOf(IllegalArgumentException.class)
+      .hasMessage("Facility must have a valid capacity digit greater than 0");
 
     verify(facilityRepository, never()).save(any());
 
