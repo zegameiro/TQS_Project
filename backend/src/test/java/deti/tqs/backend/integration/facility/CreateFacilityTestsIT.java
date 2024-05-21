@@ -19,6 +19,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
 
 import deti.tqs.backend.JsonUtils;
+import deti.tqs.backend.dtos.FacilitySchema;
 import deti.tqs.backend.models.Facility;
 import io.restassured.RestAssured;
 
@@ -39,6 +40,7 @@ class CreateFacilityTestsIT {
    *  1. Create a facility with success
    *  2. create a facility with missing fields
    *  3. Create a facility with a name that already exists
+   *  4. Create a facility with an invalid capacity
    * 
    */
 
@@ -55,32 +57,34 @@ class CreateFacilityTestsIT {
   @DisplayName("Create a facility with success")
   void createFacilityWithSuccess() throws IOException {
     
-    Facility f1 = new Facility();
-    f1.setName("Facility 1");
-    f1.setCity("Aveiro");
-    f1.setPhoneNumber("123456789");
-    f1.setPostalCode("3810-193");
-    f1.setStreetName("Rua de Aveiro");
+    FacilitySchema f1 = new FacilitySchema(
+      "Facility 1", 
+      "Aveiro", 
+      "123456789", 
+      "3810-193", 
+      "Rua de Aveiro", 
+      10
+    );
     
     HashMap<String, String> response = 
-    given()
-      .contentType("application/json")
-      .port(port)
-    .when()
-      .body(JsonUtils.toJson(f1))
-      .post("/facility/admin/add")
-    .then()
-      .statusCode(201)
-      .extract()
-      .response()
-      .as(HashMap.class);
+      given()
+        .contentType("application/json")
+        .port(port)
+      .when()
+        .body(JsonUtils.toJson(f1))
+        .post("/facility/admin/add")
+      .then()
+        .statusCode(201)
+        .extract()
+        .response()
+        .as(HashMap.class);
 
     assertAll(
-      () -> assertThat(response).containsEntry("name", f1.getName()),
-      () -> assertThat(response).containsEntry("city", f1.getCity()),
-      () -> assertThat(response).containsEntry("phoneNumber", f1.getPhoneNumber()),
-      () -> assertThat(response).containsEntry("postalCode", f1.getPostalCode()),
-      () -> assertThat(response).containsEntry("streetName", f1.getStreetName())
+      () -> assertThat(response).containsEntry("name", f1.name()),
+      () -> assertThat(response).containsEntry("city", f1.city()),
+      () -> assertThat(response).containsEntry("phoneNumber", f1.phoneNumber()),
+      () -> assertThat(response).containsEntry("postalCode", f1.postalCode()),
+      () -> assertThat(response).containsEntry("streetName", f1.streetName())
     );
 
   }
@@ -116,6 +120,7 @@ class CreateFacilityTestsIT {
     f3.setPhoneNumber("987654321");
     f3.setPostalCode("3921-829");
     f3.setStreetName("Rua de Lisbon");
+    f3.setMaxRoomsCapacity(30);
     
     given()
       .contentType("application/json")
@@ -125,6 +130,29 @@ class CreateFacilityTestsIT {
       .post("/facility/admin/add")
     .then()
       .statusCode(409);
+
+  }
+
+  @Test
+  @DisplayName("Create a facility with an invalid capacity")
+  void createFacilityWithInvalidCapacity() throws IOException {
+
+    Facility f4 = new Facility();
+    f4.setName("Facility 12");
+    f4.setCity("Lisboa");
+    f4.setPhoneNumber("987654321");
+    f4.setPostalCode("3921-829");
+    f4.setStreetName("Rua de Lisbon");
+    f4.setMaxRoomsCapacity(-1);
+    
+    given()
+      .contentType("application/json")
+      .port(port)
+    .when()
+      .body(JsonUtils.toJson(f4))
+      .post("/facility/admin/add")
+    .then()
+      .statusCode(400);
 
   }
 

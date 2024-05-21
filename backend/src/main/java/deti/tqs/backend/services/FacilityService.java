@@ -2,6 +2,7 @@ package deti.tqs.backend.services;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import deti.tqs.backend.models.Facility;
@@ -14,7 +15,8 @@ public class FacilityService {
 
   private FacilityRepository facilityRepository;
 
-  public FacilityService(FacilityRepository facilityRepository) {
+  @Autowired
+  FacilityService(FacilityRepository facilityRepository) {
     this.facilityRepository = facilityRepository;
   }
 
@@ -30,6 +32,10 @@ public class FacilityService {
     if(facility.getName() == null || facility.getCity() == null || facility.getPhoneNumber() == null || facility.getPostalCode() == null || facility.getStreetName() == null)
       throw new NoSuchFieldException("Facility must have all fields filled");
 
+    // Check if the capacity has a valid value
+    if(facility.getMaxRoomsCapacity() <= 0)
+      throw new IllegalArgumentException("Facility must have a valid capacity digit greater than 0");
+
     return facilityRepository.save(facility);
 
   }
@@ -40,12 +46,16 @@ public class FacilityService {
 
     if (found == null)
       throw new EntityNotFoundException("Facility not found");
+    
+    if(facility.getMaxRoomsCapacity() <= 0)
+      throw new IllegalArgumentException("Facility must have a valid capacity digit greater than 0");
 
     found.setName(facility.getName() != found.getName() ? facility.getName() : found.getName());
     found.setCity(facility.getCity() != found.getCity() ? facility.getCity() : found.getCity());
     found.setStreetName(facility.getStreetName() != found.getStreetName() ? facility.getStreetName() : found.getStreetName());
     found.setPhoneNumber(facility.getPhoneNumber() != found.getPhoneNumber() ? facility.getPhoneNumber() : found.getPhoneNumber());
     found.setPostalCode(facility.getPostalCode() != found.getPostalCode() ? facility.getPostalCode() : found.getPostalCode());
+    found.setMaxRoomsCapacity(facility.getMaxRoomsCapacity() != found.getMaxRoomsCapacity() ? facility.getMaxRoomsCapacity() : found.getMaxRoomsCapacity());
 
     return facilityRepository.save(found);
 

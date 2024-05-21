@@ -57,12 +57,14 @@ class SearchFacilityTestsIT {
     f5.setPhoneNumber("893721821");
     f5.setPostalCode("8915-029");
     f5.setStreetName("Rua da Batalha");
+    f5.setMaxRoomsCapacity(10);
 
     f6.setName("Facility 4");
     f6.setCity("Porto");
     f6.setPhoneNumber("123456789");
     f6.setPostalCode("1234-567");
     f6.setStreetName("Rua do Porto");
+    f6.setMaxRoomsCapacity(20);
 
   }
 

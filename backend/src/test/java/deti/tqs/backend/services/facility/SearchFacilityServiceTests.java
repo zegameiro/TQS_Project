@@ -22,7 +22,7 @@ import deti.tqs.backend.repositories.FacilityRepository;
 import deti.tqs.backend.services.FacilityService;
 
 @ExtendWith(MockitoExtension.class)
-public class SearchFacilityTests {
+class SearchFacilityServiceTests {
   
   @Mock
   private FacilityRepository facilityRepository;
@@ -51,18 +51,21 @@ public class SearchFacilityTests {
     fac1.setPhoneNumber("123456789");
     fac1.setPostalCode("3810-193");
     fac1.setStreetName("Rua de Aveiro");
+    fac1.setMaxRoomsCapacity(10);
 
     fac2.setName("Facility 2");
     fac2.setCity("Porto");
     fac2.setPhoneNumber("987654321");
     fac2.setPostalCode("4000-007");
     fac2.setStreetName("Rua do Porto");
+    fac2.setMaxRoomsCapacity(20);
 
     fac3.setName("Facility 3");
     fac3.setCity("Lisboa");
     fac3.setPhoneNumber("823741291");
     fac3.setPostalCode("1938-092");
     fac3.setStreetName("Rua de Lisboa");
+    fac3.setMaxRoomsCapacity(30);
 
   }
 

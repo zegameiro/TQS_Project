@@ -28,12 +28,12 @@ import jakarta.persistence.EntityExistsException;
 
 @WebMvcTest(FacilityController.class)
 @AutoConfigureMockMvc(addFilters = false)
-public class CreateFacilityTests {
+class CreateFacilityControllerTests {
   
   private MockMvc mvc;
 
   @Autowired
-  CreateFacilityTests(MockMvc mvc) {
+  CreateFacilityControllerTests(MockMvc mvc) {
     this.mvc = mvc;
   }
 
@@ -48,6 +48,7 @@ public class CreateFacilityTests {
    *  1. Create a facility with success
    *  2. create a facility with missing fields
    *  3. Create a facility with a name that already exists
+   *  4. Create a facility with an invalid capacity
    * 
   */
 
@@ -130,6 +131,32 @@ public class CreateFacilityTests {
     assertNull(res.getModelAndView()); // Check if the response is empty
 
     verify(facilityService, times(1)).save(any());
+
+  }
+
+  @Test
+  @DisplayName("Test create a facility with an invalid capacity")
+  void testCreateFacilityWithInvalidCapacity() throws Exception {
+
+    when(facilityService.save(any())).thenThrow(new IllegalArgumentException("Facility must have a valid capacity digit greater than 0"));
+
+    mvc.perform(
+      post("/api/facility/admin/add")
+      .contentType(MediaType.APPLICATION_JSON)
+      .content(
+        "{\"name\": \"Facility 3\"," + 
+        "\"city\": \"Lisboa\"," +
+        "\"streetName\": \"Rua de Lisboa\"," + 
+        "\"postalCode\": \"1938-092\"," +
+        "\"phoneNumber\": \"823741291\"," +
+        "\"maxRoomsCapacity\": 0 }"
+      )
+    )
+    .andExpect(status().isBadRequest())
+    .andExpect(jsonPath("$").doesNotExist());
+
+    verify(facilityService, times(1)).save(any());
+
   }
 
 }

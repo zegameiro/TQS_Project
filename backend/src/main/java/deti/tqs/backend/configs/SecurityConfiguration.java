@@ -41,6 +41,7 @@ public class SecurityConfiguration {
   SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 
     String apiFacilityadmin = "/api/facility/admin/*";
+    String apiRoomadmin = "/api/room/admin/*";
 
     return httpSecurity
       .cors(cors -> cors.configurationSource(corsConfigurationSource()))
@@ -51,6 +52,10 @@ public class SecurityConfiguration {
         .requestMatchers(HttpMethod.POST, apiFacilityadmin).permitAll()
         .requestMatchers(HttpMethod.PUT, apiFacilityadmin).permitAll()
         .requestMatchers(HttpMethod.DELETE, apiFacilityadmin).permitAll()
+        .requestMatchers(HttpMethod.GET, "/api/room/*").permitAll()
+        .requestMatchers(HttpMethod.POST, apiRoomadmin).permitAll()
+        .requestMatchers(HttpMethod.PUT, apiRoomadmin).permitAll()
+        .requestMatchers(HttpMethod.DELETE, apiRoomadmin).permitAll()
         .requestMatchers(HttpMethod.GET, "/docs").permitAll()
         .requestMatchers(HttpMethod.GET, "/swagger-ui/*").permitAll()
         .requestMatchers(HttpMethod.GET, "/v3/api-docs/*").permitAll()

@@ -14,12 +14,12 @@ import deti.tqs.backend.models.Facility;
 import deti.tqs.backend.repositories.FacilityRepository;
 
 @DataJpaTest
-public class RetrieveFacilityTests {
+class RetrieveFacilityRepositoryTests {
 
   private FacilityRepository facilityRepository;
 
   @Autowired
-  RetrieveFacilityTests(FacilityRepository facilityRepository) {
+  RetrieveFacilityRepositoryTests(FacilityRepository facilityRepository) {
     this.facilityRepository = facilityRepository;
   }
 

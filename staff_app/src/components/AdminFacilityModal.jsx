@@ -45,7 +45,8 @@ export default function AdminFacilityModal({
 
   const editFacilityMutation = useMutation({
     mutationKey: ["editFacility"],
-    mutationFn: (facilityData) => editFacility(axios, facilityData, facilityData.id),
+    mutationFn: (facilityData) =>
+      editFacility(axios, facilityData, facilityData.id),
     onSuccess: () => {
       queryClient.refetchQueries("allFacilities")
     },
@@ -188,7 +189,27 @@ export default function AdminFacilityModal({
                 </span>
               )}
             </div>
-
+            <div>
+              <div className="mb-2 block">
+                <Label htmlFor="maxRoomsCapacity" value="Room capacity" />
+              </div>
+              <TextInput
+                {...register("maxRoomsCapacity", {
+                  required: "This field is required",
+                  pattern: {
+                    value: /^\d+$/,
+                    message: "Max rooms capacity must be a number",
+                  },
+                })}
+                id="maxRoomsCapacity"
+                placeholder="The maximum number of rooms the facility can have"
+              />
+              {errors.phoneNumber && (
+                <span className="text-red-500">
+                  {errors.phoneNumber?.message}
+                </span>
+              )}
+            </div>
             <div className="flex flex-row mt-4 space-x-5">
               <Button type="submit">
                 {mode === "edit" ? "Save Changes" : "Create Facility"}
