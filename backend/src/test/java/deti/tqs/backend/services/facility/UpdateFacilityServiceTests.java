@@ -24,7 +24,7 @@ import deti.tqs.backend.services.FacilityService;
 import jakarta.persistence.EntityNotFoundException;
 
 @ExtendWith(MockitoExtension.class)
-public class UpdateFacilityServiceTests {
+class UpdateFacilityServiceTests {
 
   @Mock
   private FacilityRepository facilityRepository;
@@ -139,7 +139,9 @@ public class UpdateFacilityServiceTests {
 
     when(facilityRepository.findById(fac1.getId())).thenReturn(fac1);
 
-    assertThatThrownBy(() -> facilityService.update(f, fac1.getId()))
+    long id = fac1.getId();
+
+    assertThatThrownBy(() -> facilityService.update(f, id))
       .isInstanceOf(IllegalArgumentException.class)
       .hasMessage("Facility must have a valid capacity digit greater than 0");
 

@@ -24,7 +24,7 @@ import deti.tqs.backend.repositories.FacilityRepository;
 import deti.tqs.backend.services.FacilityService;
 
 @ExtendWith(MockitoExtension.class)
-public class DeleteFacilityServiceTests {
+class DeleteFacilityServiceTests {
 
   @Mock
   private FacilityRepository facilityRepository;

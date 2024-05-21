@@ -22,7 +22,7 @@ import deti.tqs.backend.repositories.FacilityRepository;
 import deti.tqs.backend.services.FacilityService;
 
 @ExtendWith(MockitoExtension.class)
-public class SearchFacilityServiceTests {
+class SearchFacilityServiceTests {
   
   @Mock
   private FacilityRepository facilityRepository;
