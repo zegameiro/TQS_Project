@@ -22,7 +22,7 @@ import io.restassured.RestAssured;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableAutoConfiguration(exclude = { SecurityAutoConfiguration.class })
 @TestInstance(Lifecycle.PER_CLASS)
-public class UpdateFacilityTestsIT {
+class UpdateFacilityTestsIT {
 
   private final static String BASE_URL = "http://localhost/api";
 

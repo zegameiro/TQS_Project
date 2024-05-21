@@ -92,7 +92,7 @@ class CreateRoomServiceTests {
 
   @Test
   @DisplayName("When saving a valid Room, it should return the saved Room")
-  void saveValidRoom() throws NoSuchFieldException {
+  void saveValidRoom() throws Exception {
     
     when(facilityRepository.findById(anyLong())).thenReturn(f1);
     when(roomRepository.findByNameAndFacilityId(anyString(), anyLong())).thenReturn(null);
@@ -113,8 +113,10 @@ class CreateRoomServiceTests {
     
     when(facilityRepository.findById(anyLong())).thenReturn(f1);
     when(roomRepository.findByNameAndFacilityId(anyString(), anyLong())).thenReturn(r1);
+
+    long id = f1.getId();
     
-    assertThatThrownBy(() -> roomService.save(r3, f1.getId()))
+    assertThatThrownBy(() -> roomService.save(r3, id))
       .isInstanceOf(EntityExistsException.class)
       .hasMessage("Room with this name already exists in this facility");
 
@@ -125,9 +127,11 @@ class CreateRoomServiceTests {
 
   @Test
   @DisplayName("When saving a Room with missing fields, it should return null")
-  void saveRoomWithMissingFields() throws NoSuchFieldException {
+  void saveRoomWithMissingFields() throws Exception {
     
-    assertThatThrownBy(() -> roomService.save(r2, f2.getId()))
+    long id = f2.getId();
+
+    assertThatThrownBy(() -> roomService.save(r2, id))
       .isInstanceOf(NoSuchFieldException.class)
       .hasMessage("Room must have a name");
 
@@ -142,8 +146,10 @@ class CreateRoomServiceTests {
   void saveRoomToNonExistingFacility() {
     
     when(facilityRepository.findById(anyLong())).thenReturn(null);
+
+    long id = f1.getId();
     
-    assertThatThrownBy(() -> roomService.save(r1, f1.getId()))
+    assertThatThrownBy(() -> roomService.save(r1, id))
       .isInstanceOf(EntityNotFoundException.class)
       .hasMessage("Facility does not exist");
 
@@ -155,12 +161,14 @@ class CreateRoomServiceTests {
 
   @Test
   @DisplayName("When saving a Room with an invalid chairs capacity, it should return null")
-  void saveRoomWithInvalidChairsCapacity() throws NoSuchFieldException {
+  void saveRoomWithInvalidChairsCapacity() throws Exception {
     
     r2.setName("Room 2");
     r2.setMaxChairsCapacity(0);
 
-    assertThatThrownBy(() -> roomService.save(r2, f1.getId()))
+    long id = f1.getId();
+
+    assertThatThrownBy(() -> roomService.save(r2, id))
       .isInstanceOf(NoSuchFieldException.class)
       .hasMessage("Room must have a valid capacity value greater than 0");
 
@@ -172,7 +180,7 @@ class CreateRoomServiceTests {
 
   @Test
   @DisplayName("When saving a Room in a facility that already has the maximum number of rooms filled, it should return null")
-  void saveRoomInFullCapacityFacility() throws NoSuchFieldException {
+  void saveRoomInFullCapacityFacility() throws Exception {
     
     f1.setMaxRoomsCapacity(1);
 
@@ -181,7 +189,9 @@ class CreateRoomServiceTests {
 
     f1.setRooms(List.of(r1));
 
-    assertThatThrownBy(() -> roomService.save(r3, f1.getId()))
+    long id = f1.getId();
+
+    assertThatThrownBy(() -> roomService.save(r3, id))
       .isInstanceOf(IllegalStateException.class)
       .hasMessage("Facility is at full capacity");
 

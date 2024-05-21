@@ -10,8 +10,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.io.IOException;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,7 +31,7 @@ import jakarta.persistence.EntityNotFoundException;
 
 @WebMvcTest(RoomController.class)
 @AutoConfigureMockMvc(addFilters = false)
-public class CreateRoomControllerTests {
+class CreateRoomControllerTests {
   
   private MockMvc mvc;
 
@@ -85,7 +83,7 @@ public class CreateRoomControllerTests {
 
   @Test
   @DisplayName("Create a room with success")
-  void createRoomWithSuccess() throws IOException, Exception {
+  void createRoomWithSuccess() throws Exception {
 
     when(roomService.save(any(), anyLong())).thenReturn(r1);
 
@@ -105,7 +103,7 @@ public class CreateRoomControllerTests {
 
   @Test
   @DisplayName("Create a room with a name that already exists in a facility")
-  void createRoomWithExistingName() throws IOException, Exception {
+  void createRoomWithExistingName() throws Exception {
     
     when(roomService.save(any(), anyLong())).thenThrow(new EntityExistsException("Room with this name already exists in this facility"));
 
@@ -122,7 +120,7 @@ public class CreateRoomControllerTests {
 
   @Test
   @DisplayName("Create a room without a name")
-  void createRoomWithoutName() throws IOException, Exception {
+  void createRoomWithoutName() throws Exception {
     
     when(roomService.save(any(), anyLong())).thenThrow(new NoSuchFieldException("Room must have a name"));
 
@@ -139,7 +137,7 @@ public class CreateRoomControllerTests {
 
   @Test
   @DisplayName("Create a room with an invalid capacity")
-  void createRoomWithInvalidCapacity() throws IOException, Exception {
+  void createRoomWithInvalidCapacity() throws Exception {
     
     when(roomService.save(any(), anyLong())).thenThrow(new NoSuchFieldException("Room must have a valid capacity value greater than 0"));
 
@@ -156,7 +154,7 @@ public class CreateRoomControllerTests {
 
   @Test
   @DisplayName("Create a room to a facility that does not exists")
-  void createRoomToNonExistingFacility() throws IOException, Exception {
+  void createRoomToNonExistingFacility() throws Exception {
     
     when(roomService.save(any(), anyLong())).thenThrow(new EntityNotFoundException("Facility does not exist"));
 
@@ -173,7 +171,7 @@ public class CreateRoomControllerTests {
 
   @Test
   @DisplayName("Create a room in a facility that already has the maximum number of rooms filled")
-  void createRoomInFullFacility() throws IOException, Exception {
+  void createRoomInFullFacility() throws Exception {
     
     when(roomService.save(any(), anyLong())).thenThrow(new IllegalStateException("Facility is at full capacity"));
 

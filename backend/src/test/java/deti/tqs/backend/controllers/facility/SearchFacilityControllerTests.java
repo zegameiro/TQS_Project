@@ -26,7 +26,7 @@ import deti.tqs.backend.services.FacilityService;
 
 @WebMvcTest(FacilityController.class)
 @AutoConfigureMockMvc(addFilters = false)
-public class SearchFacilityControllerTests {
+class SearchFacilityControllerTests {
 
   private MockMvc mvc;
 

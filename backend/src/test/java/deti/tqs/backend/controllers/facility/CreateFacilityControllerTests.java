@@ -28,7 +28,7 @@ import jakarta.persistence.EntityExistsException;
 
 @WebMvcTest(FacilityController.class)
 @AutoConfigureMockMvc(addFilters = false)
-public class CreateFacilityControllerTests {
+class CreateFacilityControllerTests {
   
   private MockMvc mvc;
 
