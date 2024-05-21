@@ -1,9 +1,8 @@
 import { useMutation, useQuery } from "@tanstack/react-query"
-import { Accordion, Button, Table } from "flowbite-react"
+import { Button, Table } from "flowbite-react"
 import { useState } from "react"
 import { FaEdit, FaTrashAlt } from "react-icons/fa"
-import { IoIosAddCircle } from "react-icons/io"
-import { IoAdd } from "react-icons/io5"
+import { IoIosAddCircle, IoMdAdd } from "react-icons/io"
 import { deleteFacility } from "../../actions/deleteActions"
 import { getAllFacilities } from "../../actions/getActions"
 import axios from "../../api"
@@ -65,36 +64,34 @@ export default function AdminFacilitiesTable() {
               key={facility.id}
               className="bg-white dark:border-gray-700 dark:bg-gray-800"
             >
-              <Accordion>
-                <Accordion.Panel>
-                  <Accordion.Title>
-                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                      {facility.id}
-                    </Table.Cell>
-                    <Table.Cell>{facility.name}</Table.Cell>
-                    <Table.Cell>{facility.city}</Table.Cell>
-                    <Table.Cell>{facility.streetName}</Table.Cell>
-                    <Table.Cell>{facility.postalCode}</Table.Cell>
-                    <Table.Cell>{facility.phoneNumber}</Table.Cell>
-                  </Accordion.Title>
-                  <Accordion.Content>
-                    <div className="flex flex-wrap gap-2 my-5">
-                    <Button onClick={() => openEditFacilityModal(facility)}>
-                      <FaEdit />
-                    </Button>
-                    <Button onClick={() => openCreateRoomModal(facility.id)}>
-                      <IoAdd /> Add Room
-                    </Button>
-                    <Button
-                      className="btn-sm bg-red-500 items-center hover:bg-red-600"
-                      onClick={() => deleteFacilityMutation.mutate(facility.id)}
-                    >
-                      <FaTrashAlt />
-                    </Button>
-                    </div>
-                  </Accordion.Content>
-                </Accordion.Panel>
-              </Accordion>
+              <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                {facility.id}
+              </Table.Cell>
+              <Table.Cell>{facility.name}</Table.Cell>
+              <Table.Cell>{facility.city}</Table.Cell>
+              <Table.Cell>{facility.streetName}</Table.Cell>
+              <Table.Cell>{facility.postalCode}</Table.Cell>
+              <Table.Cell>{facility.phoneNumber}</Table.Cell>
+              <div className="flex flex-wrap gap-2 my-5">
+                <Button
+                  className="btn-sm"
+                  onClick={() => openCreateRoomModal(facility.id)}
+                >
+                  <IoMdAdd className="h-5 w-5" /> Add Room
+                </Button>
+                <Button
+                  className="btn-sm items-center"
+                  onClick={() => openEditFacilityModal(facility)}
+                >
+                  <FaEdit />
+                </Button>
+                <Button
+                  className="btn-sm bg-red-500 items-center hover:bg-red-600"
+                  onClick={() => deleteFacilityMutation.mutate(facility.id)}
+                >
+                  <FaTrashAlt />
+                </Button>
+              </div>
             </Table.Row>
           ))}
         </Table.Body>
