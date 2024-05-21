@@ -1,25 +1,34 @@
-import { useQuery, useMutation } from "@tanstack/react-query"
-import { Button, Table } from "flowbite-react"
+import { useMutation, useQuery } from "@tanstack/react-query"
+import { Accordion, Button, Table } from "flowbite-react"
 import { useState } from "react"
+import { FaEdit, FaTrashAlt } from "react-icons/fa"
 import { IoIosAddCircle } from "react-icons/io"
-import { getAllFacilities } from "../../actions/getActions"
+import { IoAdd } from "react-icons/io5"
 import { deleteFacility } from "../../actions/deleteActions"
+import { getAllFacilities } from "../../actions/getActions"
 import axios from "../../api"
 import AdminFacilityModal from "./AdminFacilityModal"
-import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import AdminRoomModal from "./AdminRoomModal"
 
 export default function AdminFacilitiesTable() {
-  const [isOpenModal, setIsOpenModal] = useState(false)
+  const [isOpenFacilityModal, setIsOpenFacilityModal] = useState(false)
   const [facilityData, setFacilityData] = useState(null)
+  const [isOpenRoomModal, setIsOpenRoomModal] = useState(false)
+  const [selectedFacilityID, setSelectedFacilityID] = useState(null)
 
-  const openEditModal = (data) => {
+  const openEditFacilityModal = (data) => {
     setFacilityData(data)
-    setIsOpenModal(true)
+    setIsOpenFacilityModal(true)
   }
 
-  const openCreateModal = () => {
+  const openCreateFacilityModal = () => {
     setFacilityData(null)
-    setIsOpenModal(true)
+    setIsOpenFacilityModal(true)
+  }
+
+  const openCreateRoomModal = (facilityID) => {
+    setSelectedFacilityID(facilityID)
+    setIsOpenRoomModal(true)
   }
 
   const allFacilities = useQuery({
@@ -30,13 +39,13 @@ export default function AdminFacilitiesTable() {
   const deleteFacilityMutation = useMutation({
     mutationKey: ["deleteFacility"],
     mutationFn: (id) => deleteFacility(axios, id),
-    onSuccess: () => allFacilities.refetch()
+    onSuccess: () => allFacilities.refetch(),
   })
 
   return (
     <>
       <div className="flex flex-wrap gap-2 my-5">
-        <Button onClick={openCreateModal}>
+        <Button onClick={openCreateFacilityModal}>
           Create facility
           <IoIosAddCircle className="ml-2 h-5 w-5" />
         </Button>
@@ -49,14 +58,6 @@ export default function AdminFacilitiesTable() {
           <Table.HeadCell>Street Name</Table.HeadCell>
           <Table.HeadCell>Postal Code</Table.HeadCell>
           <Table.HeadCell>Phone Number</Table.HeadCell>
-          <Table.HeadCell>Rooms</Table.HeadCell>
-          <Table.HeadCell>Reservations</Table.HeadCell>
-          <Table.HeadCell>
-            Edit
-          </Table.HeadCell>
-          <Table.HeadCell>
-            Delete
-          </Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
           {allFacilities.data?.map((facility) => (
@@ -64,35 +65,50 @@ export default function AdminFacilitiesTable() {
               key={facility.id}
               className="bg-white dark:border-gray-700 dark:bg-gray-800"
             >
-              <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                {facility.id}
-              </Table.Cell>
-              <Table.Cell>{facility.name}</Table.Cell>
-              <Table.Cell>{facility.city}</Table.Cell>
-              <Table.Cell>{facility.streetName}</Table.Cell>
-              <Table.Cell>{facility.postalCode}</Table.Cell>
-              <Table.Cell>{facility.phoneNumber}</Table.Cell>
-              <Table.Cell>{facility.rooms ?? "-"}</Table.Cell>
-              <Table.Cell>{facility.reservations ?? "-"}</Table.Cell>
-              <Table.Cell>
-                <Button onClick={() => openEditModal(facility)}>
-                  <FaEdit />
-                </Button>
-              </Table.Cell>
-              <Table.Cell>
-                <Button className="btn-sm bg-red-500 items-center hover:bg-red-600" onClick={() => deleteFacilityMutation.mutate(facility.id)}>
-                  <FaTrashAlt />
-                </Button>
-              </Table.Cell>
+              <Accordion>
+                <Accordion.Panel>
+                  <Accordion.Title>
+                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                      {facility.id}
+                    </Table.Cell>
+                    <Table.Cell>{facility.name}</Table.Cell>
+                    <Table.Cell>{facility.city}</Table.Cell>
+                    <Table.Cell>{facility.streetName}</Table.Cell>
+                    <Table.Cell>{facility.postalCode}</Table.Cell>
+                    <Table.Cell>{facility.phoneNumber}</Table.Cell>
+                  </Accordion.Title>
+                  <Accordion.Content>
+                    <div className="flex flex-wrap gap-2 my-5">
+                    <Button onClick={() => openEditFacilityModal(facility)}>
+                      <FaEdit />
+                    </Button>
+                    <Button onClick={() => openCreateRoomModal(facility.id)}>
+                      <IoAdd /> Add Room
+                    </Button>
+                    <Button
+                      className="btn-sm bg-red-500 items-center hover:bg-red-600"
+                      onClick={() => deleteFacilityMutation.mutate(facility.id)}
+                    >
+                      <FaTrashAlt />
+                    </Button>
+                    </div>
+                  </Accordion.Content>
+                </Accordion.Panel>
+              </Accordion>
             </Table.Row>
           ))}
         </Table.Body>
       </Table>
       <AdminFacilityModal
-        openModal={isOpenModal}
-        setOpenModal={setIsOpenModal}
+        openModal={isOpenFacilityModal}
+        setOpenModal={setIsOpenFacilityModal}
         facilityData={facilityData}
         mode={facilityData ? "edit" : "create"}
+      />
+      <AdminRoomModal
+        openModal={isOpenRoomModal}
+        setOpenModal={setIsOpenRoomModal}
+        facilityID={selectedFacilityID}
       />
     </>
   )
