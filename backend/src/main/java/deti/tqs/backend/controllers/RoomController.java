@@ -96,7 +96,7 @@ public class RoomController {
 
     }
 
-    return ResponseEntity.status(HttpStatus.FOUND).body(foundRoom);
+    return ResponseEntity.status(HttpStatus.OK).body(foundRoom);
 
   }
 
@@ -107,16 +107,14 @@ public class RoomController {
 
     Iterable<Room> rooms = roomService.findAllRooms();
 
-    return ResponseEntity.status(HttpStatus.FOUND).body(rooms);
+    return ResponseEntity.status(HttpStatus.OK).body(rooms);
 
   }
 
   @GetMapping("/search")
-  public ResponseEntity<List<Room>> searchRoom(@RequestParam(required = false) String facilityName, @RequestParam(required = true) String facilityID) throws Exception {
+  public ResponseEntity<List<Room>> searchRoom(@RequestParam(required = false) String roomName, @RequestParam(required = false) String facilityID) throws Exception {
 
     logger.info("Searching for room");
-
-    logger.info("Facility name: " + facilityName);
 
     long facilityIDLong = Long.parseLong(facilityID);
     List<Room> foundRoom = null;
@@ -125,7 +123,7 @@ public class RoomController {
 
     try {
 
-      foundRoom = roomService.searchByFacilityInfo(facilityName, facilityIDLong);
+      foundRoom = roomService.searchByFacilityInfo(roomName, facilityIDLong);
       logger.info("Room found", foundRoom);
 
     } catch (EntityNotFoundException e) {
@@ -140,9 +138,9 @@ public class RoomController {
 
     }
 
-    return ResponseEntity.status(HttpStatus.FOUND).body(foundRoom);
+    return ResponseEntity.status(HttpStatus.OK).body(foundRoom);
 
-  }
+  } 
 
   @DeleteMapping("/admin/delete/{id}")
   public ResponseEntity<Void> deleteRoom(@PathVariable(required = true) long id) {

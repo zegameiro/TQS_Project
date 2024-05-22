@@ -96,7 +96,7 @@ class SearchRoomControllerTests {
     when(roomService.findById(anyLong())).thenReturn(r1);
 
     mvc.perform(get("/api/room/1").contentType("application/json"))
-      .andExpect(status().isFound())
+      .andExpect(status().isOk())
       .andExpect(jsonPath("$.name", is("Room 1")))
       .andExpect(jsonPath("$.maxChairsCapacity", is(10)));
 
@@ -124,7 +124,7 @@ class SearchRoomControllerTests {
     when(roomService.findAllRooms()).thenReturn(List.of(r1, r2, r3));
 
     mvc.perform(get("/api/room/all").contentType("application/json"))
-      .andExpect(status().isFound())
+      .andExpect(status().isOk())
       .andExpect(jsonPath("$[0].name", is("Room 1")))
       .andExpect(jsonPath("$[0].maxChairsCapacity", is(10)))
       .andExpect(jsonPath("$[1].name", is("Room 2")))
@@ -164,7 +164,7 @@ class SearchRoomControllerTests {
       .contentType("application/json")
       .param("facilityID", "1")
     )
-      .andExpect(status().isFound())
+      .andExpect(status().isOk())
       .andExpect(jsonPath("$[0].name", is("Room 1")))
       .andExpect(jsonPath("$[0].maxChairsCapacity", is(10)))
       .andExpect(jsonPath("$[1].name", is("Room 2")))
@@ -202,10 +202,10 @@ class SearchRoomControllerTests {
     mvc.perform(
       get("/api/room/search")
       .contentType("application/json")
-      .param("facilityName", "Facility 1")
+      .param("roomName", "Facility 1")
       .param("facilityID", "0")
     )
-      .andExpect(status().isFound())
+      .andExpect(status().isOk())
       .andExpect(jsonPath("$[0].name", is("Room 1")))
       .andExpect(jsonPath("$[0].maxChairsCapacity", is(10)))
       .andExpect(jsonPath("$[1].name", is("Room 2")))
@@ -226,7 +226,7 @@ class SearchRoomControllerTests {
     mvc.perform(
       get("/api/room/search")
       .contentType("application/json")
-      .param("facilityName", "Facility 1029")
+      .param("roomName", "Facility 1029")
       .param("facilityID", "0")
     )
       .andExpect(status().isNotFound());
@@ -244,10 +244,10 @@ class SearchRoomControllerTests {
     mvc.perform(
       get("/api/room/search")
       .contentType("application/json")
-      .param("facilityName", "Room 1")
+      .param("roomName", "Room 1")
       .param("facilityID", "1")
     )
-      .andExpect(status().isFound())
+      .andExpect(status().isOk())
       .andExpect(jsonPath("$[0].name", is("Room 1")))
       .andExpect(jsonPath("$[0].maxChairsCapacity", is(10)));
 
@@ -264,7 +264,7 @@ class SearchRoomControllerTests {
     mvc.perform(
       get("/api/room/search")
       .contentType("application/json")
-      .param("facilityName", "Room 1029")
+      .param("roomName", "Room 1029")
       .param("facilityID", "1029")
     )
       .andExpect(status().isNotFound());

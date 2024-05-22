@@ -2,6 +2,8 @@ package deti.tqs.backend.models;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -34,6 +36,7 @@ public class Room {
   private int maxChairsCapacity;
   
   @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+  @JsonIgnore
   private List<Chair> chairs;
 
   @ManyToOne

@@ -36,8 +36,13 @@ class CreateRoomTestsIT {
   @LocalServerPort
   private int port;
 
-  @Autowired
   private FacilityRepository facilityRepository;
+
+  @Autowired
+  CreateRoomTestsIT(FacilityRepository facilityRepository) {
+    this.facilityRepository = facilityRepository;
+  }
+
 
   /*
    * NECESSARY TESTS

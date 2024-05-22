@@ -2,6 +2,8 @@ package deti.tqs.backend.models;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -44,9 +46,11 @@ public class Facility {
   private int maxRoomsCapacity;
 
   @OneToMany(mappedBy = "facility", cascade = CascadeType.ALL)
+  @JsonIgnore
   private List<Room> rooms;
 
   @OneToMany(mappedBy = "facility", cascade = CascadeType.ALL)
+  @JsonIgnore
   private List<Reservation> reservations;
 
 }
