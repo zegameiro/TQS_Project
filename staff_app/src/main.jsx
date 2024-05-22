@@ -6,6 +6,7 @@ import "./index.css"
 import AdminPage from "./routes/AdminPage.jsx"
 import Login from "./routes/Login.jsx"
 import WorkerPage from "./routes/WorkerPage.jsx"
+import FacilityPage from "./routes/FacilityPage.jsx"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 
 const router = createBrowserRouter([
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
   {
     path: "/admin",
     element: <AdminPage />,
+  },
+  {
+    path: "/facility/:id",
+    element: <FacilityPage />,
   },
   {
     path: "/dashboard",
