@@ -15,7 +15,7 @@ public class ChairService {
         this.chairRepository = chairRepository;
     }
 
-    public Chair addChair(Chair chair) throws EntityExistsException, IllegalAccessException, NoSuchFieldException, IllegalArgumentException {
+    public Chair addChair(Chair chair) throws EntityExistsException {
         if (chairRepository.findById(chair.getId()) != null) {
             throw new EntityExistsException("Chair already exists");
         }

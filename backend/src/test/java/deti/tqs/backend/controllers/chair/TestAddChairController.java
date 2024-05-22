@@ -1,4 +1,5 @@
 package deti.tqs.backend.controllers.chair;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +13,7 @@ import org.springframework.http.MediaType;
 
 import deti.tqs.backend.JsonUtils;
 import deti.tqs.backend.controllers.ChairController;
+import deti.tqs.backend.dtos.ChairSchema;
 import deti.tqs.backend.models.Chair;
 import deti.tqs.backend.models.Facility;
 import deti.tqs.backend.models.Room;
@@ -48,16 +50,25 @@ public class TestAddChairController {
 
     @Test
     void testWhenPostChairThenCreateChair() throws Exception {
-        Chair chair = new Chair();
-        chair.setRoom(room);
+        ChairSchema chairSchema = new ChairSchema(
+            "Good Chair",
+            true,
+            room
+        );
 
-        when(chairService.addChair(chair)).thenReturn(chair);
+        Chair chair = new Chair();
+        chair.setName(chairSchema.name());
+        chair.setAvailable(chairSchema.available());
+        chair.setRoom(chairSchema.room());
+
+
+        when(chairService.addChair(any())).thenReturn(chair);
         mvc.perform(
             post("/api/chair")
             .contentType(MediaType.APPLICATION_JSON)
             .content(JsonUtils.toJson(chair))
         )
-            .andExpect(status().isOk())
+            .andExpect(status().isCreated())
             .andExpect(jsonPath("$.name", is("Good Chair")));
     }
 
