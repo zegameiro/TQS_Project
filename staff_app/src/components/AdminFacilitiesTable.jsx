@@ -2,18 +2,16 @@ import { useMutation, useQuery } from "@tanstack/react-query"
 import { Button, Table } from "flowbite-react"
 import { useState } from "react"
 import { FaEdit, FaTrashAlt } from "react-icons/fa"
-import { IoIosAddCircle, IoMdAdd } from "react-icons/io"
+import { IoIosAddCircle } from "react-icons/io"
+import { Link } from "react-router-dom"
 import { deleteFacility } from "../../actions/deleteActions"
 import { getAllFacilities } from "../../actions/getActions"
 import axios from "../../api"
 import AdminFacilityModal from "./AdminFacilityModal"
-import AdminRoomModal from "./AdminRoomModal"
 
 export default function AdminFacilitiesTable() {
   const [isOpenFacilityModal, setIsOpenFacilityModal] = useState(false)
   const [facilityData, setFacilityData] = useState(null)
-  const [isOpenRoomModal, setIsOpenRoomModal] = useState(false)
-  const [selectedFacilityID, setSelectedFacilityID] = useState(null)
 
   const openEditFacilityModal = (data) => {
     setFacilityData(data)
@@ -23,11 +21,6 @@ export default function AdminFacilitiesTable() {
   const openCreateFacilityModal = () => {
     setFacilityData(null)
     setIsOpenFacilityModal(true)
-  }
-
-  const openCreateRoomModal = (facilityID) => {
-    setSelectedFacilityID(facilityID)
-    setIsOpenRoomModal(true)
   }
 
   const allFacilities = useQuery({
@@ -57,6 +50,7 @@ export default function AdminFacilitiesTable() {
           <Table.HeadCell>Street Name</Table.HeadCell>
           <Table.HeadCell>Postal Code</Table.HeadCell>
           <Table.HeadCell>Phone Number</Table.HeadCell>
+          <Table.HeadCell>Rooms and Reservations</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
           {allFacilities.data?.map((facility) => (
@@ -72,13 +66,15 @@ export default function AdminFacilitiesTable() {
               <Table.Cell>{facility.streetName}</Table.Cell>
               <Table.Cell>{facility.postalCode}</Table.Cell>
               <Table.Cell>{facility.phoneNumber}</Table.Cell>
-              <div className="flex flex-wrap gap-2 my-5">
-                <Button
-                  className="btn-sm"
-                  onClick={() => openCreateRoomModal(facility.id)}
+              <Table.Cell>
+                <Link
+                  className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
+                  to={`/admin/facility/${facility.id}`}
                 >
-                  <IoMdAdd className="h-5 w-5" /> Add Room
-                </Button>
+                  View rooms and reservations
+                </Link>
+              </Table.Cell>
+              <div className="flex flex-wrap gap-2 my-5">
                 <Button
                   className="btn-sm items-center"
                   onClick={() => openEditFacilityModal(facility)}
@@ -101,11 +97,6 @@ export default function AdminFacilitiesTable() {
         setOpenModal={setIsOpenFacilityModal}
         facilityData={facilityData}
         mode={facilityData ? "edit" : "create"}
-      />
-      <AdminRoomModal
-        openModal={isOpenRoomModal}
-        setOpenModal={setIsOpenRoomModal}
-        facilityID={selectedFacilityID}
       />
     </>
   )

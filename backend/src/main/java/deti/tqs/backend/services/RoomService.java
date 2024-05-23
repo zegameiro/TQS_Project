@@ -1,5 +1,8 @@
 package deti.tqs.backend.services;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -59,6 +62,85 @@ public class RoomService {
     room.setFacility(found);
 
     return roomRepository.save(room);
+
+  }
+
+  public Room findById(long id) {
+
+    Room found = roomRepository.findById(id);
+
+    if (found == null)
+      throw new EntityNotFoundException("Room does not exist");
+
+    return found;
+
+  }
+
+  public List<Room> findAllRooms() {
+    return roomRepository.findAll();
+  } 
+
+  public Room findByName(String name) {
+
+    Room found = roomRepository.findByName(name);
+
+    if (found == null)
+      throw new EntityNotFoundException("Room does not exist");
+
+    return found;
+  }
+
+  public List<Room> searchByFacilityInfo(String name, long facilityID) throws Exception {
+
+    List<Room> found = new ArrayList<>();
+
+    // both parameters are null then throw exception
+
+    if(name == null && facilityID == 0)
+      throw new NoSuchFieldException("At least one parameter must be provided");
+
+    // if both parameters are provided then search by both and it should only find one
+
+    else if(name != null && facilityID != 0) {
+
+      Room r = roomRepository.findByNameAndFacilityId(name, facilityID);
+
+      if(r == null)
+        throw new EntityNotFoundException("Room does not exist");
+
+      found.add(r);
+
+    // if only the name is provided then search by facility name
+
+    } else if (name != null && facilityID == 0) {
+
+      found = roomRepository.findByFacilityName(name);
+
+      if (found.size() == 0)
+        throw new EntityNotFoundException("Room does not exist");
+    
+    // else search by facility ID
+    } else {
+
+      found = roomRepository.findByFacilityId(facilityID);
+
+      if (found.size() == 0)
+        throw new EntityNotFoundException("Room does not exist");
+
+    }
+
+    return found;
+
+  }
+
+  public void deleteRoom(long roomID) {
+
+    Room found = roomRepository.findById(roomID);
+
+    if (found == null)
+      throw new EntityNotFoundException("Room does not exist");
+
+    roomRepository.delete(found);
 
   }
 
