@@ -73,7 +73,7 @@ class DeleteRoomControllerTests {
     
     doNothing().when(roomService).deleteRoom(anyLong());
 
-    mvc.perform(delete("/api/room/admin/delete/" + r1.getId()))
+    mvc.perform(delete("/api/room/admin/delete?id=" + r1.getId()))
       .andExpect(status().isOk());
 
     verify(roomService, times(1)).deleteRoom(r1.getId());
@@ -86,7 +86,7 @@ class DeleteRoomControllerTests {
     
     doThrow(new EntityNotFoundException("Room does not exist")).when(roomService).deleteRoom(anyLong());
 
-    mvc.perform(delete("/api/room/admin/delete/" + r1.getId()))
+    mvc.perform(delete("/api/room/admin/delete?id=" + r1.getId()))
       .andExpect(status().isNotFound());
 
     verify(roomService, times(1)).deleteRoom(r1.getId());

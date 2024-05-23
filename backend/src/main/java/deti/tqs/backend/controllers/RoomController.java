@@ -142,8 +142,8 @@ public class RoomController {
 
   } 
 
-  @DeleteMapping("/admin/delete/{id}")
-  public ResponseEntity<Void> deleteRoom(@PathVariable(required = true) long id) {
+  @DeleteMapping("/admin/delete")
+  public ResponseEntity<Void> deleteRoom(@RequestParam(required = true) long id) {
 
     logger.info("Deleting room");
 

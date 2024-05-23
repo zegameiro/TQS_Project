@@ -55,10 +55,6 @@ public class DeleteRoomTestsIT {
   @BeforeAll
   void setUp() {
 
-    roomRepository.deleteAll();
-
-    facilityRepository.deleteAll();
-
     RestAssured.baseURI = BASE_URL;
     RestAssured.port = port;
 
@@ -87,7 +83,7 @@ public class DeleteRoomTestsIT {
       .contentType("application/json")
       .port(port)
     .when()
-      .delete("/room/admin/delete/" + r.getId())
+      .delete("/room/admin/delete?id=" + r.getId())
     .then()
       .statusCode(200);
 
@@ -101,7 +97,7 @@ public class DeleteRoomTestsIT {
       .contentType("application/json")
       .port(port)
     .when()
-      .delete("/room/admin/delete/2")
+      .delete("/room/admin/delete?id=2")
     .then()
       .statusCode(404);
 
