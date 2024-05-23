@@ -20,7 +20,7 @@ const router = createBrowserRouter([
     element: <AdminPage />,
   },
   {
-    path: "/facility/:id",
+    path: "/admin/facility/:id",
     element: <FacilityPage />,
   },
   {

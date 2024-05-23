@@ -30,8 +30,7 @@ export default function AdminRoomModal({ openModal, setOpenModal, facilityID }) 
     mutationKey: ["addRoom"],
     mutationFn: (roomData) => addNewRoom(axios, roomData),
     onSuccess: () => {
-        // TODO: Refetch all rooms
-    //   queryClient.refetchQueries("allRooms")
+      queryClient.refetchQueries("roomsOfFacility", "allRooms")
     },
   })
 

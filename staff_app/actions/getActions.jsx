@@ -4,6 +4,12 @@ export const getAllFacilities = async (axios) => {
   })
 }
 
+export const getFacilityById = async (axios, id) => {
+  return axios.get(`facility/${id}`).then((res) => {
+    return res.data
+  })
+}
+
 export const getAllRooms = async (axios) => {
   return axios.get("room/all").then((res) => {
     return res.data
