@@ -50,9 +50,17 @@ public class TestAddChairRepository {
         facilityRepository.deleteAll();        
 
         Facility facility = new Facility();
+        facility.setName("Facility");
+        facility.setCity("Aveiro");
+        facility.setStreetName("Street");
+        facility.setPostalCode("1234-567");
+        facility.setPhoneNumber("123456789");
+        facility.setMaxRoomsCapacity(10);
         facilityRepository.save(facility);
 
         room = new Room();
+        room.setName("Room");
+        room.setMaxChairsCapacity(5);
         room.setFacility(facility);
         roomRepository.save(room);
     }
