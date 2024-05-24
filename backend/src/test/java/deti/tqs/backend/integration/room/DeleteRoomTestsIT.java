@@ -23,7 +23,7 @@ import io.restassured.RestAssured;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableAutoConfiguration(exclude = { SecurityAutoConfiguration.class })
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class DeleteRoomTestsIT {
+class DeleteRoomTestsIT {
  
   private final static String BASE_URL = "http://localhost/api";
 
