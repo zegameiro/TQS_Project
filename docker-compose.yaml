@@ -138,7 +138,6 @@ services:
 
 volumes:
   pg_data:
-  modules:
 
 networks:
 
