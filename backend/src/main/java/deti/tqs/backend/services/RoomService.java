@@ -74,7 +74,7 @@ public class RoomService {
 
     // Check if the name is missing
     
-    if(room.getName() == null || room.getName().length() == 0) 
+    if(room.getName().length() == 0) 
       throw new NoSuchFieldException("Room must have a name");
 
     // Check if the capacity has a valid value

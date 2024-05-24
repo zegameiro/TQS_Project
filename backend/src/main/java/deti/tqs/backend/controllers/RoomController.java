@@ -166,6 +166,14 @@ public class RoomController {
 
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 
+    } catch (IllegalStateException e) {
+
+      return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(null);
+
+    } catch (EntityExistsException e) {
+
+      return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+
     }
 
     return ResponseEntity.status(HttpStatus.OK).body(updatedRoom);
