@@ -3,6 +3,8 @@ package deti.tqs.backend.services;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,8 @@ import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class RoomService {
+
+  private static final Logger logger = LoggerFactory.getLogger(RoomService.class);
   
   private RoomRepository roomRepository;
   private FacilityRepository facilityRepository;
@@ -62,6 +66,60 @@ public class RoomService {
     room.setFacility(found);
 
     return roomRepository.save(room);
+
+  }
+
+  public Room updateRoom(Room room, long roomID, long newFacilityID) throws NoSuchFieldException {
+
+    Room found = roomRepository.findById(roomID);
+
+    if (found == null)
+      throw new EntityNotFoundException("Room does not exist");
+
+    // Check if the name is missing
+    
+    if(room.getName() == null || room.getName().length() == 0) 
+      throw new NoSuchFieldException("Room must have a name");
+
+    // Check if the capacity has a valid value
+
+    if(room.getMaxChairsCapacity() <= 0)
+      throw new NoSuchFieldException("Room must have a valid capacity value greater than 0"); 
+
+    Facility newFacility = null;
+
+    if (newFacilityID != 0) {
+
+      newFacility = facilityRepository.findById(newFacilityID);
+
+      logger.debug("New facility: " + newFacility);
+
+      if (newFacility == null)
+        throw new EntityNotFoundException("Facility does not exist");
+
+      // Check if the facility is at full capacity
+
+      int size = newFacility.getRooms() == null ? 0 : newFacility.getRooms().size();
+      
+      if(newFacility.getMaxRoomsCapacity() <= size)
+        throw new IllegalStateException("Facility is at full capacity");
+
+    }
+
+    // Check if a room with the same name already exists in this facility
+
+    long facID =  newFacilityID != 0 ? newFacilityID : found.getFacility().getId();
+
+    Room roomSameName = roomRepository.findByNameAndFacilityId(room.getName(), facID);
+
+    if (roomSameName != null)
+      throw new EntityExistsException("Room with this name already exists in this facility");
+    
+    found.setName(room.getName());
+    found.setMaxChairsCapacity(room.getMaxChairsCapacity());
+    found.setFacility(newFacility != null ? newFacility : found.getFacility());
+
+    return roomRepository.save(found);
 
   }
 
