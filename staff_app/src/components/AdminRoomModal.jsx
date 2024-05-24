@@ -3,15 +3,24 @@ import { Button, Label, Modal, TextInput } from "flowbite-react"
 import PropTypes from "prop-types"
 import { useForm } from "react-hook-form"
 import { addNewRoom } from "../../actions/postActions"
+import { editRoom } from "../../actions/putActions"
 import axios from "../../api"
 
 AdminRoomModal.propTypes = {
   openModal: PropTypes.bool.isRequired,
   setOpenModal: PropTypes.func.isRequired,
   facilityID: PropTypes.number.isRequired,
+  mode: PropTypes.oneOf(["create", "edit"]).isRequired,
+  selectedRoom: PropTypes.object,
 }
 
-export default function AdminRoomModal({ openModal, setOpenModal, facilityID }) {
+export default function AdminRoomModal({
+  openModal,
+  setOpenModal,
+  facilityID,
+  mode,
+  selectedRoom,
+}) {
   const queryClient = useQueryClient()
 
   const {
@@ -34,10 +43,26 @@ export default function AdminRoomModal({ openModal, setOpenModal, facilityID }) 
     },
   })
 
+  const editRoomMutation = useMutation({
+    mutationKey: ["editRoom"],
+    mutationFn: (roomData) => console.log(roomData) & editRoom(axios, roomData, selectedRoom.id),
+    onSuccess: () => {
+      queryClient.refetchQueries("roomsOfFacility", "allRooms")
+    },
+  })
+
   const onSubmit = (data) => {
-    data.facilityID = facilityID
-    console.log(data)
-    addRoomMutation.mutate(data)
+    if (mode === "create") {
+
+      data.facilityID = facilityID
+      addRoomMutation.mutate(data)
+
+    } else if (mode === "edit") {
+
+      data.facilityID = 0
+      editRoomMutation.mutate(data)
+
+    }
     onCloseModal()
   }
 
@@ -47,7 +72,7 @@ export default function AdminRoomModal({ openModal, setOpenModal, facilityID }) 
       <Modal.Body>
         <div className="space-y-6">
           <h3 className="text-xl font-medium text-gray-900 dark:text-white">
-            Create a room
+            {mode === "create" ? "Create" : "Edit"} Room
           </h3>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div>
@@ -62,6 +87,7 @@ export default function AdminRoomModal({ openModal, setOpenModal, facilityID }) 
                 })}
                 id="name"
                 placeholder="The room's name"
+                defaultValue={selectedRoom?.name}
               />
               {errors.name && (
                 <span className="text-red-500">{errors.name?.message}</span>
@@ -79,6 +105,7 @@ export default function AdminRoomModal({ openModal, setOpenModal, facilityID }) 
                 })}
                 id="maxChairsCapacity"
                 placeholder="The maximum chair capacity of the room"
+                defaultValue={selectedRoom?.maxChairsCapacity}
               />
               {errors.maxChairsCapacity && (
                 <span className="text-red-500">
@@ -87,7 +114,7 @@ export default function AdminRoomModal({ openModal, setOpenModal, facilityID }) 
               )}
             </div>
             <div className="flex flex-row mt-4 space-x-5">
-              <Button type="submit">Create room</Button>
+              <Button type="submit">{mode === "create" ? "Create" : "Edit"} room</Button>
               <Button onClick={() => reset()}>Clear</Button>
             </div>
           </form>

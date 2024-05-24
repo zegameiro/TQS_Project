@@ -65,6 +65,62 @@ public class RoomService {
 
   }
 
+  public Room updateRoom(Room room, long roomID, long newFacilityID) throws NoSuchFieldException {
+
+    Room found = roomRepository.findById(roomID);
+
+    if (found == null)
+      throw new EntityNotFoundException("Room does not exist");
+
+    // Check if the name is missing
+    
+    if(room.getName().length() == 0) 
+      throw new NoSuchFieldException("Room must have a name");
+
+    // Check if the capacity has a valid value
+
+    if(room.getMaxChairsCapacity() <= 0)
+      throw new NoSuchFieldException("Room must have a valid capacity value greater than 0"); 
+
+    Facility newFacility = null;
+
+    if (newFacilityID != 0) {
+
+      newFacility = facilityRepository.findById(newFacilityID);
+
+      if (newFacility == null)
+        throw new EntityNotFoundException("Facility does not exist");
+
+      // Check if the facility is at full capacity
+
+      int size = newFacility.getRooms() == null ? 0 : newFacility.getRooms().size();
+      
+      if(newFacility.getMaxRoomsCapacity() <= size)
+        throw new IllegalStateException("Facility is at full capacity");
+
+    }
+
+    // Check if a room with the same name already exists in this facility
+
+    if (!found.getName().equals(room.getName())) {
+
+      long facID =  newFacilityID != 0 ? newFacilityID : found.getFacility().getId();
+
+      Room roomSameName = roomRepository.findByNameAndFacilityId(room.getName(), facID);
+
+      if (roomSameName != null)
+        throw new EntityExistsException("Room with this name already exists in this facility");
+        
+    }
+    
+    found.setName(room.getName());
+    found.setMaxChairsCapacity(room.getMaxChairsCapacity());
+    found.setFacility(newFacility != null ? newFacility : found.getFacility());
+
+    return roomRepository.save(found);
+
+  }
+
   public Room findById(long id) {
 
     Room found = roomRepository.findById(id);

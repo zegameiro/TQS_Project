@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query"
 import { Accordion, Button, Table, TableBody } from "flowbite-react"
 import PropTypes from "prop-types"
 import { useState } from "react"
-import { FaTrashAlt } from "react-icons/fa"
+import { FaEdit, FaTrashAlt } from "react-icons/fa"
 import { IoIosAddCircle } from "react-icons/io"
 import { deleteRoom } from "../../actions/deleteActions"
 import { getRoomsByFacilityID } from "../../actions/getActions"
@@ -15,6 +15,7 @@ AdminRoomsTable.propTypes = {
 
 export default function AdminRoomsTable({ facilityID }) {
   const [isOpenRoomModal, setIsOpenRoomModal] = useState(false)
+  const [selectedRoom, setSelectedRoom] = useState(null)
 
   const roomsOfFacility = useQuery({
     queryKey: ["roomsOfFacility"],
@@ -28,6 +29,12 @@ export default function AdminRoomsTable({ facilityID }) {
   })
 
   const openCreateRoomModal = () => {
+    setSelectedRoom(null)
+    setIsOpenRoomModal(true)
+  }
+
+  const openEditRoomModal = (roomID) => {
+    setSelectedRoom(roomsOfFacility.data.find((room) => room.id === roomID))
     setIsOpenRoomModal(true)
   }
 
@@ -73,6 +80,15 @@ export default function AdminRoomsTable({ facilityID }) {
                 </Table>
               )}
               <h3 className="pt-3 text-xl font-medium text-gray-900 dark:text-white">
+                Edit room:
+              </h3>
+              <Button
+                className="flex btn-sm items-center"
+                onClick={() => openEditRoomModal(room.id)}
+              >
+                <FaEdit />
+              </Button>
+              <h3 className="pt-3 text-xl font-medium text-gray-900 dark:text-white">
                 Delete room:
               </h3>
               <Button
@@ -89,6 +105,8 @@ export default function AdminRoomsTable({ facilityID }) {
         openModal={isOpenRoomModal}
         setOpenModal={setIsOpenRoomModal}
         facilityID={facilityID}
+        mode={selectedRoom ? "edit" : "create"}
+        selectedRoom={selectedRoom}
       />
     </>
   )

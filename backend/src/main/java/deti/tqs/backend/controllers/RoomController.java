@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -141,6 +142,43 @@ public class RoomController {
     return ResponseEntity.status(HttpStatus.OK).body(foundRoom);
 
   } 
+
+  @PutMapping("/admin/update")
+  public ResponseEntity<Room> updateRoom(@RequestBody(required = true) RoomSchema roomSchema, @RequestParam(required = true) long id) {
+
+    logger.info("Updating room");
+
+    Room room = new Room();
+    room.setName(roomSchema.name());
+    room.setMaxChairsCapacity(roomSchema.maxChairsCapacity());
+
+    Room updatedRoom = null;
+
+    try {
+      
+      updatedRoom = roomService.updateRoom(room, id, roomSchema.facilityID());
+      
+    } catch (EntityNotFoundException e) {
+
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+
+    } catch (NoSuchFieldException e) {
+
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+
+    } catch (IllegalStateException e) {
+
+      return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(null);
+
+    } catch (EntityExistsException e) {
+
+      return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+
+    }
+
+    return ResponseEntity.status(HttpStatus.OK).body(updatedRoom);
+
+  }
 
   @DeleteMapping("/admin/delete")
   public ResponseEntity<Void> deleteRoom(@RequestParam(required = true) long id) {
