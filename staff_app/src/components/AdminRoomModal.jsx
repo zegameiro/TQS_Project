@@ -27,7 +27,6 @@ export default function AdminRoomModal({
     register,
     handleSubmit,
     reset,
-    setValue,
     formState: { errors },
   } = useForm()
 
@@ -83,7 +82,7 @@ export default function AdminRoomModal({
                 })}
                 id="name"
                 placeholder="The room's name"
-                value={selectedRoom?.name}
+                defaultValue={selectedRoom?.name}
               />
               {errors.name && (
                 <span className="text-red-500">{errors.name?.message}</span>
@@ -101,7 +100,7 @@ export default function AdminRoomModal({
                 })}
                 id="maxChairsCapacity"
                 placeholder="The maximum chair capacity of the room"
-                value={selectedRoom?.maxChairsCapacity}
+                defaultValue={selectedRoom?.maxChairsCapacity}
               />
               {errors.maxChairsCapacity && (
                 <span className="text-red-500">
