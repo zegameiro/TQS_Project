@@ -3,8 +3,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -15,7 +17,7 @@ import deti.tqs.backend.JsonUtils;
 import deti.tqs.backend.controllers.ChairController;
 import deti.tqs.backend.dtos.ChairSchema;
 import deti.tqs.backend.models.Chair;
-import deti.tqs.backend.models.Facility;
+// import deti.tqs.backend.models.Facility;
 import deti.tqs.backend.models.Room;
 import deti.tqs.backend.services.ChairService;
 
@@ -25,6 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ChairController.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class TestAddChairController {
     
     @Autowired
@@ -33,7 +36,7 @@ public class TestAddChairController {
     @MockBean
     private ChairService chairService;
 
-    private static Facility facility = new Facility();
+    // private static Facility facility = new Facility();
     private static Room room = new Room();
     
 
@@ -42,6 +45,7 @@ public class TestAddChairController {
     * 1. When post valid chair, create chair with success
     * 2. Save a chair with success without a room
     * 3. New chair is available by default
+
     */
 
     @BeforeEach
@@ -49,6 +53,7 @@ public class TestAddChairController {
     }
 
     @Test
+    @DisplayName("When post valid chair, create chair with success")
     void testWhenPostChairThenCreateChair() throws Exception {
         ChairSchema chairSchema = new ChairSchema(
             "Good Chair",
@@ -63,8 +68,9 @@ public class TestAddChairController {
 
 
         when(chairService.addChair(any())).thenReturn(chair);
+
         mvc.perform(
-            post("/api/chair")
+            post("/api/chair/admin/add")
             .contentType(MediaType.APPLICATION_JSON)
             .content(JsonUtils.toJson(chair))
         )

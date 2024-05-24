@@ -9,7 +9,6 @@ import deti.tqs.backend.dtos.ChairSchema;
 import deti.tqs.backend.models.Chair;
 import deti.tqs.backend.services.ChairService;
 import jakarta.persistence.EntityExistsException;
-import jakarta.persistence.EntityNotFoundException;
 import java.lang.IllegalArgumentException;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/chair")
 public class ChairController {
 
     private static final Logger log = LoggerFactory.getLogger(ChairController.class);
@@ -33,7 +32,7 @@ public class ChairController {
         this.chairService = chairService;
     }
 
-    @PostMapping("/chair")
+    @PostMapping("/admin/add")
     public ResponseEntity<Chair> createChair(@RequestBody(required = true) ChairSchema chairSchema) {
         log.info("Creating a new chair.");
         
