@@ -92,4 +92,21 @@ public class UpdateRoomControllerTests {
         verify(roomService, times(1)).updateRoom(any(), anyLong(), anyLong());
     }
 
+    @Test
+    @DisplayName("Update a room with an invalid field")
+    void testUpdateRoomWithInvalidField() throws Exception {
+
+        when(roomService.updateRoom(any(), anyLong(), anyLong()))
+                .thenThrow(new NoSuchFieldException("Invalid field"));
+
+        mvc.perform(
+                put("/api/room/admin/update?id=" + 1)
+                        .contentType("application/json")
+                        .content("{\"field\":\"something\",\"maxChairsCapacity\":7}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$").doesNotExist());
+
+        verify(roomService, times(1)).updateRoom(any(), anyLong(), anyLong());
+    }
+
 }
