@@ -156,7 +156,7 @@ public class RoomController {
 
     try {
       
-      updatedRoom = roomService.updateRoom(room, id, 0);
+      updatedRoom = roomService.updateRoom(room, id, roomSchema.facilityID());
       
     } catch (EntityNotFoundException e) {
 

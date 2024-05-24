@@ -45,7 +45,7 @@ export default function AdminRoomModal({
 
   const editRoomMutation = useMutation({
     mutationKey: ["editRoom"],
-    mutationFn: (roomData) => editRoom(axios, roomData, roomData.id),
+    mutationFn: (roomData) => console.log(roomData) & editRoom(axios, roomData, selectedRoom.id),
     onSuccess: () => {
       queryClient.refetchQueries("roomsOfFacility", "allRooms")
     },
@@ -53,10 +53,15 @@ export default function AdminRoomModal({
 
   const onSubmit = (data) => {
     if (mode === "create") {
+
       data.facilityID = facilityID
       addRoomMutation.mutate(data)
+
     } else if (mode === "edit") {
+
+      data.facilityID = 0
       editRoomMutation.mutate(data)
+
     }
     onCloseModal()
   }

@@ -3,8 +3,6 @@ package deti.tqs.backend.services;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +15,6 @@ import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class RoomService {
-
-  private static final Logger logger = LoggerFactory.getLogger(RoomService.class);
   
   private RoomRepository roomRepository;
   private FacilityRepository facilityRepository;
@@ -92,8 +88,6 @@ public class RoomService {
 
       newFacility = facilityRepository.findById(newFacilityID);
 
-      logger.debug("New facility: " + newFacility);
-
       if (newFacility == null)
         throw new EntityNotFoundException("Facility does not exist");
 
@@ -108,12 +102,16 @@ public class RoomService {
 
     // Check if a room with the same name already exists in this facility
 
-    long facID =  newFacilityID != 0 ? newFacilityID : found.getFacility().getId();
+    if (!found.getName().equals(room.getName())) {
 
-    Room roomSameName = roomRepository.findByNameAndFacilityId(room.getName(), facID);
+      long facID =  newFacilityID != 0 ? newFacilityID : found.getFacility().getId();
 
-    if (roomSameName != null)
-      throw new EntityExistsException("Room with this name already exists in this facility");
+      Room roomSameName = roomRepository.findByNameAndFacilityId(room.getName(), facID);
+
+      if (roomSameName != null)
+        throw new EntityExistsException("Room with this name already exists in this facility");
+        
+    }
     
     found.setName(room.getName());
     found.setMaxChairsCapacity(room.getMaxChairsCapacity());

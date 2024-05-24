@@ -71,7 +71,7 @@ class UpdateRoomServiceTest {
     f1.setStreetName("Rua de Aveiro");
 
     f2.setName("Facility 2");
-    f2.setMaxRoomsCapacity(20);
+    f2.setMaxRoomsCapacity(1);
     f2.setCity("Porto");
     f2.setPhoneNumber("987654321");
     f2.setPostalCode("4000-193");
@@ -94,13 +94,14 @@ class UpdateRoomServiceTest {
     when(roomRepository.findById(r1.getId())).thenReturn(r1);
     when(roomRepository.findByNameAndFacilityId(anyString(), anyLong())).thenReturn(null);
 
-    r1.setName("Room 1 Updated");
-    r1.setMaxChairsCapacity(20);
-    r1.setFacility(f2);
+    Room r = new Room();
+    r.setName("Room 1 Updated");
+    r.setMaxChairsCapacity(20);
+    r.setFacility(f2);
 
-    when(roomRepository.save(r1)).thenReturn(r1);
+    when(roomRepository.save(any())).thenReturn(r);
 
-    Room updatedRoom = roomService.updateRoom(r1, r1.getId(), f2.getId());
+    Room updatedRoom = roomService.updateRoom(r, r1.getId(), f2.getId());
 
     assertAll(
       () -> assertThat(updatedRoom).isNotNull(),
@@ -119,12 +120,13 @@ class UpdateRoomServiceTest {
   @DisplayName("Test update a room that does not exist")
   void testUpdateRoomThatDoesNotExist() throws NoSuchFieldException {
     
-    when(roomRepository.findById(r1.getId())).thenThrow(EntityNotFoundException.class);
+    when(roomRepository.findById(anyLong())).thenReturn(null);
 
     assertThrows(EntityNotFoundException.class, () -> roomService.updateRoom(r1, r1.getId(), f2.getId()));
 
     verify(roomRepository, times(1)).findById(anyLong());
     verify(roomRepository, never()).findByNameAndFacilityId(anyString(), anyLong());
+    verify(facilityRepository, never()).findById(anyLong());
     verify(roomRepository, never()).save(any());
 
   }
@@ -136,7 +138,12 @@ class UpdateRoomServiceTest {
     when(roomRepository.findById(r1.getId())).thenReturn(r1);
     when(roomRepository.findByNameAndFacilityId(anyString(), anyLong())).thenReturn(r1);
 
-    assertThrows(EntityExistsException.class, () -> roomService.updateRoom(r1, r1.getId(), f2.getId()));
+    Room roomUpdate = new Room();
+    roomUpdate.setName("Room 2");
+    roomUpdate.setMaxChairsCapacity(20);
+    roomUpdate.setFacility(f2);
+
+    assertThrows(EntityExistsException.class, () -> roomService.updateRoom(roomUpdate, r1.getId(), f2.getId()));
 
     verify(roomRepository, times(1)).findById(anyLong());
     verify(roomRepository, times(1)).findByNameAndFacilityId(anyString(), anyLong());
@@ -196,13 +203,12 @@ class UpdateRoomServiceTest {
   @DisplayName("Test update a room with a facility at full capacity")
   void testUpdateRoomWithFacilityAtFullCapacity() throws NoSuchFieldException {
     
-    f2.setMaxRoomsCapacity(1);
     f2.setRooms(List.of(r2));
 
     when(roomRepository.findById(r1.getId())).thenReturn(r1);
-    when(facilityRepository.findById(f2.getId())).thenReturn(f2);
+    when(facilityRepository.findById(anyLong())).thenReturn(f2);
 
-    assertThrows(IllegalStateException.class, () -> roomService.updateRoom(r1, r1.getId(), f2.getId()));
+    assertThrows(IllegalStateException.class, () -> roomService.updateRoom(r1, r1.getId(), 2));
 
     verify(roomRepository, times(1)).findById(anyLong());
     verify(facilityRepository, times(1)).findById(anyLong());
