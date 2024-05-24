@@ -110,7 +110,7 @@ export default function AdminRoomModal({
               )}
             </div>
             <div className="flex flex-row mt-4 space-x-5">
-              <Button type="submit">Create room</Button>
+              <Button type="submit">{mode === "create" ? "Create" : "Edit"} room</Button>
               <Button onClick={() => reset()}>Clear</Button>
             </div>
           </form>
