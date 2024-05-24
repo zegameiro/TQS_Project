@@ -62,7 +62,6 @@ services:
 
     volumes:
       - ./customer_app:/customer_app
-      - modules:/customer_app/node_modules
 
     ports:
       - 3001:3001
@@ -85,7 +84,6 @@ services:
 
     volumes:
       - ./staff_app:/staff_app
-      - modules:/staff_app/node_modules
     
     ports:
       - 3002:3002
@@ -108,7 +106,6 @@ services:
 
     volumes:
       - ./digital_screen:/digital_screen
-      - modules:/digital_screen/node_modules
 
     ports:
       - 3003:3003
