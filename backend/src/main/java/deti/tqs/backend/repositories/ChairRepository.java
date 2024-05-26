@@ -8,4 +8,8 @@ public interface ChairRepository extends JpaRepository<Chair, Long> {
   
   Chair findById(long id);
 
+  Chair findByName(String name);
+
+  Chair findByNameAndRoomId(String name, long roomId);
+
 }
