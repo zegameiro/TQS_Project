@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import QRCode from 'qrcode.react';
 
+import { useMutation, useQuery } from "@tanstack/react-query"
+import axios from "../../../api"
+import { addNewReservation } from "../../../actions/postActions";
+
 const Confirmation = ({ reservationDetails, userData }) => {
 
     console.log(reservationDetails);
@@ -22,21 +26,28 @@ const Confirmation = ({ reservationDetails, userData }) => {
         "A copy of the reservation will be sent to the email provided.",
     ]
 
+    
     const reservation = {
-        id: token,
-        reservationDetails: {
-            facility: reservationDetails.location,
-            section: reservationDetails.service,
-            services: reservationDetails.selectedServices,
-            price: reservationDetails.priceToPay
-        },
+        // id: token,
+        speciality: reservationDetails.service,
+        roomID: reservationDetails.roomID,
         costumer: {
             name: userData[0],
             email: userData[1],
             phone: userData[2],
-            address: userData[3]
+            // address: userData[3]
         }
     }
+
+    const addReservationMutation = useMutation({
+        mutationKey: ["addReservation"],
+        mutationFn: (facilityData) => addNewReservation(axios, reservation),
+        onSuccess: () => {
+        },
+    })
+
+    addReservationMutation.mutate(reservation);
+
 
     console.log(reservation);
 

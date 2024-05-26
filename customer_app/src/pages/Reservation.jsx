@@ -31,6 +31,7 @@ const Reservation = () => {
   const url = window.location.href.split('?')[1];
   const location = url.split('+')[0];
   const service = decodeURIComponent(url.split('+')[1]);
+  const roomID = url.split('+')[2];
 
   const categories = [
     {
@@ -240,7 +241,7 @@ const Reservation = () => {
           {
             currentStep === 0 ? <ChooseService services={selectedCategory.services} selectedServices={selectedServices} setSelectedServices={setSelectedServices} /> :
               currentStep === 2 ? <Payment services={selectedCategory.services} selectedServices={selectedServices} selectedPaymentData={[clientName, clientEmail, clientPhone, clientAddress]} setSelectedPaymentData={[setClientName, setClientEmail, setClientPhone, setClientAddress]} setPriceToPay={setPriceToPay} /> :
-                currentStep === 3 ? <Confirmation reservationDetails={{ location, service, selectedServices, priceToPay }} userData={[clientName, clientEmail, clientPhone, clientAddress]} /> :
+                currentStep === 3 ? <Confirmation reservationDetails={{ location, roomID, service, selectedServices, priceToPay }} userData={[clientName, clientEmail, clientPhone, clientAddress]} /> :
                   components[currentStep]
           }
         </div>

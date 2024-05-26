@@ -5,3 +5,7 @@
 // export const addNewRoom = async (axios, roomData) => {
 //   return axios.post("room/admin/add", roomData)
 // }
+
+export const addNewReservation = async (axios, reservationData) => {
+  return axios.post("reservation/add", reservationData)
+}

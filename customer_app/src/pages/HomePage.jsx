@@ -28,12 +28,7 @@ export default function HomePage() {
     queryFn: () => getAllRooms(axios),
   })
 
-  console.log(allFacilities.data)
-
-  
-  allFacilities.data?.map(facility => {
-    console.log(facility.city)
-  })
+  console.log(allRooms.data)
 
   const locations = [
     {
@@ -54,6 +49,7 @@ export default function HomePage() {
     const facilityRooms = allRooms.data?.filter(room => room.facility.city === facility.city);
     const categories = facilityRooms?.map((room, index) => ({
       title: room.name,
+      id: room.id,
       image: images[index],
     }));
 
