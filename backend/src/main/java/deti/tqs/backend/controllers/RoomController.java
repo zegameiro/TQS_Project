@@ -1,13 +1,19 @@
 package deti.tqs.backend.controllers;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import deti.tqs.backend.dtos.RoomSchema;
@@ -68,6 +74,92 @@ public class RoomController {
     }
 
     return ResponseEntity.status(HttpStatus.CREATED).body(savedRoom);
+
+  }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<Room> getRoomById(@PathVariable long id) {
+
+    logger.info("Getting room by ID");
+
+    Room foundRoom = null;
+
+    try {
+
+      foundRoom = roomService.findById(id);
+      logger.info("Room found");
+
+    } catch (EntityNotFoundException e) {
+
+      logger.error(e.getMessage());
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+
+    }
+
+    return ResponseEntity.status(HttpStatus.OK).body(foundRoom);
+
+  }
+
+  @GetMapping("/all")
+  public ResponseEntity<Iterable<Room>> getAllRooms() {
+
+    logger.info("Getting all rooms");
+
+    Iterable<Room> rooms = roomService.findAllRooms();
+
+    return ResponseEntity.status(HttpStatus.OK).body(rooms);
+
+  }
+
+  @GetMapping("/search")
+  public ResponseEntity<List<Room>> searchRoom(@RequestParam(required = false) String roomName, @RequestParam(required = false) String facilityID) throws Exception {
+
+    logger.info("Searching for room");
+
+    long facilityIDLong = Long.parseLong(facilityID);
+    List<Room> foundRoom = null;
+
+    logger.info("Facility ID: " + facilityIDLong);
+
+    try {
+
+      foundRoom = roomService.searchByFacilityInfo(roomName, facilityIDLong);
+      logger.info("Room found", foundRoom);
+
+    } catch (EntityNotFoundException e) {
+
+      logger.error(e.getMessage());
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+
+    } catch (NoSuchFieldException e) {
+
+      logger.error(e.getMessage());
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+
+    }
+
+    return ResponseEntity.status(HttpStatus.OK).body(foundRoom);
+
+  } 
+
+  @DeleteMapping("/admin/delete")
+  public ResponseEntity<Void> deleteRoom(@RequestParam(required = true) long id) {
+
+    logger.info("Deleting room");
+
+    try {
+
+      roomService.deleteRoom(id);
+      logger.info("Room deleted");
+
+    } catch (EntityNotFoundException e) {
+
+      logger.error(e.getMessage());
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+
+    }
+
+    return ResponseEntity.status(HttpStatus.OK).body(null);
 
   }
 

@@ -3,6 +3,7 @@ package deti.tqs.backend.controllers.facility;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -50,7 +51,7 @@ class DeleteFacilityControllerTests {
     mvc.perform(delete("/api/facility/admin/delete?id=" + exampleId))
       .andExpect(status().isOk());
 
-    verify(facilityService).delete(anyLong());
+    verify(facilityService, times(1)).delete(anyLong());
   
   }
 
@@ -63,7 +64,7 @@ class DeleteFacilityControllerTests {
     mvc.perform(delete("/api/facility/admin/delete?id=412314"))
       .andExpect(status().isNotFound());
 
-    verify(facilityService).delete(anyLong());
+    verify(facilityService, times(1)).delete(anyLong());
 
   }
   
