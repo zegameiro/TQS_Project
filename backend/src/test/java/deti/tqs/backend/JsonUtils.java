@@ -7,9 +7,12 @@ import java.io.IOException;
 
 public class JsonUtils<T> {
 
-    public static <T> byte[] toJson(T object) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        return mapper.writeValueAsBytes(object);
-    }
+  public static <T> byte[] toJson(T object) throws IOException {
+
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    return mapper.writeValueAsBytes(object);
+
+  }
+  
 }

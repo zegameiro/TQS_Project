@@ -3,7 +3,7 @@ import { Avatar, Dropdown, Navbar } from "flowbite-react"
 export default function NavbarComponent() {
   return (
     <Navbar fluid className="bg-[#1F0F53]">
-      <Navbar.Brand href="logo-black-no-background.svg">
+      <Navbar.Brand href="/">
         <img
           src="/icon.svg"
           className="mr-3 h-6 sm:h-9"
@@ -38,7 +38,9 @@ export default function NavbarComponent() {
         <Navbar.Link href="/dashboard" className="text-[#FFDB99]">
           Dashboard
         </Navbar.Link>
-        <Navbar.Link href="/admin" className="text-[#FFDB99]">Admin Page</Navbar.Link>
+        <Navbar.Link href="/admin" className="text-[#FFDB99]">
+          Admin Page
+        </Navbar.Link>
       </Navbar.Collapse>
     </Navbar>
   )
