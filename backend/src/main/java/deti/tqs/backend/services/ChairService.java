@@ -12,7 +12,7 @@ import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class ChairService {
-    
+  
     private ChairRepository chairRepository;
 
     private RoomRepository roomRepository;

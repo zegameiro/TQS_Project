@@ -39,7 +39,7 @@ public class SecurityConfiguration {
 
   @Bean
   SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-
+    
     String apiFacilityAdmin = "/api/facility/admin/*";
     String apiRoomAdmin = "/api/room/admin/*";
     String apiChairAdmin = "/api/chair/admin/*";
