@@ -34,7 +34,7 @@ public class Reservation {
 
   @ManyToOne
   @JoinColumn(nullable = false)
-  private Facility facility;
+  private Room room;
 
   @ManyToOne
   @JoinColumn(nullable = false)

@@ -39,6 +39,10 @@ public class Room {
   @JsonIgnore
   private List<Chair> chairs;
 
+  @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+  @JsonIgnore
+  private List<Reservation> reservations;
+
   @ManyToOne
   @JoinColumn
   private Facility facility;
