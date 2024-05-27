@@ -98,4 +98,15 @@ public class ChairService {
         return chairRepository.findByRoomId(roomID);
     }
 
+    public void deleteChair(long id) {
+
+        Chair foundChair = chairRepository.findById(id);
+
+        if (foundChair == null)
+            throw new EntityNotFoundException("Chair not found");
+
+        chairRepository.delete(foundChair);
+
+    }
+
 }
