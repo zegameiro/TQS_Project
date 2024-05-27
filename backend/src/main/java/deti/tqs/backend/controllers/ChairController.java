@@ -9,10 +9,13 @@ import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -69,6 +72,43 @@ public class ChairController {
 
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Chair> getChair(@PathVariable(required = true) long id) {
+        
+        logger.info("Getting chair");
 
-    
+        Chair c = null;
+
+        try {
+
+            c = chairService.getChair(id);
+            logger.info("Chair found");
+
+        } catch (EntityNotFoundException e) {
+
+            logger.error(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+
+        }
+
+        return ResponseEntity.status(200).body(c);
+
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<Iterable<Chair>> getAllChairs(@RequestParam(required = false) String roomID) {
+        
+        logger.info("Getting all chairs");
+
+        Iterable<Chair> chairs = null;
+
+        if (roomID != null)
+            chairs = chairService.getChairsByRoomID(Long.parseLong(roomID));
+        else 
+            chairs = chairService.getAllChairs();
+
+        return ResponseEntity.status(200).body(chairs);
+
+    }
+
 }
