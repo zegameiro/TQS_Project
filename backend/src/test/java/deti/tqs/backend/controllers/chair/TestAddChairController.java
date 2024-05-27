@@ -20,6 +20,7 @@ import deti.tqs.backend.dtos.ChairSchema;
 import deti.tqs.backend.models.Chair;
 import deti.tqs.backend.models.Room;
 import deti.tqs.backend.services.ChairService;
+import jakarta.persistence.EntityExistsException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -111,6 +112,56 @@ public class TestAddChairController {
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.name", is(chairSchema.name())))
         .andExpect(jsonPath("$.available", is(chairSchema.available())));
+    }
+
+    @Test
+    @DisplayName("Save a chair with success without a room")
+    void testWhenPostChairTwice_thenThrowError() throws Exception {
+        ChairSchema chairSchema = new ChairSchema(
+            "Bad Chair",
+            true,
+            null
+        );
+
+        Chair chair = new Chair();
+        chair.setName(chairSchema.name());
+        chair.setAvailable(chairSchema.available());
+        chair.setRoom(chairSchema.room());
+
+
+        when(chairService.addChair(any())).thenThrow(new EntityExistsException());
+
+        mvc.perform(
+            post("/api/chair/admin/add")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(JsonUtils.toJson(chair))
+        )
+        .andExpect(status().isConflict());
+    }
+
+    @Test
+    @DisplayName("Save a chair with success without a room")
+    void testWhenPostChairWhithIlegalArguments_thenThrowError() throws Exception {
+        ChairSchema chairSchema = new ChairSchema(
+            null,
+            true,
+            null
+        );
+
+        Chair chair = new Chair();
+        chair.setName(chairSchema.name());
+        chair.setAvailable(chairSchema.available());
+        chair.setRoom(chairSchema.room());
+
+
+        when(chairService.addChair(any())).thenThrow(new IllegalArgumentException());
+
+        mvc.perform(
+            post("/api/chair/admin/add")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(JsonUtils.toJson(chair))
+        )
+        .andExpect(status().isBadRequest());
     }
 
 }
