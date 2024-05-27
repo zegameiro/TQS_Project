@@ -17,7 +17,7 @@ import deti.tqs.backend.repositories.FacilityRepository;
 import deti.tqs.backend.repositories.RoomRepository;
 
 @DataJpaTest
-public class TestAddChairRepository {
+class TestAddChairRepository {
     
     /* NECESSARY TESTS */
     /*
@@ -31,7 +31,7 @@ public class TestAddChairRepository {
     private FacilityRepository facilityRepository;
 
     @Autowired
-    public TestAddChairRepository(
+    TestAddChairRepository(
         ChairRepository chairRepository, 
         RoomRepository roomRepository,
         FacilityRepository facilityRepository
