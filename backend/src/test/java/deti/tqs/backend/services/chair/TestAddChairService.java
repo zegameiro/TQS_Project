@@ -1,5 +1,14 @@
 package deti.tqs.backend.services.chair;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import deti.tqs.backend.models.Chair;
 import deti.tqs.backend.models.Facility;
@@ -16,6 +26,8 @@ import deti.tqs.backend.repositories.ChairRepository;
 import deti.tqs.backend.repositories.FacilityRepository;
 import deti.tqs.backend.repositories.RoomRepository;
 import deti.tqs.backend.services.ChairService;
+import groovy.lang.MissingFieldException;
+import jakarta.persistence.EntityExistsException;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -27,34 +39,26 @@ public class TestAddChairService {
     * 2. Fail to save an invalid chair in non existing room 
     */
     
-    @Mock(lenient = true)
+    @Mock
     private ChairRepository chairRepository;
 
-    @Mock(lenient = true)
-    private RoomRepository roomRepository;
-
-    @Mock(lenient = true)
-    private FacilityRepository facilityRepository;
-
     @InjectMocks
-    private ChairService ChairService;
+    private ChairService chairService;
 
-    private static Room room;
-    private static Facility facility;
+    private Room room = new Room();
 
 
-    @BeforeEach
-    void setUp() {
-        chairRepository.deleteAll();
-        roomRepository.deleteAll();
-        facilityRepository.deleteAll();
+    @Test
+    void addChair_whenChairAlreadyExists_shouldThrowEntityExistsException() {
 
-        facility = new Facility();
-        facilityRepository.save(facility);
+        Chair chair = new Chair();
+        chair.setName("Good Chair");
+        chair.setRoom(room);
 
-        room = new Room();
-        room.setFacility(facility);
-        roomRepository.save(room);
+        when(chairRepository.findById(anyLong())).thenReturn(chair);
+
+        // Act & Assert
+        assertThrows(EntityExistsException.class, () -> chairService.addChair(chair));
     }
 
 
@@ -65,23 +69,18 @@ public class TestAddChairService {
         Chair chair = new Chair();
         chair.setName("Good Chair");
         chair.setRoom(room);
-        ChairService.addChair(chair);
 
-        Mockito.when(chairRepository.save(chair)).thenReturn(chair);
-    }
+        Mockito.when(chairRepository.save(any())).thenReturn(chair);
 
-    @Test
-    @DisplayName("Test fail to save an invalid chair in non existing room")
-    public void testFailToSaveChairInInvalidRoom() {
-        
-        Room invalidRoom = new Room();
+        Chair savedChair = chairService.addChair(chair);
 
-        Chair chair = new Chair();
-        chair.setName("Bad Chair");
-        chair.setRoom(invalidRoom);
-        ChairService.addChair(chair);
+        assertAll(
+            () -> assertThat(savedChair).isNotNull(),
+            () -> assertThat(savedChair.getName()).isEqualTo(chair.getName()),
+            () -> assertThat(savedChair.getRoom()).isEqualTo(chair.getRoom())
+        );
 
-        Mockito.when(chairRepository.save(chair)).thenReturn(null);
+        verify(chairRepository, times(1)).save(any());
     }
 
 }
