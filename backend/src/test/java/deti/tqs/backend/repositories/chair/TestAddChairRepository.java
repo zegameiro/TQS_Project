@@ -2,12 +2,14 @@ package deti.tqs.backend.repositories.chair;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import deti.tqs.backend.models.Chair;
 import deti.tqs.backend.models.Facility;
@@ -21,9 +23,10 @@ public class TestAddChairRepository {
     
     /* NECESSARY TESTS */
     /*
-    * 1. Save a chair with success in existing room
-    * 2. Save a chair with success without a room 
-    * 3. New chair is available by default
+    * 1. Fail to save chair without a name
+    * 2. Save a chair with success in existing room
+    * 3. Save a chair with success without a room 
+    * 4. New chair is available by default
     */
 
     private ChairRepository chairRepository;
@@ -63,6 +66,15 @@ public class TestAddChairRepository {
         room.setMaxChairsCapacity(5);
         room.setFacility(facility);
         roomRepository.save(room);
+    }
+
+    @Test
+    @DisplayName("Fail to save chair without a name")
+    void testNewChairHasNoName() {
+        Chair chair = new Chair();
+        chair.setRoom(room);
+
+        assertThrows(DataIntegrityViolationException.class, () -> chairRepository.save(chair));
     }
 
 
@@ -110,4 +122,6 @@ public class TestAddChairRepository {
         Chair result = chairRepository.findById(chair.getId());
         assertThat(result.isAvailable()).isTrue();
     }
+
+    
 }
