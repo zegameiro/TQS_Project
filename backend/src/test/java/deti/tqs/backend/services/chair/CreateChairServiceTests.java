@@ -168,7 +168,9 @@ class CreateChairServiceTests {
 
     when(roomRepository.findById(anyLong())).thenReturn(r2);
 
-    assertThrows(IllegalStateException.class, () -> chairService.addChair(c2, r2.getId()));
+    long roomID = r2.getId();
+
+    assertThrows(IllegalStateException.class, () -> chairService.addChair(c2, roomID));
 
     verify(roomRepository, times(1)).findById(anyLong());
     verify(chairRepository, never()).findByNameAndRoomId(anyString(), anyLong());
