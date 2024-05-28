@@ -15,6 +15,9 @@ import jakarta.persistence.EntityNotFoundException;
 @Service
 public class ChairService {
 
+
+    private static final String CHAIR_NOT_FOUND = "Chair not found";
+
     private ChairRepository chairRepository;
 
     private RoomRepository roomRepository;
@@ -64,7 +67,7 @@ public class ChairService {
         Chair foundChair = chairRepository.findById(id);
 
         if (foundChair == null)
-            throw new EntityNotFoundException("Chair not found");
+            throw new EntityNotFoundException(CHAIR_NOT_FOUND);
 
         return foundChair;
 
@@ -75,7 +78,7 @@ public class ChairService {
         Chair foundChair = chairRepository.findByName(name);
 
         if (foundChair == null)
-            throw new EntityNotFoundException("Chair not found");
+            throw new EntityNotFoundException(CHAIR_NOT_FOUND);
 
         return foundChair;
     }
@@ -85,7 +88,7 @@ public class ChairService {
         Chair foundChair = chairRepository.findByNameAndRoomId(name, roomID);
 
         if (foundChair == null)
-            throw new EntityNotFoundException("Chair not found");
+            throw new EntityNotFoundException(CHAIR_NOT_FOUND);
 
         return foundChair;
     }
