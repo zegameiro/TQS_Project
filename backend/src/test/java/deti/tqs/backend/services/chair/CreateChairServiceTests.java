@@ -133,6 +133,20 @@ class CreateChairServiceTests {
   }
 
   @Test
+  @DisplayName("Save a chair with an null name")
+  void saveChairWithNullName() throws Exception {
+
+    c1.setName(null);
+
+    assertThrows(NoSuchFieldException.class, () -> chairService.addChair(c1, 1));
+
+    verify(roomRepository, never()).findById(anyLong());
+    verify(chairRepository, never()).findByNameAndRoomId(anyString(), anyLong());
+    verify(chairRepository, never()).save(c1);
+
+  }
+
+  @Test
   @DisplayName("Save a chair to a room that does not exists")
   void saveChairToNonExistingRoom() {
 
@@ -154,7 +168,9 @@ class CreateChairServiceTests {
 
     when(roomRepository.findById(anyLong())).thenReturn(r2);
 
-    assertThrows(IllegalStateException.class, () -> chairService.addChair(c2, r2.getId()));
+    long roomID = r2.getId();
+
+    assertThrows(IllegalStateException.class, () -> chairService.addChair(c2, roomID));
 
     verify(roomRepository, times(1)).findById(anyLong());
     verify(chairRepository, never()).findByNameAndRoomId(anyString(), anyLong());
