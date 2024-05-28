@@ -35,7 +35,7 @@ class TestAddChairRepository {
     private FacilityRepository facilityRepository;
 
     @Autowired
-    public TestAddChairRepository(
+    TestAddChairRepository(
         ChairRepository chairRepository, 
         RoomRepository roomRepository,
         FacilityRepository facilityRepository

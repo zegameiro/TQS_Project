@@ -58,6 +58,7 @@ public class SecurityConfiguration {
         .requestMatchers(HttpMethod.PUT, apiRoomAdmin).permitAll()
         .requestMatchers(HttpMethod.DELETE, apiRoomAdmin).permitAll()
         .requestMatchers(HttpMethod.GET, "/api/chair/*").permitAll()
+        .requestMatchers(HttpMethod.POST, "/api/chair/room/*").permitAll()
         .requestMatchers(HttpMethod.POST, apiChairAdmin).permitAll()
         .requestMatchers(HttpMethod.PUT, apiChairAdmin).permitAll()
         .requestMatchers(HttpMethod.DELETE, apiChairAdmin).permitAll()

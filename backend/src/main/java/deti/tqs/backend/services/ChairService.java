@@ -1,5 +1,7 @@
 package deti.tqs.backend.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +14,9 @@ import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class ChairService {
-  
+
+    private static final String CHAIR_NOT_FOUND = "Chair not found";
+
     private ChairRepository chairRepository;
 
     private RoomRepository roomRepository;
@@ -22,7 +26,7 @@ public class ChairService {
         this.chairRepository = chairRepository;
         this.roomRepository = roomRepository;
     }
-    
+
     public Chair addChair(Chair chair, long roomID) throws Exception {
 
         // Check if the chair name is valid
@@ -55,6 +59,45 @@ public class ChairService {
 
         return chairRepository.save(chair);
 
+    }
+
+    public Chair getChair(long id) {
+        
+        Chair foundChair = chairRepository.findById(id);
+
+        if (foundChair == null)
+            throw new EntityNotFoundException(CHAIR_NOT_FOUND);
+
+        return foundChair;
+
+    }
+
+    public Chair getChairByName(String name) {
+
+        Chair foundChair = chairRepository.findByName(name);
+
+        if (foundChair == null)
+            throw new EntityNotFoundException(CHAIR_NOT_FOUND);
+
+        return foundChair;
+    }
+
+    public Chair getChairByNameAndRoomID(String name, long roomID) {
+
+        Chair foundChair = chairRepository.findByNameAndRoomId(name, roomID);
+
+        if (foundChair == null)
+            throw new EntityNotFoundException(CHAIR_NOT_FOUND);
+
+        return foundChair;
+    }
+
+    public List<Chair> getAllChairs() {
+        return chairRepository.findAll();
+    }
+
+    public List<Chair> getChairsByRoomID(long roomID) {
+        return chairRepository.findByRoomId(roomID);
     }
 
 }
