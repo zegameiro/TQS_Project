@@ -27,6 +27,7 @@ public class TestAddChairRepository {
     * 2. Save a chair with success in existing room
     * 3. Save a chair with success without a room 
     * 4. New chair is available by default
+    * 5. Unavailable chair is unavailable
     */
 
     private ChairRepository chairRepository;
@@ -121,6 +122,19 @@ public class TestAddChairRepository {
 
         Chair result = chairRepository.findById(chair.getId());
         assertThat(result.isAvailable()).isTrue();
+    }
+
+    @Test
+    @DisplayName("Unavailable chair is unavailable")
+    void testNewUnabailableChairIsUnavailable() {
+        Chair chair = new Chair();
+        chair.setName("New Chair");
+        chair.setRoom(room);
+        chair.setAvailable(false);
+        chairRepository.save(chair);
+
+        Chair result = chairRepository.findById(chair.getId());
+        assertThat(result.isAvailable()).isFalse();
     }
 
     

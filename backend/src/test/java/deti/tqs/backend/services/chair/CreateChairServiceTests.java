@@ -133,6 +133,20 @@ class CreateChairServiceTests {
   }
 
   @Test
+  @DisplayName("Save a chair with an null name")
+  void saveChairWithNullName() throws Exception {
+
+    c1.setName(null);
+
+    assertThrows(NoSuchFieldException.class, () -> chairService.addChair(c1, 1));
+
+    verify(roomRepository, never()).findById(anyLong());
+    verify(chairRepository, never()).findByNameAndRoomId(anyString(), anyLong());
+    verify(chairRepository, never()).save(c1);
+
+  }
+
+  @Test
   @DisplayName("Save a chair to a room that does not exists")
   void saveChairToNonExistingRoom() {
 
