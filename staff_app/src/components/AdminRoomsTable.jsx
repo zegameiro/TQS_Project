@@ -17,6 +17,7 @@ import { getAllChairs, getRoomsByFacilityID } from "../../actions/getActions"
 import { addNewChair } from "../../actions/postActions"
 import axios from "../../api"
 import AdminRoomModal from "./AdminRoomModal"
+import ChairForm from "./ChairForm"
 
 AdminRoomsTable.propTypes = {
   facilityID: PropTypes.number.isRequired,
@@ -53,7 +54,7 @@ export default function AdminRoomsTable({ facilityID }) {
   const addChairMutation = useMutation({
     mutationKey: ["addChair"],
     mutationFn: (chairData) => addNewChair(axios, chairData),
-    onSuccess: () => roomsOfFacility.refetch() && allChairs.refetch()
+    onSuccess: () => roomsOfFacility.refetch() && allChairs.refetch(),
   })
 
   const openCreateRoomModal = () => {
@@ -91,33 +92,14 @@ export default function AdminRoomsTable({ facilityID }) {
             return (
               <Accordion.Panel key={room.id}>
                 <Accordion.Title>
-                  {room.id} - {room.name} - Max. Chairs: {room.maxChairsCapacity}
+                  {room.id} - {room.name} - Max. Chairs:{" "}
+                  {room.maxChairsCapacity}
                 </Accordion.Title>
                 <Accordion.Content>
                   <h3 className="text-xl font-medium text-gray-900 dark:text-white">
                     Chairs:
                   </h3>
-                  <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className="max-w-56">
-                      <div className="mb-2 block">
-                        <Label htmlFor="name" value="Chair name" />
-                      </div>
-                      <TextInput
-                        {...register("name", {})}
-                        id="name"
-                        icon={FaChair}
-                        placeholder="Name of the new chair"
-                      />
-                      <input
-                        type="hidden"
-                        {...register("roomID", {})}
-                        value={room.id}
-                      />
-                    </div>
-                    <Button className="mt-2 mb-8" type="submit">
-                      Add chair
-                    </Button>
-                  </form>
+                  <ChairForm roomID={room.id} onSubmit={onSubmit} /> 
                   {chairsForRoom.length === 0 ? (
                     <p>No chairs available</p>
                   ) : (
