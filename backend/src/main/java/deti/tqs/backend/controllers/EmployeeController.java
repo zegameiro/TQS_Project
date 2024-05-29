@@ -14,6 +14,7 @@ import deti.tqs.backend.models.Employee;
 import deti.tqs.backend.services.EmployeeService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.persistence.EntityExistsException;
+import jakarta.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,32 +33,35 @@ public class EmployeeController {
     }
 
     @PostMapping("/admin/add")
-    public ResponseEntity<Employee> createEmployee(@RequestBody(required = true) EmployeeSchema employeeSchema) {
+    public ResponseEntity<Employee> createEmployee(@Valid @RequestBody(required = true) EmployeeSchema employeeSchema) {
 
         
 
         logger.info("Creating employee");
 
         Employee employee;
-        HttpStatus status = HttpStatus.BAD_REQUEST;
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
 
         try {
             employee = new Employee();
+            employee.setId(1);
             employee.setAdmin(employeeSchema.isAdmin());
             employee.setFullName(employeeSchema.fullName());
             employee.setEmail(employeeSchema.email());
             employee.setPhoneNumber(employeeSchema.phoneNumber());
             employee.setSpecialitiesID(employeeSchema.specialitiesID());
 
-
             employee = employeeService.save(employee);
             
             status = HttpStatus.CREATED;
+
             return new ResponseEntity<Employee>(employee, status);
         } catch (EntityExistsException e) {
             status = HttpStatus.CONFLICT;
-        } catch (IllegalArgumentException e) {
-            status = HttpStatus.BAD_REQUEST;
+        } catch (NoSuchFieldException e) {
+            status = HttpStatus.CONFLICT;
+        } catch (Exception e) {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
 
         return new ResponseEntity<Employee>(status);

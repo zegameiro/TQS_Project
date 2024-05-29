@@ -2,6 +2,7 @@ package deti.tqs.backend.controllers.employee;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.calls;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -19,10 +20,12 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import deti.tqs.backend.JsonUtils;
 import deti.tqs.backend.controllers.EmployeeController;
+import deti.tqs.backend.dtos.EmployeeSchema;
 import deti.tqs.backend.models.Employee;
 import deti.tqs.backend.services.EmployeeService;
 
-import java.lang.IllegalArgumentException;
+import java.lang.NoSuchFieldException;
+import java.util.List;
 
 @WebMvcTest(EmployeeController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -76,13 +79,22 @@ public class CreateEmployeeControllerTests {
     @DisplayName("Test save an employee with success")
     void whenSaveEmployee_thenCreateEmployee() throws Exception {
 
+        String CONTENT = 
+            "{" +
+            "\"isAdmin\": False," +
+            "\"fullName\": \"Employee 1\"," +
+            "\"email\": \"johndoe@gmail.com\"," +
+            "\"phoneNumber\": \"123456789\"," +
+            "\"specialitiesID\": [1]" +
+            "}";
+
         when(employeeService.save(any())).thenReturn(employee);
 
         mvc.perform(
             post("/api/employee/admin/add")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(JsonUtils.toJson(employee)
-        ))
+            .content(CONTENT)
+        )
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.id", is((int) employee.getId())))
         .andExpect(jsonPath("$.fullName", is(employee.getFullName())))
@@ -96,7 +108,7 @@ public class CreateEmployeeControllerTests {
 
         employee.setFullName(null);
 
-        when(employeeService.save(any())).thenThrow(IllegalArgumentException.class);
+        when(employeeService.save(any())).thenThrow(NoSuchFieldException.class);
 
         mvc.perform(
             post("/api/employee/admin/add")
@@ -112,7 +124,7 @@ public class CreateEmployeeControllerTests {
 
         employee.setFullName("");
 
-        when(employeeService.save(any())).thenThrow(IllegalArgumentException.class);
+        when(employeeService.save(any())).thenThrow(NoSuchFieldException.class);
 
         mvc.perform(
             post("/api/employee/admin/add")
@@ -128,7 +140,7 @@ public class CreateEmployeeControllerTests {
 
         employee.setEmail(null);
 
-        when(employeeService.save(any())).thenThrow(IllegalArgumentException.class);
+        when(employeeService.save(any())).thenThrow(NoSuchFieldException.class);
 
         mvc.perform(
             post("/api/employee/admin/add")
@@ -144,7 +156,7 @@ public class CreateEmployeeControllerTests {
 
         employee.setEmail("");
 
-        when(employeeService.save(any())).thenThrow(IllegalArgumentException.class);
+        when(employeeService.save(any())).thenThrow(NoSuchFieldException.class);
 
         mvc.perform(
             post("/api/employee/admin/add")
@@ -160,7 +172,7 @@ public class CreateEmployeeControllerTests {
 
         employee.setPhoneNumber(null);
 
-        when(employeeService.save(any())).thenThrow(IllegalArgumentException.class);
+        when(employeeService.save(any())).thenThrow(NoSuchFieldException.class);
 
         mvc.perform(
             post("/api/employee/admin/add")
@@ -176,7 +188,7 @@ public class CreateEmployeeControllerTests {
 
         employee.setPhoneNumber("");
 
-        when(employeeService.save(any())).thenThrow(IllegalArgumentException.class);
+        when(employeeService.save(any())).thenThrow(NoSuchFieldException.class);
 
         mvc.perform(
             post("/api/employee/admin/add")
@@ -190,7 +202,7 @@ public class CreateEmployeeControllerTests {
     @DisplayName("Test save an employee with existing email")
     void whenSaveEmployeeWithExistingEmail_thenBadRequest() throws Exception {
 
-        when(employeeService.save(any())).thenThrow(IllegalArgumentException.class);
+        when(employeeService.save(any())).thenThrow(NoSuchFieldException.class);
 
         mvc.perform(
             post("/api/employee/admin/add")
@@ -204,7 +216,7 @@ public class CreateEmployeeControllerTests {
     @DisplayName("Test save an employee with existing phoneNumber")
     void whenSaveEmployeeWithExistingPhoneNumber_thenBadRequest() throws Exception {
 
-        when(employeeService.save(any())).thenThrow(IllegalArgumentException.class);
+        when(employeeService.save(any())).thenThrow(NoSuchFieldException.class);
 
         mvc.perform(
             post("/api/employee/admin/add")
@@ -220,7 +232,7 @@ public class CreateEmployeeControllerTests {
 
         employee.setEmail("johndoegmail.com");
 
-        when(employeeService.save(any())).thenThrow(IllegalArgumentException.class);
+        when(employeeService.save(any())).thenThrow(NoSuchFieldException.class);
 
         mvc.perform(
             post("/api/employee/admin/add")
@@ -236,7 +248,7 @@ public class CreateEmployeeControllerTests {
 
         employee.setEmail("johndoe@gmailcom");
 
-        when(employeeService.save(any())).thenThrow(IllegalArgumentException.class);
+        when(employeeService.save(any())).thenThrow(NoSuchFieldException.class);
 
         mvc.perform(
             post("/api/employee/admin/add")
@@ -252,7 +264,7 @@ public class CreateEmployeeControllerTests {
 
         employee.setEmail("johndoe.gmail@com");
 
-        when(employeeService.save(any())).thenThrow(IllegalArgumentException.class);
+        when(employeeService.save(any())).thenThrow(NoSuchFieldException.class);
 
         mvc.perform(
             post("/api/employee/admin/add")
@@ -268,7 +280,7 @@ public class CreateEmployeeControllerTests {
 
         employee.setEmail("johndoe@@gmail.com");
 
-        when(employeeService.save(any())).thenThrow(IllegalArgumentException.class);
+        when(employeeService.save(any())).thenThrow(NoSuchFieldException.class);
 
         mvc.perform(
             post("/api/employee/admin/add")
@@ -284,7 +296,7 @@ public class CreateEmployeeControllerTests {
 
         employee.setEmail("@.");
 
-        when(employeeService.save(any())).thenThrow(IllegalArgumentException.class);
+        when(employeeService.save(any())).thenThrow(NoSuchFieldException.class);
 
         mvc.perform(
             post("/api/employee/admin/add")
@@ -300,7 +312,7 @@ public class CreateEmployeeControllerTests {
 
         employee.setPhoneNumber("123456789a");
 
-        when(employeeService.save(any())).thenThrow(IllegalArgumentException.class);
+        when(employeeService.save(any())).thenThrow(NoSuchFieldException.class);
 
         mvc.perform(
             post("/api/employee/admin/add")
