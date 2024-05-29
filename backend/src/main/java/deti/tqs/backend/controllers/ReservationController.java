@@ -13,9 +13,12 @@ import deti.tqs.backend.models.Reservation;
 import deti.tqs.backend.models.Validity;
 import deti.tqs.backend.services.ReservationService;
 import deti.tqs.backend.services.RoomService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/reservation")
+@Tag(name = "Reservation", description = "Operations pertaining to reservations in the system.")
 public class ReservationController {
 
     private static final Logger logger = LoggerFactory.getLogger(FacilityController.class);
@@ -30,6 +33,7 @@ public class ReservationController {
     }
 
     @PostMapping("/add")
+    @Operation(summary = "Create a new reservation", description = "A customer make a reservation in the system.")
     public Reservation createReservation(@RequestBody(required = true) ReservationSchema reservationSchema) {
         logger.info("Creating reservation");
         Reservation reservation = new Reservation();

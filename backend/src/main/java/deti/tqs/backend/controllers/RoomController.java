@@ -20,11 +20,14 @@ import org.springframework.web.bind.annotation.RestController;
 import deti.tqs.backend.dtos.RoomSchema;
 import deti.tqs.backend.models.Room;
 import deti.tqs.backend.services.RoomService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 
 @RestController
 @RequestMapping("/api/room")
+@Tag(name = "Room", description = "Operations pertaining to rooms in the system.")
 public class RoomController {
 
   private static final Logger logger = LoggerFactory.getLogger(RoomController.class);
@@ -37,6 +40,7 @@ public class RoomController {
   }
 
   @PostMapping("/admin/add")
+  @Operation(summary = "Create a new room", description = "An admin create a new room in the system.")
   public ResponseEntity<Room> createRoom(@RequestBody(required = true) RoomSchema roomSchema)  {
 
     logger.info("Creating room");
@@ -79,6 +83,7 @@ public class RoomController {
   }
 
   @GetMapping("/{id}")
+  @Operation(summary = "Get a room by ID", description = "Get a room by its ID.")
   public ResponseEntity<Room> getRoomById(@PathVariable long id) {
 
     logger.info("Getting room by ID");
@@ -102,6 +107,7 @@ public class RoomController {
   }
 
   @GetMapping("/all")
+  @Operation(summary = "Get all rooms", description = "Get all rooms in the system.")
   public ResponseEntity<Iterable<Room>> getAllRooms() {
 
     logger.info("Getting all rooms");
@@ -113,6 +119,7 @@ public class RoomController {
   }
 
   @GetMapping("/search")
+  @Operation(summary = "Search for a room", description = "Search for a room by its name and facility ID.")
   public ResponseEntity<List<Room>> searchRoom(@RequestParam(required = false) String roomName, @RequestParam(required = false) String facilityID) throws Exception {
 
     logger.info("Searching for room");
@@ -144,6 +151,7 @@ public class RoomController {
   } 
 
   @PutMapping("/admin/update")
+  @Operation(summary = "Update a room", description = "An admin update a room in the system.")
   public ResponseEntity<Room> updateRoom(@RequestBody(required = true) RoomSchema roomSchema, @RequestParam(required = true) long id) {
 
     logger.info("Updating room");
@@ -181,6 +189,7 @@ public class RoomController {
   }
 
   @DeleteMapping("/admin/delete")
+  @Operation(summary = "Delete a room", description = "An admin delete a room in the system.")
   public ResponseEntity<Void> deleteRoom(@RequestParam(required = true) long id) {
 
     logger.info("Deleting room");
