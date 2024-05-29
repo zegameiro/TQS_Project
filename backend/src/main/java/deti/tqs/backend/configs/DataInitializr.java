@@ -12,9 +12,13 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import deti.tqs.backend.models.Chair;
+import deti.tqs.backend.models.Customer;
 import deti.tqs.backend.models.Facility;
+import deti.tqs.backend.models.Reservation;
 import deti.tqs.backend.models.Room;
+import deti.tqs.backend.models.Validity;
 import deti.tqs.backend.repositories.ChairRepository;
+import deti.tqs.backend.repositories.CustomerRepository;
 import deti.tqs.backend.repositories.FacilityRepository;
 import deti.tqs.backend.repositories.ReservationRepository;
 import deti.tqs.backend.repositories.RoomRepository;
@@ -30,14 +34,16 @@ public class DataInitializr implements ApplicationRunner {
     private final RoomRepository roomRepository;
     private final ChairRepository chairRepository;
     private final ReservationRepository reservationRepository;
+    private final CustomerRepository customerRepository;
 
     @Autowired
     public DataInitializr(FacilityRepository facilityRepository, ReservationRepository reservationRepository,
-            RoomRepository roomRepository, ChairRepository chairRepository) {
+            RoomRepository roomRepository, ChairRepository chairRepository, CustomerRepository customerRepository) {
         this.facilityRepository = facilityRepository;
         this.reservationRepository = reservationRepository;
         this.roomRepository = roomRepository;
         this.chairRepository = chairRepository;
+        this.customerRepository = customerRepository;
     }
 
     @Override
@@ -122,5 +128,32 @@ public class DataInitializr implements ApplicationRunner {
                 roomRepository.save(room);
             }
         }
+
+        // Costumer
+        logger.info("Creating default costumer");
+        Customer customer = new Customer();
+        customer.setName("John Doe");
+        customer.setPhoneNumber("912345678");
+        customer.setEmail("aaaaaaa@a.a");
+        customer.setReservations(new ArrayList<>());
+        customerRepository.save(customer);
+
+        // Reservation
+        logger.info("Creating default reservations");
+        // criar 5 reservas para rooms e facilities aleatorios
+        for (int i = 0; i < 5; i++) {
+            Facility facility = facilities.get(i % 3);
+            Room room = facility.getRooms().get(i % facility.getMaxRoomsCapacity());
+
+            Reservation reservation = new Reservation();
+            reservation.setTimestamp(System.currentTimeMillis());
+            reservation.setValidity(Validity.VALID);
+            reservation.setSpeciality(room.getName());
+            reservation.setRoom(room);
+            reservation.setCustomer(customer);
+            reservationRepository.save(reservation);
+            room.getReservations().add(reservation);
+            roomRepository.save(room);
+        } 
     }
 }
