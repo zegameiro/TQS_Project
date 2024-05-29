@@ -1,6 +1,7 @@
 
 import React, { useState } from "react";
 import { Button, Progress } from "@nextui-org/react";
+import { format } from 'date-fns';
 
 import NavbarFixed from "../components/NavbarFixed"
 import ChooseService from "../components/make-reservation/chooseService";
@@ -17,6 +18,10 @@ const Reservation = () => {
   const [currentStep, setCurrentStep] = useState(0)
 
   const [selectedServices, setSelectedServices] = useState([]);
+
+  const [selectedDate, setSelectedDate] = useState(format(new Date(), 'yyyy-MM-dd'));
+  const [selectedHour, setSelectedHour] = useState("");
+  const [selectedMinute, setSelectedMinute] = useState("");
 
   // client data
   const [clientName, setClientName] = useState("");
@@ -207,6 +212,10 @@ const Reservation = () => {
       document.getElementById("warning-label").innerHTML = "Please select at least one service";
       return;
     }
+    if (currentStep === 1 && (selectedDate === null || selectedHour === "" || selectedMinute === "")) {
+      document.getElementById("warning-label").innerHTML = "Please select a date and time";
+      return;
+    }
     if (currentStep === 2 && (clientName === "" || clientEmail === "" || clientPhone === "" || clientAddress === "")) {
       document.getElementById("warning-label").innerHTML = "Please fill all the fields";
       return;
@@ -240,9 +249,10 @@ const Reservation = () => {
         <div className="w-[70%] ml-[15%] mt-5 mb-10 h-[50vh] p-10 border-primary" style={{ border: '.125rem solid #220f67', borderRadius: '1rem', overflowY: 'auto' }}>
           {
             currentStep === 0 ? <ChooseService services={selectedCategory.services} selectedServices={selectedServices} setSelectedServices={setSelectedServices} /> :
-              currentStep === 2 ? <Payment services={selectedCategory.services} selectedServices={selectedServices} selectedPaymentData={[clientName, clientEmail, clientPhone, clientAddress]} setSelectedPaymentData={[setClientName, setClientEmail, setClientPhone, setClientAddress]} setPriceToPay={setPriceToPay} /> :
-                currentStep === 3 ? <Confirmation reservationDetails={{ location, roomID, service, selectedServices, priceToPay }} userData={[clientName, clientEmail, clientPhone, clientAddress]} /> :
-                  components[currentStep]
+              currentStep === 1 ? <PickTimeSlot selectedDate={selectedDate} setSelectedDate={setSelectedDate} selectedHour={selectedHour} setSelectedHour={setSelectedHour} selectedMinute={selectedMinute} setSelectedMinute={setSelectedMinute} /> :
+                currentStep === 2 ? <Payment services={selectedCategory.services} selectedServices={selectedServices} selectedPaymentData={[clientName, clientEmail, clientPhone, clientAddress]} setSelectedPaymentData={[setClientName, setClientEmail, setClientPhone, setClientAddress]} setPriceToPay={setPriceToPay} /> :
+                  currentStep === 3 ? <Confirmation reservationDetails={{ location, roomID, service, selectedServices, priceToPay }} userData={[clientName, clientEmail, clientPhone, clientAddress]} /> :
+                    components[currentStep]
           }
         </div>
 
