@@ -2,11 +2,12 @@ package deti.tqs.backend.models;
 
 public enum BeautyService {
   
-  HAIRDRESSER(0),
-  DEPILATION(1),
-  MANICURE(2),
-  PEDICURE(3),
-  SPA(4);
+  BASIC_HAIRDRESSER(0),
+  COMPLEX_HAIRDRESSER(1),
+  MAKEUP(2),
+  DEPILATION(3),
+  MANICURE_PEDICURE(4),
+  SPA(5);
 
   private final int id;
 

@@ -110,6 +110,7 @@ public class DataInitializr implements ApplicationRunner {
                 Room room = new Room();
                 room.setName(roomExamples.get(i));
                 room.setMaxChairsCapacity(5);
+                room.setBeautyServiceId(i);
                 room.setFacility(facility);
                 room.setChairs(new ArrayList<>());
                 room.setReservations(new ArrayList<>());
@@ -147,88 +148,153 @@ public class DataInitializr implements ApplicationRunner {
 
         Speciality speciality2 = new Speciality();
         speciality2.setName("Beard Trimming");
-        speciality2.setPrice(38.01);
+        speciality2.setPrice(5);
         speciality2.setBeautyServiceId(0);
 
         Speciality speciality3 = new Speciality();
-        speciality3.setName("Extensions");
-        speciality3.setPrice(58.18);
+        speciality3.setName("Washing");
+        speciality3.setPrice(5);
         speciality3.setBeautyServiceId(0);
 
         Speciality speciality4 = new Speciality();
-        speciality4.setName("Coloring");
-        speciality4.setPrice(1092.73);
+        speciality4.setName("Brushing");
+        speciality4.setPrice(7.25);
         speciality4.setBeautyServiceId(0);
 
         Speciality speciality5 = new Speciality();
-        speciality5.setName("Straightening");
-        speciality5.setPrice(82.71);
-        speciality5.setBeautyServiceId(0);
+        speciality5.setName("Extensions");
+        speciality5.setPrice(58.80);
+        speciality5.setBeautyServiceId(1);
 
         Speciality speciality6 = new Speciality();
-        speciality6.setName("Curling");
-        speciality6.setPrice(293.54);
-        speciality6.setBeautyServiceId(0);
+        speciality6.setName("Coloring");
+        speciality6.setPrice(35.95);
+        speciality6.setBeautyServiceId(1);
 
         Speciality speciality7 = new Speciality();
-        speciality7.setName("Wax Hair Removal");
-        speciality7.setPrice(756.13);
+        speciality7.setName("Discoloration");
+        speciality7.setPrice(27.45);
         speciality7.setBeautyServiceId(1);
 
         Speciality speciality8 = new Speciality();
-        speciality8.setName("Laser Hair Removal");
-        speciality8.setPrice(10983.38);
+        speciality8.setName("Straightening");
+        speciality8.setPrice(32.70);
         speciality8.setBeautyServiceId(1);
 
         Speciality speciality9 = new Speciality();
-        speciality9.setName("Manicure");
-        speciality9.setPrice(47.18);
-        speciality9.setBeautyServiceId(2);
+        speciality9.setName("Curling");
+        speciality9.setPrice(93.50);
+        speciality9.setBeautyServiceId(1);
 
         Speciality speciality10 = new Speciality();
-        speciality10.setName("Pedicure");
-        speciality10.setPrice(15.0);
-        speciality10.setBeautyServiceId(3);
+        speciality10.setName("Perm");
+        speciality10.setPrice(33.50);
+        speciality10.setBeautyServiceId(1);
 
         Speciality speciality11 = new Speciality();
-        speciality11.setName("Massages");
-        speciality11.setPrice(563.29);
-        speciality11.setBeautyServiceId(4);
+        speciality11.setName("Eyebrows");
+        speciality11.setPrice(13.50);
+        speciality11.setBeautyServiceId(2);
 
         Speciality speciality12 = new Speciality();
-        speciality12.setName("Facial Treatments");
-        speciality12.setPrice(672.12);
-        speciality12.setBeautyServiceId(4);
+        speciality12.setName("Eyelashes");
+        speciality12.setPrice(13.50);
+        speciality12.setBeautyServiceId(2);
 
         Speciality speciality13 = new Speciality();
-        speciality13.setName("Dermatological treatments");
-        speciality13.setPrice(2039.51);
-        speciality13.setBeautyServiceId(4);
+        speciality13.setName("Lips");
+        speciality13.setPrice(7.50);
+        speciality13.setBeautyServiceId(2);
 
         Speciality speciality14 = new Speciality();
-        speciality14.setName("Dermatological treatments");
-        speciality14.setPrice(172.35);
-        speciality14.setBeautyServiceId(4);
+        speciality14.setName("Full Face");
+        speciality14.setPrice(27.95);
+        speciality14.setBeautyServiceId(2);
 
         Speciality speciality15 = new Speciality();
-        speciality15.setName("Saunas");
-        speciality15.setPrice(51821.74);
-        speciality15.setBeautyServiceId(4);
+        speciality15.setName("Special Occasions");
+        speciality15.setPrice(111.65);
+        speciality15.setBeautyServiceId(2);
 
         Speciality speciality16 = new Speciality();
-        speciality16.setName("Jacuzzi");
-        speciality16.setPrice(1000.05);
-        speciality16.setBeautyServiceId(4);
+        speciality16.setName("Wax Hair Removal");
+        speciality16.setPrice(56.30);
+        speciality16.setBeautyServiceId(3);
 
         Speciality speciality17 = new Speciality();
-        speciality17.setName("Turkish Bath");
-        speciality17.setPrice(4720.20);
-        speciality17.setBeautyServiceId(4);
+        speciality17.setName("Laser Hair Removal");
+        speciality17.setPrice(78.30);
+        speciality17.setBeautyServiceId(3);
 
         Speciality speciality18 = new Speciality();
-        speciality18.setName("Pools");
-        speciality18.setPrice(5.29);
-        speciality18.setBeautyServiceId(4);
+        speciality18.setName("Tweezers");
+        speciality18.setPrice(24.80);
+        speciality18.setBeautyServiceId(3);
+
+        Speciality speciality19 = new Speciality();
+        speciality19.setName("Thread");
+        speciality19.setPrice(18.60);
+        speciality19.setBeautyServiceId(3);
+
+        Speciality speciality20 = new Speciality();
+        speciality20.setName("Epilator");
+        speciality20.setPrice(23.20);
+        speciality20.setBeautyServiceId(3);
+
+        Speciality speciality21 = new Speciality();
+        speciality21.setName("Sugaring");
+        speciality21.setPrice(34.95);
+        speciality21.setBeautyServiceId(3);
+
+        Speciality speciality22 = new Speciality();
+        speciality22.setName("Manicure");
+        speciality22.setPrice(47.50);
+        speciality22.setBeautyServiceId(4);
+
+        Speciality speciality23 = new Speciality();
+        speciality23.setName("Pedicure");
+        speciality23.setPrice(47.50);
+        speciality23.setBeautyServiceId(4);
+
+        Speciality speciality24 = new Speciality();
+        speciality24.setName("Massages");
+        speciality24.setPrice(125.90);
+        speciality24.setBeautyServiceId(5);
+
+        Speciality speciality25 = new Speciality();
+        speciality25.setName("Facial Treatments");
+        speciality25.setPrice(72);
+        speciality25.setBeautyServiceId(5);
+
+        Speciality speciality26 = new Speciality();
+        speciality26.setName("Body treatments");
+        speciality26.setPrice(203.75);
+        speciality26.setBeautyServiceId(5);
+
+        Speciality speciality27 = new Speciality();
+        speciality27.setName("Dermatological treatments");
+        speciality27.setPrice(172.35);
+        speciality27.setBeautyServiceId(5);
+
+        Speciality speciality28 = new Speciality();
+        speciality28.setName("Sauna");
+        speciality28.setPrice(75);
+        speciality28.setBeautyServiceId(5);
+
+        Speciality speciality29 = new Speciality();
+        speciality29.setName("Jacuzzi");
+        speciality29.setPrice(80);
+        speciality29.setBeautyServiceId(5);
+
+        Speciality speciality30 = new Speciality();
+        speciality30.setName("Turkish Bath");
+        speciality30.setPrice(70);
+        speciality30.setBeautyServiceId(5);
+
+        Speciality speciality31 = new Speciality();
+        speciality31.setName("Pools");
+        speciality31.setPrice(60);
+        speciality31.setBeautyServiceId(5);
 
 
         List<Speciality> specialities = List.of(
@@ -249,7 +315,20 @@ public class DataInitializr implements ApplicationRunner {
             speciality15,
             speciality16,
             speciality17,
-            speciality18
+            speciality18,
+            speciality19,
+            speciality20,
+            speciality21,
+            speciality22,
+            speciality23,
+            speciality24,
+            speciality25,
+            speciality26,
+            speciality27,
+            speciality28,
+            speciality29,
+            speciality30,
+            speciality31
         );
 
         specialityRepository.saveAll(specialities);
