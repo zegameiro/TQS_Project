@@ -27,7 +27,7 @@ import jakarta.persistence.EntityNotFoundException;
 
 @RestController
 @RequestMapping("/api/facility")
-@Tag(name = "Faciliy", description = "Operations pertaining to facilities in the system.")
+@Tag(name = "Facility", description = "Operations pertaining to facilities in the system.")
 public class FacilityController {
 
   private static final Logger logger = LoggerFactory.getLogger(FacilityController.class);
