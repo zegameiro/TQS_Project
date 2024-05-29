@@ -81,11 +81,11 @@ public class CreateEmployeeControllerTests {
 
         String CONTENT = 
             "{" +
-            "\"isAdmin\": False," +
-            "\"fullName\": \"Employee 1\"," +
-            "\"email\": \"johndoe@gmail.com\"," +
-            "\"phoneNumber\": \"123456789\"," +
-            "\"specialitiesID\": [1]" +
+                "\"isAdmin\": \"false\"," +
+                "\"fullName\": \"Employee 1\"," +
+                "\"email\": \"johndoe@gmail.com\"," +
+                "\"phoneNumber\": \"123456789\"," +
+                "\"specialitiesID\": [1]" +
             "}";
 
         when(employeeService.save(any())).thenReturn(employee);
