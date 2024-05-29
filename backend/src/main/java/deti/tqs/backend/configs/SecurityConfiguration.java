@@ -56,6 +56,7 @@ public class SecurityConfiguration {
         .requestMatchers(HttpMethod.POST, apiRoomadmin).permitAll()
         .requestMatchers(HttpMethod.PUT, apiRoomadmin).permitAll()
         .requestMatchers(HttpMethod.DELETE, apiRoomadmin).permitAll()
+        .requestMatchers(HttpMethod.GET, "/api/speciality/*").permitAll()
         .requestMatchers(HttpMethod.GET, "/docs").permitAll()
         .requestMatchers(HttpMethod.GET, "/swagger-ui/*").permitAll()
         .requestMatchers(HttpMethod.GET, "/v3/api-docs/*").permitAll()

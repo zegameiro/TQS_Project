@@ -11,6 +11,10 @@ import Confirmation from "../components/make-reservation/confirmation";
 
 import { useNavigate } from "react-router-dom";
 
+import { useMutation, useQuery } from "@tanstack/react-query"
+import axios from "../../api"
+import { getRoomById, getSpecialitiesByBeautyServiceID } from "../../actions/getActions";
+
 const Reservation = () => {
 
   const steps = ["Choose services", "Pick a Time Slot", "Payment", "Here it is your reservation"]
@@ -34,165 +38,22 @@ const Reservation = () => {
 
   // get URL
   const url = window.location.href.split('?')[1];
-  const location = url.split('+')[0];
-  const service = decodeURIComponent(url.split('+')[1]);
-  const roomID = url.split('+')[2];
+  const roomID = url.split('+')[0];
 
-  const categories = [
-    {
-      title: "Basic Hairdresser",
-      services: [
-        {
-          name: "Hair Cut",
-          price: 10,
-        },
-        {
-          name: "Beard Trimming",
-          price: 5,
-        },
-        {
-          name: "Washing",
-          price: 5,
-        },
-        {
-          name: "Brushing",
-          price: 5,
-        },
-      ],
-    },
-    {
-      title: "Complex Hairdresser",
-      services: [
-        {
-          name: "Extensions",
-          price: 50,
-        },
-        {
-          name: "Coloring",
-          price: 30,
-        },
-        {
-          name: "Discoloration",
-          price: 30,
-        },
-        {
-          name: "Straightening/Curling",
-          price: 30,
-        },
-        {
-          name: "Perm",
-          price: 30,
-        },
-      ],
-    },
-    {
-      title: "Makeup",
-      services: [
-        {
-          name: "Eyebrows",
-          price: 5,
-        },
-        {
-          name: "Eyelashes",
-          price: 5,
-        },
-        {
-          name: "Lips",
-          price: 5,
-        },
-        {
-          name: "Full Face",
-          price: 20,
-        },
-        {
-          name: "Special Occasions",
-          price: 30,
-        },
-      ],
-    },
-    {
-      title: "Depilation",
-      services: [
-        {
-          name: "Wax hair removal",
-          price: 10,
-        },
-        {
-          name: "Laser hair removal",
-          price: 50,
-        },
-        {
-          name: "Tweezers",
-          price: 5,
-        },
-        {
-          name: "Thread",
-          price: 5,
-        },
-        {
-          name: "Epilator",
-          price: 5,
-        },
-        {
-          name: "Sugaring",
-          price: 10,
-        },
-      ],
-    },
-    {
-      title: "Manicure/Pedicure",
-      services: [
-        {
-          name: "Manicure",
-          price: 30,
-        },
-        {
-          name: "Pedicure",
-          price: 30,
-        },
-      ],
-    },
-    {
-      title: "Spa",
-      services: [
-        {
-          name: "Massages",
-          price: 20,
-        },
-        {
-          name: "Facial treatments",
-          price: 15,
-        },
-        {
-          name: "Body treatments",
-          price: 20,
-        },
-        {
-          name: "Dermatological treatments",
-          price: 30,
-        },
-        {
-          name: "Sauna",
-          price: 25,
-        },
-        {
-          name: "Jacuzzi",
-          price: 25,
-        },
-        {
-          name: "Turkish bath",
-          price: 25,
-        },
-        {
-          name: "Pools",
-          price: 20,
-        },
-      ],
-    },
-  ]
-  // simulate API call
-  const selectedCategory = categories.find(category => category.title === service);
+  const room = useQuery({
+    queryKey: ["room", roomID],
+    queryFn: () => getRoomById(axios, roomID),
+  })
 
+  const specialities = useQuery({
+    queryKey: ["specialities"],
+    queryFn: () => getSpecialitiesByBeautyServiceID(axios, room?.data?.beautyServiceId),
+  })
+
+  const specialitiesList = specialities?.data?.map(speciality => ({
+    name: speciality.name,
+    price: speciality.price,
+  }))
 
 
   // navigation
@@ -247,14 +108,19 @@ const Reservation = () => {
       <div className="m-5">
         <h1 style={{ textAlign: 'center', color: '#1F0F53', fontSize: '40px', fontWeight: 'bold' }}>{steps[currentStep]}</h1>
         <div className="w-[70%] ml-[15%] mt-5 mb-10 h-[50vh] p-10 border-primary" style={{ border: '.125rem solid #220f67', borderRadius: '1rem', overflowY: 'auto' }}>
-          {
-            currentStep === 0 ? <ChooseService services={selectedCategory.services} selectedServices={selectedServices} setSelectedServices={setSelectedServices} /> :
-              currentStep === 1 ? <PickTimeSlot selectedDate={selectedDate} setSelectedDate={setSelectedDate} selectedHour={selectedHour} setSelectedHour={setSelectedHour} selectedMinute={selectedMinute} setSelectedMinute={setSelectedMinute} /> :
-                currentStep === 2 ? <Payment services={selectedCategory.services} selectedServices={selectedServices} selectedPaymentData={[clientName, clientEmail, clientPhone, clientAddress]} setSelectedPaymentData={[setClientName, setClientEmail, setClientPhone, setClientAddress]} setPriceToPay={setPriceToPay} /> :
-                  currentStep === 3 ? <Confirmation reservationDetails={{ location, roomID, service, selectedServices, priceToPay }} userData={[clientName, clientEmail, clientPhone, clientAddress]} /> :
-                    components[currentStep]
+          {specialitiesList &&
+            <div>
+              {
+                currentStep === 0 ? <ChooseService service={room.data.name} services={specialitiesList} selectedServices={selectedServices} setSelectedServices={setSelectedServices} /> :
+                  currentStep === 1 ? <PickTimeSlot selectedDate={selectedDate} setSelectedDate={setSelectedDate} selectedHour={selectedHour} setSelectedHour={setSelectedHour} selectedMinute={selectedMinute} setSelectedMinute={setSelectedMinute} /> :
+                    currentStep === 2 ? <Payment services={specialitiesList} selectedServices={selectedServices} selectedPaymentData={[clientName, clientEmail, clientPhone, clientAddress]} setSelectedPaymentData={[setClientName, setClientEmail, setClientPhone, setClientAddress]} setPriceToPay={setPriceToPay} /> :
+                      currentStep === 3 ? <Confirmation reservationDetails={{ location, roomID, service, selectedServices, priceToPay }} userData={[clientName, clientEmail, clientPhone, clientAddress]} /> :
+                        components[currentStep]
+              }
+            </div>
           }
         </div>
+
 
         {!isLastStep() ? (
           <div style={{ margin: '0 5vw', display: 'flex', flexDirection: 'row' }}>
