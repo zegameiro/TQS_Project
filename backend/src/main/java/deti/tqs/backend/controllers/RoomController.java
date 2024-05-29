@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import deti.tqs.backend.dtos.RoomSchema;
 import deti.tqs.backend.models.Room;
@@ -48,6 +49,7 @@ public class RoomController {
     Room r = new Room();
     r.setName(roomSchema.name());
     r.setMaxChairsCapacity(roomSchema.maxChairsCapacity());
+    r.setBeautyServiceId(Integer.parseInt(roomSchema.beautyServiceID()));
 
     Room savedRoom = null;
 
@@ -59,22 +61,22 @@ public class RoomController {
     } catch (NoSuchFieldException e) {
 
       logger.error(e.getMessage());
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 
     } catch (EntityNotFoundException e) {
       
       logger.error(e.getMessage());
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
 
     } catch (EntityExistsException e) {
 
       logger.error(e.getMessage());
-      return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+      throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
       
     } catch (IllegalStateException e) {
 
       logger.error(e.getMessage());
-      return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(null);
+      throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
 
     }
 
@@ -98,7 +100,7 @@ public class RoomController {
     } catch (EntityNotFoundException e) {
 
       logger.error(e.getMessage());
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
 
     }
 
@@ -137,12 +139,12 @@ public class RoomController {
     } catch (EntityNotFoundException e) {
 
       logger.error(e.getMessage());
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
 
     } catch (NoSuchFieldException e) {
 
       logger.error(e.getMessage());
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 
     }
 
@@ -168,19 +170,19 @@ public class RoomController {
       
     } catch (EntityNotFoundException e) {
 
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
 
     } catch (NoSuchFieldException e) {
 
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 
     } catch (IllegalStateException e) {
 
-      return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(null);
+      throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
 
     } catch (EntityExistsException e) {
 
-      return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+      throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
 
     }
 
@@ -202,7 +204,7 @@ public class RoomController {
     } catch (EntityNotFoundException e) {
 
       logger.error(e.getMessage());
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
 
     }
 

@@ -97,18 +97,22 @@ class SearchRoomTestsIT {
     r1.setName("Room 1");
     r1.setMaxChairsCapacity(10);
     r1.setFacility(f1);
+    r1.setBeautyServiceId(0);
 
     r2.setName("Room 2");
     r2.setMaxChairsCapacity(20);
     r2.setFacility(f1);
+    r2.setBeautyServiceId(1);
 
     r3.setName("Room 3");
     r3.setMaxChairsCapacity(30);
     r3.setFacility(f2);
+    r3.setBeautyServiceId(2);
 
     r4.setName("Room 4");
     r4.setMaxChairsCapacity(40);
     r4.setFacility(f2);
+    r4.setBeautyServiceId(2);
 
     roomRepository.saveAllAndFlush(List.of(r1, r2, r3, r4));
 

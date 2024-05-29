@@ -1,13 +1,17 @@
 package deti.tqs.backend.dtos;
 
 import deti.tqs.backend.configs.Generated;
-import deti.tqs.backend.models.Customer;
 import jakarta.validation.Valid;
 
 @Generated
 public record ReservationSchema(
 
-        @Valid String speciality,
-        @Valid long roomID,
-        @Valid Customer customer) {
-}
+        @Valid String timestamp,
+        @Valid String secretCode,
+        @Valid String customerName,
+        @Valid String customerEmail,
+        @Valid String customerPhoneNumber,
+        @Valid String specialityID,
+        @Valid String roomID
+
+) {}

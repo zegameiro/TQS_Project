@@ -11,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -48,5 +49,12 @@ public class Facility {
   @OneToMany(mappedBy = "facility", cascade = CascadeType.ALL)
   @JsonIgnore
   private List<Room> rooms;
+
+  @OneToOne(mappedBy = "facility", cascade = CascadeType.ALL)
+  private ReservationQueue reservationQueue;
+
+  @OneToMany(mappedBy = "facility", cascade = CascadeType.ALL)
+  @JsonIgnore
+  private List<Employee> employees;
 
 }

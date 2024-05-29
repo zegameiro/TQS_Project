@@ -80,10 +80,12 @@ class UpdateRoomServiceTest {
     r1.setName("Room 1");
     r1.setMaxChairsCapacity(10);
     r1.setFacility(f1);
+    r1.setBeautyServiceId(4);
 
     r2.setName("Room 2");
     r2.setMaxChairsCapacity(15);
     r2.setFacility(f2);
+    r2.setBeautyServiceId(0);
 
   }
 
@@ -98,6 +100,7 @@ class UpdateRoomServiceTest {
     r.setName("Room 1 Updated");
     r.setMaxChairsCapacity(20);
     r.setFacility(f2);
+    r.setBeautyServiceId(0);
 
     when(roomRepository.save(any())).thenReturn(r);
 

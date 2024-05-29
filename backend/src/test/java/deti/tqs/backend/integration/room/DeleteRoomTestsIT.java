@@ -70,6 +70,7 @@ class DeleteRoomTestsIT {
     r.setName("Room 1");
     r.setMaxChairsCapacity(5);
     r.setFacility(f);
+    r.setBeautyServiceId(0);
 
     roomRepository.saveAndFlush(r);
 

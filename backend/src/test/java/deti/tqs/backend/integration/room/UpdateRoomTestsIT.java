@@ -92,10 +92,12 @@ class UpdateRoomTestsIT {
     r1.setName("Room 1");
     r1.setMaxChairsCapacity(20);
     r1.setFacility(f1);
+    r1.setBeautyServiceId(0);
 
     r2.setName("Room 2");
     r2.setMaxChairsCapacity(30);
     r2.setFacility(f2);
+    r2.setBeautyServiceId(3);
 
     roomRepository.saveAndFlush(r1);
     roomRepository.saveAndFlush(r2);
@@ -109,7 +111,8 @@ class UpdateRoomTestsIT {
     RoomSchema roomSchema = new RoomSchema(
       "Room 3",
       2,
-      f2.getId()
+      f2.getId(),
+      "0"
     );
     
     Room updatedRoom = 
@@ -139,7 +142,8 @@ class UpdateRoomTestsIT {
     RoomSchema roomSchema = new RoomSchema(
       "Room 3",
       2,
-      f1.getId()
+      f1.getId(),
+      "1"
     );
     
     given()
@@ -159,7 +163,8 @@ class UpdateRoomTestsIT {
     RoomSchema roomSchema = new RoomSchema(
       "Room 2",
       2,
-      f2.getId()
+      f2.getId(),
+      "4"
     );
     
     given()
@@ -179,7 +184,8 @@ class UpdateRoomTestsIT {
     RoomSchema roomSchema = new RoomSchema(
       "",
       2,
-      f1.getId()
+      f1.getId(),
+      "3"
     );
     
     given()
@@ -199,7 +205,8 @@ class UpdateRoomTestsIT {
     RoomSchema roomSchema = new RoomSchema(
       "Room 3",
       -1,
-      f1.getId()
+      f1.getId(),
+      "1"
     );
     
     given()
@@ -219,7 +226,8 @@ class UpdateRoomTestsIT {
     RoomSchema roomSchema = new RoomSchema(
       "Room 3",
       2,
-      23945
+      23945,
+      "1"
     );
     
     given()
@@ -239,7 +247,8 @@ class UpdateRoomTestsIT {
     RoomSchema roomSchema = new RoomSchema(
       "Room 3",
       2,
-      f1.getId()
+      f1.getId(),
+      "1"
     );
     
     given()

@@ -1,5 +1,6 @@
 package deti.tqs.backend.models;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,17 +29,33 @@ public class Reservation {
   private long timestamp;
 
   @Column(nullable = false)
-  private Validity validity;
+  private String secretCode;
 
   @Column(nullable = false)
-  private String speciality;
+  private String customerName;
+
+  @Column(nullable = false)
+  private String customerEmail; 
+
+  @Column(nullable = false)
+  private String customerPhoneNumber;
+
+  @Column
+  private int validityID = 0;
+
+  @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL)
+  private Speciality speciality;
 
   @ManyToOne
-  @JoinColumn(nullable = false)
+  @JoinColumn
   private Room room;
 
   @ManyToOne
-  @JoinColumn(nullable = false)
-  private Customer customer;
+  @JoinColumn
+  private ReservationQueue reservationQueue;
+
+  @ManyToOne
+  @JoinColumn
+  private Employee employee;
 
 }

@@ -5,39 +5,36 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Setter
 @Getter
+@Setter
 @NoArgsConstructor
-@Table(name = "CUSTOMER")
-public class Customer {
-  
+@Table(name = "RESERVATION_QUEUE")
+public class ReservationQueue {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
-  @Column(nullable = false)
-  private String name;
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn 
+  @JsonIgnore
+  private Facility facility;
 
-  @Column(nullable = false)
-  private String email; 
-
-  @Column(nullable = false)
-  private String phoneNumber;
-
-  @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "reservationQueue", cascade = CascadeType.ALL)
   @JsonIgnore
   private List<Reservation> reservations;
-
+  
 }

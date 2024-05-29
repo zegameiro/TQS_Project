@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import deti.tqs.backend.dtos.FacilitySchema;
 import deti.tqs.backend.models.Facility;
@@ -65,11 +66,11 @@ public class FacilityController {
 
     } catch (EntityExistsException e) {
 
-      return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+      throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
       
     } catch (IllegalArgumentException e) {
 
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
 
     }
 
@@ -99,7 +100,7 @@ public class FacilityController {
       
     } catch (EntityNotFoundException e) {
 
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
 
     }
 
@@ -119,7 +120,7 @@ public class FacilityController {
       
     } catch (IllegalArgumentException e) {
 
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
 
     }
 
