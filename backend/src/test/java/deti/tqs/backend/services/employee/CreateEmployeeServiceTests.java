@@ -96,7 +96,7 @@ public class CreateEmployeeServiceTests {
 
         assertThatThrownBy(
                 () -> employeeService.save(employee))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(NoSuchFieldException.class)
                 .hasMessage("Employee must have a full name");
 
         verify(employeeRepository, times(0)).save(employee);
@@ -111,7 +111,7 @@ public class CreateEmployeeServiceTests {
 
         assertThatThrownBy(
                 () -> employeeService.save(employee))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(NoSuchFieldException.class)
                 .hasMessage("Employee must have a full name");
 
         verify(employeeRepository, times(0)).save(employee);
@@ -126,7 +126,7 @@ public class CreateEmployeeServiceTests {
 
         assertThatThrownBy(
                 () -> employeeService.save(employee))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(NoSuchFieldException.class)
                 .hasMessage("Employee must have an email");
 
         verify(employeeRepository, times(0)).save(employee);
@@ -141,7 +141,7 @@ public class CreateEmployeeServiceTests {
 
         assertThatThrownBy(
                 () -> employeeService.save(employee))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(NoSuchFieldException.class)
                 .hasMessage("Employee must have an email");
 
         verify(employeeRepository, times(0)).save(employee);
@@ -156,7 +156,7 @@ public class CreateEmployeeServiceTests {
 
         assertThatThrownBy(
                 () -> employeeService.save(employee))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(NoSuchFieldException.class)
                 .hasMessage("Employee must have a phone number");
 
         verify(employeeRepository, times(0)).save(employee);
@@ -171,7 +171,7 @@ public class CreateEmployeeServiceTests {
 
         assertThatThrownBy(
                 () -> employeeService.save(employee))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(NoSuchFieldException.class)
                 .hasMessage("Employee must have a phone number");
 
         verify(employeeRepository, times(0)).save(employee);
@@ -216,7 +216,7 @@ public class CreateEmployeeServiceTests {
 
         assertThatThrownBy(
                 () -> employeeService.save(employee))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(NoSuchFieldException.class)
                 .hasMessage("Employee must have a valid email");
 
         verify(employeeRepository, times(0)).save(employee);
@@ -231,7 +231,7 @@ public class CreateEmployeeServiceTests {
 
         assertThatThrownBy(
                 () -> employeeService.save(employee))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(NoSuchFieldException.class)
                 .hasMessage("Employee must have a valid email");
 
         verify(employeeRepository, times(0)).save(employee);
@@ -246,7 +246,7 @@ public class CreateEmployeeServiceTests {
 
         assertThatThrownBy(
                 () -> employeeService.save(employee))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(NoSuchFieldException.class)
                 .hasMessage("Employee must have a valid email");
 
         verify(employeeRepository, times(0)).save(employee);
@@ -261,7 +261,7 @@ public class CreateEmployeeServiceTests {
 
         assertThatThrownBy(
                 () -> employeeService.save(employee))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(NoSuchFieldException.class)
                 .hasMessage("Employee must have a valid email");
 
         verify(employeeRepository, times(0)).save(employee);
@@ -276,7 +276,7 @@ public class CreateEmployeeServiceTests {
 
         assertThatThrownBy(
                 () -> employeeService.save(employee))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(NoSuchFieldException.class)
                 .hasMessage("Employee must have a valid email");
 
         verify(employeeRepository, times(0)).save(employee);
@@ -291,7 +291,7 @@ public class CreateEmployeeServiceTests {
 
         assertThatThrownBy(
                 () -> employeeService.save(employee))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(NoSuchFieldException.class)
                 .hasMessage("Employee must have a valid phone number");
 
         verify(employeeRepository, times(0)).save(employee);
