@@ -254,16 +254,16 @@ public class DataInitializr implements ApplicationRunner {
 
         specialityRepository.saveAll(specialities);
 
-        // Reservation Queues
+        // // Reservation Queues
 
-        for (Facility facility : facilities) {
-            ReservationQueue reservationQueue = new ReservationQueue();
-            reservationQueue.setFacility(facility);
-            reservationQueue.setReservations(new ArrayList<>());
-            reservationQueueRepository.save(reservationQueue);
-            facility.setReservationQueue(reservationQueue);
-            facilityRepository.save(facility);
-        }
+        // for (Facility facility : facilities) {
+        //     ReservationQueue reservationQueue = new ReservationQueue();
+        //     reservationQueue.setFacility(facility);
+        //     reservationQueue.setReservations(new ArrayList<>());
+        //     reservationQueueRepository.save(reservationQueue);
+        //     facility.setReservationQueue(reservationQueue);
+        //     facilityRepository.save(facility);
+        // }
 
         // Reservation
         logger.info("Creating default reservations");
