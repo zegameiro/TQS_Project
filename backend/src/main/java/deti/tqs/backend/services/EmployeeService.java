@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import deti.tqs.backend.models.Employee;
 import deti.tqs.backend.repositories.EmployeeRepository;
+import jakarta.persistence.EntityExistsException;
 
 @Service
 public class EmployeeService {
@@ -16,7 +17,48 @@ public class EmployeeService {
         this.employeeRepository = employeeRepository;
     }
 
-    public Employee save(Employee employee) {
-        throw new UnsupportedOperationException("Not implemented yet");
+    public Employee save(Employee employee) throws IllegalArgumentException, EntityExistsException {
+
+        checkIfEntityExists(employee);
+        checkIfEntityIsValid(employee);
+        checkIfEmailIsValid(employee);
+        checkIfPhoneNumberIsValid(employee);
+
+        return employeeRepository.save(employee);
+    }
+
+    private void checkIfEntityExists(Employee employee) throws EntityExistsException {
+        if (employeeRepository.findByEmail(employee.getEmail()) != null)
+            throw new EntityExistsException("Employee with this email already exists"); 
+        if (employeeRepository.findByPhoneNumber(employee.getPhoneNumber()) != null)
+            throw new EntityExistsException("Employee with this phone number already exists");
+    }
+
+    private void checkIfEntityIsValid(Employee employee) throws IllegalArgumentException {
+        if (isNullOrEmpty(employee.getFullName()))
+            throw new IllegalArgumentException("Employee must have a full name");
+
+        if (isNullOrEmpty(employee.getEmail()))
+            throw new IllegalArgumentException("Employee must have an email");
+
+        if (isNullOrEmpty(employee.getPhoneNumber()))
+            throw new IllegalArgumentException("Employee must have a phone number");
+    }
+
+    private boolean isNullOrEmpty(String str) {
+        return str == null || str.isEmpty();
+    }
+
+    private void checkIfEmailIsValid(Employee employee) throws IllegalArgumentException {
+        if (!employee.getEmail().matches("^(.+)@(.+)\\.(.+)$"))
+            throw new IllegalArgumentException("Employee must have a valid email");
+        if (employee.getEmail().chars().filter(ch -> ch == '@').count() != 1)
+            throw new IllegalArgumentException("Employee must have a valid email");
+    }
+
+    private void checkIfPhoneNumberIsValid(Employee employee) throws IllegalArgumentException {
+        if (!employee.getPhoneNumber().matches("^[0-9]+$"))
+            throw new IllegalArgumentException("Employee must have a valid phone number");
     }
 }
+
