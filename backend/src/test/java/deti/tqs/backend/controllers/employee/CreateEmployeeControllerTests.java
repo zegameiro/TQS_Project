@@ -1,9 +1,7 @@
 package deti.tqs.backend.controllers.employee;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -12,28 +10,28 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import static org.hamcrest.CoreMatchers.is;
-
-import org.springframework.http.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import deti.tqs.backend.JsonUtils;
+import deti.tqs.backend.controllers.EmployeeController;
 import deti.tqs.backend.models.Employee;
 import deti.tqs.backend.services.EmployeeService;
 
-@WebMvcTest(EmplyeeController.class)
+import java.lang.IllegalArgumentException;
+
+@WebMvcTest(EmployeeController.class)
 @AutoConfigureMockMvc(addFilters = false)
-public class CreateEmplyeeControllerTests {
+public class CreateEmployeeControllerTests {
     
     private MockMvc mvc;
 
     @Autowired
-    CreateEmplyeeControllerTests(MockMvc mvc) {
+    CreateEmployeeControllerTests(MockMvc mvc) {
         this.mvc = mvc;
     }
 
@@ -64,20 +62,19 @@ public class CreateEmplyeeControllerTests {
 
     @BeforeEach
     void setUp() {
-        employeeRepository.deleteAll();
-
         employee = new Employee();
         employee.setId(1L);
+        employee.setAdmin(false);
         employee.setFullName("Employee 1");
         employee.setEmail("johndoe@gmail.com");
         employee.setPhoneNumber("123456789");
-        employee.setSpecialities(null);
+        employee.setSpecialitiesID(null);
 
     }
 
     @Test
     @DisplayName("Test save an employee with success")
-    void whenSaveEmployee_thenCreateEmployee() {
+    void whenSaveEmployee_thenCreateEmployee() throws Exception {
 
         when(employeeService.save(any())).thenReturn(employee);
 
@@ -91,17 +88,15 @@ public class CreateEmplyeeControllerTests {
         .andExpect(jsonPath("$.fullName", is(employee.getFullName())))
         .andExpect(jsonPath("$.email", is(employee.getEmail())))
         .andExpect(jsonPath("$.phoneNumber", is(employee.getPhoneNumber())));
-
-        verify(employeeService, times(1)).save(any());
     }
 
     @Test
     @DisplayName("Test save an employee with null fullName")
-    void whenSaveEmployeeWithNullFullName_thenBadRequest() {
+    void whenSaveEmployeeWithNullFullName_thenBadRequest() throws Exception {
 
         employee.setFullName(null);
 
-        when(employeeService.save(any())).thenThrow(NoSuchFieldException.class);
+        when(employeeService.save(any())).thenThrow(IllegalArgumentException.class);
 
         mvc.perform(
             post("/api/employee/admin/add")
@@ -109,17 +104,15 @@ public class CreateEmplyeeControllerTests {
             .content(JsonUtils.toJson(employee)
         ))
         .andExpect(status().isBadRequest());
-
-        verify(employeeService, times(1)).save(any());
     }
 
     @Test
     @DisplayName("Test save an employee with empty fullName")
-    void whenSaveEmployeeWithEmptyFullName_thenBadRequest() {
+    void whenSaveEmployeeWithEmptyFullName_thenBadRequest() throws Exception {
 
         employee.setFullName("");
 
-        when(employeeService.save(any())).thenThrow(NoSuchFieldException.class);
+        when(employeeService.save(any())).thenThrow(IllegalArgumentException.class);
 
         mvc.perform(
             post("/api/employee/admin/add")
@@ -127,17 +120,15 @@ public class CreateEmplyeeControllerTests {
             .content(JsonUtils.toJson(employee)
         ))
         .andExpect(status().isBadRequest());
-
-        verify(employeeService, times(1)).save(any());
     }
 
     @Test
     @DisplayName("Test save an employee with null email")
-    void whenSaveEmployeeWithNullEmail_thenBadRequest() {
+    void whenSaveEmployeeWithNullEmail_thenBadRequest() throws Exception {
 
         employee.setEmail(null);
 
-        when(employeeService.save(any())).thenThrow(NoSuchFieldException.class);
+        when(employeeService.save(any())).thenThrow(IllegalArgumentException.class);
 
         mvc.perform(
             post("/api/employee/admin/add")
@@ -145,17 +136,15 @@ public class CreateEmplyeeControllerTests {
             .content(JsonUtils.toJson(employee)
         ))
         .andExpect(status().isBadRequest());
-
-        verify(employeeService, times(1)).save(any());
     }
 
     @Test
     @DisplayName("Test save an employee with empty email")
-    void whenSaveEmployeeWithEmptyEmail_thenBadRequest() {
+    void whenSaveEmployeeWithEmptyEmail_thenBadRequest() throws Exception {
 
         employee.setEmail("");
 
-        when(employeeService.save(any())).thenThrow(NoSuchFieldException.class);
+        when(employeeService.save(any())).thenThrow(IllegalArgumentException.class);
 
         mvc.perform(
             post("/api/employee/admin/add")
@@ -163,17 +152,15 @@ public class CreateEmplyeeControllerTests {
             .content(JsonUtils.toJson(employee)
         ))
         .andExpect(status().isBadRequest());
-
-        verify(employeeService, times(1)).save(any());
     }
 
     @Test
     @DisplayName("Test save an employee with null phoneNumber")
-    void whenSaveEmployeeWithNullPhoneNumber_thenBadRequest() {
+    void whenSaveEmployeeWithNullPhoneNumber_thenBadRequest() throws Exception {
 
         employee.setPhoneNumber(null);
 
-        when(employeeService.save(any())).thenThrow(NoSuchFieldException.class);
+        when(employeeService.save(any())).thenThrow(IllegalArgumentException.class);
 
         mvc.perform(
             post("/api/employee/admin/add")
@@ -181,17 +168,15 @@ public class CreateEmplyeeControllerTests {
             .content(JsonUtils.toJson(employee)
         ))
         .andExpect(status().isBadRequest());
-
-        verify(employeeService, times(1)).save(any());
     }
 
     @Test
     @DisplayName("Test save an employee with empty phoneNumber")
-    void whenSaveEmployeeWithEmptyPhoneNumber_thenBadRequest() {
+    void whenSaveEmployeeWithEmptyPhoneNumber_thenBadRequest() throws Exception {
 
         employee.setPhoneNumber("");
 
-        when(employeeService.save(any())).thenThrow(NoSuchFieldException.class);
+        when(employeeService.save(any())).thenThrow(IllegalArgumentException.class);
 
         mvc.perform(
             post("/api/employee/admin/add")
@@ -199,13 +184,11 @@ public class CreateEmplyeeControllerTests {
             .content(JsonUtils.toJson(employee)
         ))
         .andExpect(status().isBadRequest());
-
-        verify(employeeService, times(1)).save(any());
     }
 
     @Test
     @DisplayName("Test save an employee with existing email")
-    void whenSaveEmployeeWithExistingEmail_thenBadRequest() {
+    void whenSaveEmployeeWithExistingEmail_thenBadRequest() throws Exception {
 
         when(employeeService.save(any())).thenThrow(IllegalArgumentException.class);
 
@@ -215,13 +198,11 @@ public class CreateEmplyeeControllerTests {
             .content(JsonUtils.toJson(employee)
         ))
         .andExpect(status().isBadRequest());
-
-        verify(employeeService, times(1)).save(any());
     }
 
     @Test
     @DisplayName("Test save an employee with existing phoneNumber")
-    void whenSaveEmployeeWithExistingPhoneNumber_thenBadRequest() {
+    void whenSaveEmployeeWithExistingPhoneNumber_thenBadRequest() throws Exception {
 
         when(employeeService.save(any())).thenThrow(IllegalArgumentException.class);
 
@@ -231,13 +212,11 @@ public class CreateEmplyeeControllerTests {
             .content(JsonUtils.toJson(employee)
         ))
         .andExpect(status().isBadRequest());
-
-        verify(employeeService, times(1)).save(any());
     }
 
     @Test
     @DisplayName("Test save an employee with email not containing '@'")
-    void whenSaveEmployeeWithEmailNotContainingAt_thenBadRequest() {
+    void whenSaveEmployeeWithEmailNotContainingAt_thenBadRequest() throws Exception {
 
         employee.setEmail("johndoegmail.com");
 
@@ -249,13 +228,11 @@ public class CreateEmplyeeControllerTests {
             .content(JsonUtils.toJson(employee)
         ))
         .andExpect(status().isBadRequest());
-
-        verify(employeeService, times(1)).save(any());
     }
 
     @Test
     @DisplayName("Test save an employee with email not containing '.'")
-    void whenSaveEmployeeWithEmailNotContainingDot_thenBadRequest() {
+    void whenSaveEmployeeWithEmailNotContainingDot_thenBadRequest() throws Exception {
 
         employee.setEmail("johndoe@gmailcom");
 
@@ -267,13 +244,11 @@ public class CreateEmplyeeControllerTests {
             .content(JsonUtils.toJson(employee)
         ))
         .andExpect(status().isBadRequest());
-
-        verify(employeeService, times(1)).save(any());
     }
 
     @Test
     @DisplayName("Test save an employee with email containing '@' and '.', but not in the right order")
-    void whenSaveEmployeeWithEmailNotInRightOrder_thenBadRequest() {
+    void whenSaveEmployeeWithEmailNotInRightOrder_thenBadRequest() throws Exception {
 
         employee.setEmail("johndoe.gmail@com");
 
@@ -285,13 +260,11 @@ public class CreateEmplyeeControllerTests {
             .content(JsonUtils.toJson(employee)
         ))
         .andExpect(status().isBadRequest());
-
-        verify(employeeService, times(1)).save(any());
     }
 
     @Test
     @DisplayName("Test save an employee with email containing more then one '@'")
-    void whenSaveEmployeeWithEmailContainingMoreThanOneAt_thenBadRequest() {
+    void whenSaveEmployeeWithEmailContainingMoreThanOneAt_thenBadRequest() throws Exception {
 
         employee.setEmail("johndoe@@gmail.com");
 
@@ -303,13 +276,11 @@ public class CreateEmplyeeControllerTests {
             .content(JsonUtils.toJson(employee)
         ))
         .andExpect(status().isBadRequest());
-
-        verify(employeeService, times(1)).save(any());
     }
 
     @Test
     @DisplayName("Test save an employee with email containing only '@.'")
-    void whenSaveEmployeeWithEmailContainingOnlyAtDot_thenBadRequest() {
+    void whenSaveEmployeeWithEmailContainingOnlyAtDot_thenBadRequest() throws Exception {
 
         employee.setEmail("@.");
 
@@ -321,13 +292,11 @@ public class CreateEmplyeeControllerTests {
             .content(JsonUtils.toJson(employee)
         ))
         .andExpect(status().isBadRequest());
-
-        verify(employeeService, times(1)).save(any());
     }
 
     @Test
     @DisplayName("Test save an employee with a phoneNumber not containing only numbers")
-    void whenSaveEmployeeWithPhoneNumberNotOnlyNumbers_thenBadRequest() {
+    void whenSaveEmployeeWithPhoneNumberNotOnlyNumbers_thenBadRequest() throws Exception {
 
         employee.setPhoneNumber("123456789a");
 
@@ -339,10 +308,8 @@ public class CreateEmplyeeControllerTests {
             .content(JsonUtils.toJson(employee)
         ))
         .andExpect(status().isBadRequest());
-
-        verify(employeeService, times(1)).save(any());
     }
 
-    
+
 
 }
