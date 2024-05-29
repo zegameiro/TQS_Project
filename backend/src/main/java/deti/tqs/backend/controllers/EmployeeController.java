@@ -45,7 +45,6 @@ public class EmployeeController {
         try {
             employee = new Employee();
             employee.setId(1);
-            employee.setAdmin(employeeSchema.isAdmin());
             employee.setFullName(employeeSchema.fullName());
             employee.setEmail(employeeSchema.email());
             employee.setPhoneNumber(employeeSchema.phoneNumber());
@@ -59,7 +58,7 @@ public class EmployeeController {
         } catch (EntityExistsException e) {
             status = HttpStatus.CONFLICT;
         } catch (NoSuchFieldException e) {
-            status = HttpStatus.CONFLICT;
+            status = HttpStatus.BAD_REQUEST;
         } catch (Exception e) {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
