@@ -42,10 +42,12 @@ public class AddEmployeeRepositoryTests {
         employeeRepository.deleteAll();
 
         employee = new Employee();
+        employee.setId(1L);
+        employee.setAdmin(false);
         employee.setFullName("John Doe");
         employee.setEmail("johndoe@gmail.com");
         employee.setPhoneNumber("123456789");
-        employee.setSpecialities(null);
+        employee.setSpecialitiesID(null);
 
     }
 
@@ -62,7 +64,7 @@ public class AddEmployeeRepositoryTests {
                 () -> assertThat(foundEmployee.getFullName()).isEqualTo(employee.getFullName()),
                 () -> assertThat(foundEmployee.getEmail()).isEqualTo(employee.getEmail()),
                 () -> assertThat(foundEmployee.getPhoneNumber()).isEqualTo(employee.getPhoneNumber()),
-                () -> assertThat(foundEmployee.getSpecialities()).isEqualTo(employee.getSpecialities()));
+                () -> assertThat(foundEmployee.getSpecialitiesID()).isEqualTo(employee.getSpecialitiesID()));
     }
 
     @Test
@@ -111,7 +113,7 @@ public class AddEmployeeRepositoryTests {
         employee2.setFullName("John Doe Jr");
         employee2.setEmail("johndoe@gmail.com");
         employee2.setPhoneNumber("987654321");
-        employee2.setSpecialities(null);
+        employee2.setSpecialitiesID(null);
 
         assertThatThrownBy(
                 () -> employeeRepository.save(employee2))
@@ -128,7 +130,7 @@ public class AddEmployeeRepositoryTests {
         employee2.setFullName("John Doe Jr");
         employee2.setEmail("johndoejr@gmail.com");
         employee2.setPhoneNumber("123456789");
-        employee2.setSpecialities(null);
+        employee2.setSpecialitiesID(null);
 
         assertThatThrownBy(
                 () -> employeeRepository.save(employee2))

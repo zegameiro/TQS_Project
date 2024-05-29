@@ -58,10 +58,12 @@ public class CreateEmployeeServiceTests {
         employeeRepository.deleteAll();
 
         employee = new Employee();
+        employee.setId(1L);
+        employee.setAdmin(false);
         employee.setFullName("John Doe");
         employee.setEmail("johndoe@gmail.com");
         employee.setPhoneNumber("123456789");
-        employee.setSpecialities(null);
+        employee.setSpecialitiesID(null);
 
     }
 
