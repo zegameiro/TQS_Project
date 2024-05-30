@@ -26,8 +26,23 @@ const Confirmation = ({ reservationDetails, userData }) => {
     const specialityToPost = reservationDetails.selectedServices[0];
     const specialityID = allSpecialities.find(speciality => speciality.name === specialityToPost).id;
 
+    // converter data para timestamp
+    const newDate = reservationDetails.date;
+    const [year, month, date] = newDate.day.split('-').map(Number);
+    const [hours, minutes] = [newDate.hour, newDate.minute].map(Number);
+
+    const dateObj = new Date();
+    dateObj.setFullYear(year);
+    dateObj.setMonth(month - 1);
+    dateObj.setDate(date);
+    dateObj.setHours(hours);
+    dateObj.setMinutes(minutes);
+    dateObj.setSeconds(0); 
+    dateObj.setMilliseconds(0);
+
+
     const reservation = useMemo(() => ({
-        timestamp: new Date().getTime().toString(),
+        timestamp: dateObj.getTime().toString(),
         secretCode: token,
         customerName: userData[0],
         customerEmail: userData[1],

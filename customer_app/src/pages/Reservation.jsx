@@ -102,6 +102,12 @@ const Reservation = () => {
     return currentStep === steps.length - 1;
   }
 
+  let date = {
+    day: selectedDate,
+    hour: selectedHour,
+    minute: selectedMinute
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
       <NavbarFixed />
@@ -115,7 +121,7 @@ const Reservation = () => {
                 currentStep === 0 ? <ChooseService service={room.data?.name} services={specialitiesList} selectedServices={selectedServices} setSelectedServices={setSelectedServices} /> :
                   currentStep === 1 ? <PickTimeSlot selectedDate={selectedDate} setSelectedDate={setSelectedDate} selectedHour={selectedHour} setSelectedHour={setSelectedHour} selectedMinute={selectedMinute} setSelectedMinute={setSelectedMinute} /> :
                     currentStep === 2 ? <Payment services={specialitiesList} selectedServices={selectedServices} selectedPaymentData={[clientName, clientEmail, clientPhone]} setSelectedPaymentData={[setClientName, setClientEmail, setClientPhone]} setPriceToPay={setPriceToPay} /> :
-                      currentStep === 3 ? <Confirmation reservationDetails={{ roomID, selectedServices, allSpecialities }} userData={[clientName, clientEmail, clientPhone]} /> :
+                      currentStep === 3 ? <Confirmation reservationDetails={{ roomID, selectedServices, allSpecialities, date }} userData={[clientName, clientEmail, clientPhone]} /> :
                         components[currentStep]
               }
             </div>
