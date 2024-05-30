@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import QRCode from 'qrcode.react';
-import { Button } from "@nextui-org/react";
-
-import { useMutation, useQuery } from "@tanstack/react-query"
-import axios from "../../../api"
+import { useMutation } from "@tanstack/react-query";
+import axios from "../../../api";
 import { addNewReservation } from "../../../actions/postActions";
 
 const Confirmation = ({ reservationDetails, userData }) => {
-
+    const [reservationCreated, setReservationCreated] = useState(false);
     const [token, setToken] = useState('');
 
     useEffect(() => {
@@ -22,13 +20,13 @@ const Confirmation = ({ reservationDetails, userData }) => {
     const notes = [
         "The QR code or reservation token will be used when entering the establishment on the day of the reservation or to check the current status of the reservation on the website.",
         "A copy of the reservation will be sent to the email provided.",
-    ]
+    ];
 
     const allSpecialities = reservationDetails.allSpecialities;
     const specialityToPost = reservationDetails.selectedServices[0];
     const specialityID = allSpecialities.find(speciality => speciality.name === specialityToPost).id;
 
-    const reservation = {
+    const reservation = useMemo(() => ({
         timestamp: new Date().getTime().toString(),
         secretCode: token,
         customerName: userData[0],
@@ -36,7 +34,7 @@ const Confirmation = ({ reservationDetails, userData }) => {
         customerPhoneNumber: userData[2],
         specialityID: specialityID.toString(),
         roomID: reservationDetails.roomID,
-    }
+    }), [token, userData, specialityID, reservationDetails.roomID]);
 
     const addReservationMutation = useMutation({
         mutationKey: ["addReservation"],
@@ -46,11 +44,15 @@ const Confirmation = ({ reservationDetails, userData }) => {
         onError: (error) => {
             console.log("ERROR ", error);
         }
-    })
+    });
 
     useEffect(() => {
-        addReservationMutation.mutate();
-    }, []);
+        if (token !== '' && !reservationCreated) {
+            addReservationMutation.mutate();
+            setReservationCreated(true);
+        }
+    }, [reservationCreated, token, reservation, addReservationMutation]);
+
 
     return (
         <div>
@@ -73,6 +75,6 @@ const Confirmation = ({ reservationDetails, userData }) => {
             </div>
         </div>
     );
-}
+};
 
 export default Confirmation;
