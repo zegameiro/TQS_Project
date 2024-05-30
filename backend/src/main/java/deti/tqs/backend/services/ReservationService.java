@@ -13,6 +13,7 @@ import deti.tqs.backend.models.Reservation;
 import deti.tqs.backend.models.ReservationQueue;
 import deti.tqs.backend.models.Room;
 import deti.tqs.backend.models.Speciality;
+import deti.tqs.backend.repositories.EmployeeRepository;
 import deti.tqs.backend.repositories.FacilityRepository;
 import deti.tqs.backend.repositories.ReservationQueueRepository;
 import deti.tqs.backend.repositories.ReservationRepository;
@@ -30,18 +31,28 @@ public class ReservationService {
     private SpecialityRepository specialityRepository;
     private ReservationQueueRepository reservationQueueRepository;
     private FacilityRepository facilityRepository;
+    private EmployeeRepository employeeRepository;
 
     @Autowired
-    ReservationService(ReservationRepository reservationRepository, RoomRepository roomRepository, SpecialityRepository specialityRepository, ReservationQueueRepository reservationQueueRepository, FacilityRepository facilityRepository) {
+    ReservationService(ReservationRepository reservationRepository, RoomRepository roomRepository, SpecialityRepository specialityRepository, 
+        ReservationQueueRepository reservationQueueRepository, FacilityRepository facilityRepository, EmployeeRepository employeeRepository) {
         this.reservationRepository = reservationRepository;
         this.roomRepository = roomRepository;
         this.specialityRepository = specialityRepository;
         this.reservationQueueRepository = reservationQueueRepository;
         this.facilityRepository = facilityRepository;
+        this.employeeRepository = employeeRepository;
     }
 
     public Reservation findById(Long id) {
-        return reservationRepository.findById(id).orElse(null);
+
+        Reservation reservation = reservationRepository.findById(id).orElse(null);
+
+        if(reservation == null)
+            throw new EntityNotFoundException("Reservation not found");
+
+        return reservation;
+
     }
 
     public List<Reservation> findAll() {
@@ -69,7 +80,7 @@ public class ReservationService {
             throw new EntityNotFoundException("Invalid speciality");
 
         // Check if there is an employee available for the reservation
-        Employee designatedEmployee = findEmployeeForReservation(reservationSchema);
+        Employee designatedEmployee = findEmployeeForReservation(reservationSchema, roomFound, specialityFound);
 
         if(designatedEmployee == null)
             throw new IllegalArgumentException("No employee available for the reservation");
@@ -102,6 +113,8 @@ public class ReservationService {
 
         else
             designatedEmployee.getReservations().add(reservation);
+
+        employeeRepository.save(designatedEmployee);
 
         if(reserQueue.getReservations() == null)
             reserQueue.setReservations(List.of(reservation));
@@ -138,7 +151,12 @@ public class ReservationService {
 
     public Reservation getReservationBySecretCode(String secretCode) {
 
-        return reservationRepository.findBySecretCode(secretCode);
+        Reservation found = reservationRepository.findBySecretCode(secretCode);
+
+        if(found == null)
+            throw new EntityNotFoundException("Reservation not found");
+
+        return found;
 
     }
 
@@ -181,33 +199,26 @@ public class ReservationService {
 
     }
 
-    public Employee findEmployeeForReservation(ReservationSchema r) {
-        
-        Room roomFound = roomRepository.findById(Long.parseLong(r.roomID()));
+    public Employee findEmployeeForReservation(ReservationSchema r, Room roomFound, Speciality specialityFound) {
 
-        if(roomFound == null)
-            throw new EntityNotFoundException("Room not found");
+        if(roomFound == null || specialityFound == null || r == null)
+            return null;
 
-        logger.info("Room founddddddddddddd: " + roomFound.getName());
+        List<Employee> employees = employeeRepository.findByFacility_Id(roomFound.getFacility().getId());
 
-        List<Employee> employees = roomFound.getFacility().getEmployees();
+        if(employees == null || employees.isEmpty())
+            return null;
 
-        for(Employee e: employees) {
-            logger.info("Employee: " + e.getSpecialitiesID());
-        }
-
-        Speciality speciality = specialityRepository.findById(Long.parseLong(r.specialityID()));
-
-        logger.info("Speciality: " + speciality.getId());
-        
         long timestamp = Long.parseLong(r.timestamp());
-        boolean found = false;
         Employee designatedEmployee = null;
 
         for (Employee e : employees) {
             
+            logger.info("Employee specialities: " +  e.getSpecialitiesID() );
+            logger.info("Speciality found: " +  specialityFound.getId() + " with name: " + specialityFound.getName());
+
             // Check if the employee has the required speciality for the reservation
-            if(e.getSpecialitiesID().contains(speciality.getId())) {
+            if(e.getSpecialitiesID() != null && e.getSpecialitiesID().contains(specialityFound.getId())) {   
 
                 logger.info("Employee has the speciality");
 
@@ -217,32 +228,25 @@ public class ReservationService {
 
                     designatedEmployee = e;
 
-                    logger.info("Employee found: " + e.getFullName());
+                    logger.info("Employee found1");
 
-                    found = true;
                     break;
 
                 } else {
 
-                    for(Reservation res : e.getReservations()) {
+                    for(Reservation employeeReservation : e.getReservations()) {
 
                         // If it has a reservation that is inside a time period of half hour from the reservation timestamp, break the loop and go to the next employee
-                        if(res.getTimestamp() - 180000  < timestamp && timestamp < res.getTimestamp() + 1800000) {
+                        if(timestamp < employeeReservation.getTimestamp() + 1800000) {
 
                             logger.info("Employee has a reservation at the same time");
-
-                            found = false;
                             break;
 
                         // If it doesn't have a reservation at the same time, assign the employee to the reservation
                         } else {
 
                             designatedEmployee = e;
-
-                            logger.info("Employee found: " + e.getFullName());
-
-                            found = true;
-                            break;
+                            logger.info("Employee found");
 
                         }
                     }
@@ -250,12 +254,9 @@ public class ReservationService {
 
             }
 
-            if(found)
-                break;
-
         }
 
-        logger.info("Employee found: " + designatedEmployee);
+        logger.info("Employee found3: " + designatedEmployee);
 
         return designatedEmployee;
 

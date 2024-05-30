@@ -2,6 +2,7 @@ package deti.tqs.backend.services.reservation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
@@ -28,10 +29,12 @@ import deti.tqs.backend.models.Room;
 import deti.tqs.backend.models.Speciality;
 import deti.tqs.backend.repositories.EmployeeRepository;
 import deti.tqs.backend.repositories.FacilityRepository;
+import deti.tqs.backend.repositories.ReservationQueueRepository;
 import deti.tqs.backend.repositories.ReservationRepository;
 import deti.tqs.backend.repositories.RoomRepository;
 import deti.tqs.backend.repositories.SpecialityRepository;
 import deti.tqs.backend.services.ReservationService;
+import jakarta.persistence.EntityNotFoundException;
 
 @ExtendWith(MockitoExtension.class)
 class CreateReservationServiceTests {
@@ -46,10 +49,13 @@ class CreateReservationServiceTests {
   private SpecialityRepository specialityRepository;
 
   @Mock
-  private FacilityRepository facilityRepository;
+  private EmployeeRepository employeeRepository;
+
+  @Mock 
+  private ReservationQueueRepository reservationQueueRepository;
 
   @Mock
-  private EmployeeRepository employeeRepository;
+  private FacilityRepository facilityRepository;
 
   @InjectMocks
   private ReservationService reservationService;
@@ -76,6 +82,7 @@ class CreateReservationServiceTests {
    *  3. Create a Reservation with a speciality that does not exists
    *  4. Create a Reservation and assign it to an employee that doesn't have availability
    *  5. Create a Reservation and assign it to a non existing queue
+   *  6. Create a Reservation and assign it to an employee that doesn't have any reservations yet
    * 
   */
 
@@ -111,12 +118,6 @@ class CreateReservationServiceTests {
     employee1.setReservations(new ArrayList<>());
     employee1.setFacility(facility1);
 
-    employeeRepository.saveAndFlush(employee1);
-
-    facility1.setEmployees(List.of(employee1));
-
-    facilityRepository.saveAndFlush(facility1);
-
     reservationSchema1 = new ReservationSchema(
       "123456789",
       "askjwoevn", 
@@ -145,6 +146,9 @@ class CreateReservationServiceTests {
 
     when(roomRepository.findById(anyLong())).thenReturn(room1);
     when(specialityRepository.findById(anyLong())).thenReturn(speciality1);
+    when(employeeRepository.findByFacility_Id(anyLong())).thenReturn(List.of(employee1));
+    when(reservationQueueRepository.findById(anyLong())).thenReturn(queue1);
+    when(employeeRepository.save(any())).thenReturn(employee1);
     when(reservationRepository.save(any())).thenReturn(reservation1);
 
     Reservation createdReservation = reservationService.createReservation(reservationSchema1);
@@ -163,7 +167,136 @@ class CreateReservationServiceTests {
 
     verify(roomRepository, times(1)).findById(anyLong());
     verify(specialityRepository, times(1)).findById(anyLong());
-    verify(reservationRepository, times(1)).save(createdReservation);
+    verify(reservationRepository, times(1)).save(any());
+    verify(specialityRepository, times(1)).findById(anyLong());
+    verify(employeeRepository, times(1)).findByFacility_Id(anyLong());
+    verify(reservationQueueRepository, times(1)).findById(anyLong());
+
+  }
+
+  @Test
+  @DisplayName("When creating a Reservation with a room that does not exists, it should throw an EntityNotFoundException")
+  void testCreateReservationWithNonExistingRoom() {
+
+    when(roomRepository.findById(anyLong())).thenReturn(null);
+
+    assertThrows(EntityNotFoundException.class, () -> reservationService.createReservation(reservationSchema1));
+    
+    verify(roomRepository, times(1)).findById(anyLong());
+    verify(specialityRepository, times(0)).findById(anyLong());
+    verify(reservationRepository, times(0)).save(any());
+    verify(specialityRepository, times(0)).findById(anyLong());
+    verify(employeeRepository, times(0)).findByFacility_Id(anyLong());
+
+  }
+
+  @Test
+  @DisplayName("When creating a Reservation with a speciality that does not exists, it should throw an EntityNotFoundException")
+  void testCreateReservationWithNonExistingSpeciality() {
+
+    when(roomRepository.findById(anyLong())).thenReturn(room1);
+    when(specialityRepository.findById(anyLong())).thenReturn(null);
+
+    assertThrows(EntityNotFoundException.class, () -> reservationService.createReservation(reservationSchema1));
+    
+    verify(roomRepository, times(1)).findById(anyLong());
+    verify(specialityRepository, times(1)).findById(anyLong());
+    verify(reservationRepository, times(0)).save(any());
+    verify(employeeRepository, times(0)).findByFacility_Id(anyLong());
+
+  }
+
+  @Test
+  @DisplayName("When creating a Reservation and assign it to an employee that doesn't have availability, it should throw an IllegalArgumentException")
+  void testCreateReservationWithNonAvailableEmployee() {
+
+    when(roomRepository.findById(anyLong())).thenReturn(room1);
+    when(specialityRepository.findById(anyLong())).thenReturn(speciality1);
+    when(employeeRepository.findByFacility_Id(anyLong())).thenReturn(new ArrayList<>());
+
+    assertThrows(IllegalArgumentException.class, () -> reservationService.createReservation(reservationSchema1));
+    
+    verify(roomRepository, times(1)).findById(anyLong());
+    verify(specialityRepository, times(1)).findById(anyLong());
+    verify(reservationRepository, times(0)).save(any());
+    verify(employeeRepository, times(1)).findByFacility_Id(anyLong());
+
+  }
+
+  @Test
+  @DisplayName("When creating a Reservation and assign it to a non existing queue, it should create a new queue and create the reservation with success")
+  void testCreateReservationWithNonExistingQueue() {
+
+    when(roomRepository.findById(anyLong())).thenReturn(room1);
+    when(specialityRepository.findById(anyLong())).thenReturn(speciality1);
+    when(employeeRepository.findByFacility_Id(anyLong())).thenReturn(List.of(employee1));
+    when(reservationQueueRepository.findById(anyLong())).thenReturn(null);
+    when(reservationQueueRepository.save(any())).thenReturn(queue1);
+    when(facilityRepository.save(any())).thenReturn(facility1);
+    when(employeeRepository.save(any())).thenReturn(employee1);
+    when(reservationRepository.save(any())).thenReturn(reservation1);
+
+    Reservation createdReservation = reservationService.createReservation(reservationSchema1);
+
+    assertAll(
+      () -> assertThat(createdReservation).isNotNull(),
+      () -> assertThat(createdReservation.getTimestamp()).isEqualTo(123456789),
+      () -> assertThat(createdReservation.getCustomerName()).isEqualTo("John Doe"),
+      () -> assertThat(createdReservation.getCustomerEmail()).isEqualTo("johndoe@gmail.com"),
+      () -> assertThat(createdReservation.getCustomerPhoneNumber()).isEqualTo("987654321"),
+      () -> assertThat(createdReservation.getSecretCode()).isEqualTo("askjwoevn"),
+      () -> assertThat(createdReservation.getRoom()).isEqualTo(room1),
+      () -> assertThat(createdReservation.getSpeciality()).isEqualTo(speciality1),
+      () -> assertThat(createdReservation.getEmployee()).isEqualTo(employee1),
+      () -> assertThat(createdReservation.getReservationQueue()).isEqualTo(queue1),
+      () -> assertThat(facility1.getReservationQueueId()).isEqualTo(queue1.getId())
+    );
+
+    verify(roomRepository, times(1)).findById(anyLong());
+    verify(specialityRepository, times(1)).findById(anyLong());
+    verify(reservationRepository, times(1)).save(any());
+    verify(specialityRepository, times(1)).findById(anyLong());
+    verify(employeeRepository, times(1)).findByFacility_Id(anyLong());
+    verify(reservationQueueRepository, times(1)).findById(anyLong());
+    verify(reservationQueueRepository, times(1)).save(any());
+    verify(facilityRepository, times(1)).save(any());
+
+  }
+
+  @Test
+  @DisplayName("When creating a Reservation and assign it to an employee that doesn't have any reservations yet, it should create the reservation with success")
+  void testCreateReservationWithEmployeeWithoutReservations() {
+
+    employee1.setReservations(null);
+
+    when(roomRepository.findById(anyLong())).thenReturn(room1);
+    when(specialityRepository.findById(anyLong())).thenReturn(speciality1);
+    when(employeeRepository.findByFacility_Id(anyLong())).thenReturn(List.of(employee1));
+    when(reservationQueueRepository.findById(anyLong())).thenReturn(queue1);
+    when(employeeRepository.save(any())).thenReturn(employee1);
+    when(reservationRepository.save(any())).thenReturn(reservation1);
+
+    Reservation createdReservation = reservationService.createReservation(reservationSchema1);
+
+    assertAll(
+      () -> assertThat(createdReservation).isNotNull(),
+      () -> assertThat(createdReservation.getTimestamp()).isEqualTo(123456789),
+      () -> assertThat(createdReservation.getCustomerName()).isEqualTo("John Doe"),
+      () -> assertThat(createdReservation.getCustomerEmail()).isEqualTo("johndoe@gmail.com"),
+      () -> assertThat(createdReservation.getCustomerPhoneNumber()).isEqualTo("987654321"),
+      () -> assertThat(createdReservation.getSecretCode()).isEqualTo("askjwoevn"),
+      () -> assertThat(createdReservation.getRoom()).isEqualTo(room1),
+      () -> assertThat(createdReservation.getSpeciality()).isEqualTo(speciality1),
+      () -> assertThat(createdReservation.getEmployee()).isEqualTo(employee1),
+      () -> assertThat(createdReservation.getReservationQueue()).isEqualTo(queue1)
+    );
+
+    verify(roomRepository, times(1)).findById(anyLong());
+    verify(specialityRepository, times(1)).findById(anyLong());
+    verify(reservationRepository, times(1)).save(any());
+    verify(specialityRepository, times(1)).findById(anyLong());
+    verify(employeeRepository, times(1)).findByFacility_Id(anyLong());
+    verify(reservationQueueRepository, times(1)).findById(anyLong());
 
   }
 
