@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import QRCode from 'qrcode.react';
+import {Button} from "@nextui-org/react";
 
 import { useMutation, useQuery } from "@tanstack/react-query"
 import axios from "../../../api"
@@ -39,13 +40,10 @@ const Confirmation = ({ reservationDetails, userData }) => {
 
     const addReservationMutation = useMutation({
         mutationKey: ["addReservation"],
-        mutationFn: (facilityData) => addNewReservation(axios, reservation),
+        mutationFn: () => addNewReservation(axios, reservation),
         onSuccess: () => {
         },
     })
-
-    // addReservationMutation.mutate(reservation);
-
 
     console.log(reservation);
 
@@ -67,6 +65,9 @@ const Confirmation = ({ reservationDetails, userData }) => {
             </div>
             <div className="flex justify-center items-center mt-1">
                 <pre>{JSON.stringify(reservation, null, 2)}</pre>
+            </div>
+            <div className="flex justify-center items-center mt-5">
+                <Button size="lg" color='primary' className='text-white' onClick={() => addReservationMutation.mutate()}>Confirm</Button>
             </div>
         </div>
     );

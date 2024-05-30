@@ -11,11 +11,11 @@
   },
   "dependencies": {
     "@internationalized/date": "^3.5.4",
-    "@nextui-org/react": "^2.3.6",
-    "@tanstack/react-query": "^5.37.1",
+    "@nextui-org/react": "^2.4.0",
+    "@tanstack/react-query": "^5.40.0",
     "axios": "^1.7.2",
     "date-fns": "^3.6.0",
-    "framer-motion": "^11.2.6",
+    "framer-motion": "^11.2.9",
     "qrcode.react": "^3.1.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -30,11 +30,11 @@
     "@vitejs/plugin-react": "^4.3.0",
     "autoprefixer": "^10.4.19",
     "eslint": "^8.57.0",
-    "eslint-plugin-react": "^7.34.1",
+    "eslint-plugin-react": "^7.34.2",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.3",
-    "vite": "^5.2.11"
+    "vite": "^5.2.12"
   }
 }
