@@ -7,9 +7,13 @@ import deti.tqs.backend.models.Employee;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
-  
+
+  Employee findById(long id);
+
   Employee findByEmail(String email);
 
   Employee findByFullName(String fullName);
+
+  Employee findByPhoneNumber(String phoneNumber);
 
 }

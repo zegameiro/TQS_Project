@@ -50,8 +50,7 @@ public class Facility {
   @JsonIgnore
   private List<Room> rooms;
 
-  @OneToOne(mappedBy = "facility", cascade = CascadeType.ALL)
-  private ReservationQueue reservationQueue;
+  private long reservationQueueId;
 
   @OneToMany(mappedBy = "facility", cascade = CascadeType.ALL)
   @JsonIgnore

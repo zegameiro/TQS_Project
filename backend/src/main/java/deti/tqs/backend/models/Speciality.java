@@ -39,9 +39,5 @@ public class Speciality {
   @JoinColumn
   @JsonIgnore
   private Reservation reservation;
-
-  @ManyToOne
-  @JoinColumn
-  private Employee employee;
   
 }

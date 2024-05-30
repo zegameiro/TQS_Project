@@ -94,10 +94,9 @@ class CreateReservationServiceTests {
     room1.setFacility(facility1);
     room1.setBeautyServiceId(2);
 
-    queue1.setFacility(facility1);
     queue1.setReservations(new ArrayList<>());
 
-    facility1.setReservationQueue(queue1);
+    facility1.setReservationQueueId(queue1.getId());
     facility1.setRooms(List.of(room1));
 
     speciality1.setName("Speciality 1");
@@ -108,7 +107,7 @@ class CreateReservationServiceTests {
     employee1.setFullName("Francis Smith");
     employee1.setEmail("francis.smith@plaza.pt");
     employee1.setPhoneNumber("987654321");
-    employee1.setSpecialities(List.of(speciality1));
+    employee1.setSpecialitiesID(List.of(speciality1.getId()));
     employee1.setReservations(new ArrayList<>());
     employee1.setFacility(facility1);
 

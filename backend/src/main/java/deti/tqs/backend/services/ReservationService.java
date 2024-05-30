@@ -13,6 +13,8 @@ import deti.tqs.backend.models.Reservation;
 import deti.tqs.backend.models.ReservationQueue;
 import deti.tqs.backend.models.Room;
 import deti.tqs.backend.models.Speciality;
+import deti.tqs.backend.repositories.FacilityRepository;
+import deti.tqs.backend.repositories.ReservationQueueRepository;
 import deti.tqs.backend.repositories.ReservationRepository;
 import deti.tqs.backend.repositories.RoomRepository;
 import deti.tqs.backend.repositories.SpecialityRepository;
@@ -26,12 +28,16 @@ public class ReservationService {
     private ReservationRepository reservationRepository;
     private RoomRepository roomRepository;
     private SpecialityRepository specialityRepository;
+    private ReservationQueueRepository reservationQueueRepository;
+    private FacilityRepository facilityRepository;
 
     @Autowired
-    ReservationService(ReservationRepository reservationRepository, RoomRepository roomRepository, SpecialityRepository specialityRepository) {
+    ReservationService(ReservationRepository reservationRepository, RoomRepository roomRepository, SpecialityRepository specialityRepository, ReservationQueueRepository reservationQueueRepository, FacilityRepository facilityRepository) {
         this.reservationRepository = reservationRepository;
         this.roomRepository = roomRepository;
         this.specialityRepository = specialityRepository;
+        this.reservationQueueRepository = reservationQueueRepository;
+        this.facilityRepository = facilityRepository;
     }
 
     public Reservation findById(Long id) {
@@ -69,10 +75,17 @@ public class ReservationService {
             throw new IllegalArgumentException("No employee available for the reservation");
 
         // Get the the reservation queue of the facility to add this reservation
-        ReservationQueue reserQueue = reservation.getRoom().getFacility().getReservationQueue();
+        ReservationQueue reserQueue = reservationQueueRepository.findById(roomFound.getFacility().getReservationQueueId());
 
         if(reserQueue == null)
-            throw new EntityNotFoundException("Reservation queue does not exist");
+        
+            reserQueue = new ReservationQueue();
+            roomFound.getFacility().setReservationQueueId(reserQueue.getId());
+
+            reservationQueueRepository.save(reserQueue);
+            facilityRepository.save(roomFound.getFacility());
+
+            logger.info("Reservation queue created");
 
         // Set the reservation attributes
         reservation.setTimestamp(Long.parseLong(reservationSchema.timestamp()));
@@ -180,12 +193,12 @@ public class ReservationService {
         List<Employee> employees = roomFound.getFacility().getEmployees();
 
         for(Employee e: employees) {
-            logger.info("Employee: " + e.getSpecialities());
+            logger.info("Employee: " + e.getSpecialitiesID());
         }
 
         Speciality speciality = specialityRepository.findById(Long.parseLong(r.specialityID()));
 
-        logger.info("Speciality: " + speciality.getName());
+        logger.info("Speciality: " + speciality.getId());
         
         long timestamp = Long.parseLong(r.timestamp());
         boolean found = false;
@@ -194,23 +207,44 @@ public class ReservationService {
         for (Employee e : employees) {
             
             // Check if the employee has the required speciality for the reservation
-            if(e.getSpecialities().contains(speciality)) {
+            if(e.getSpecialitiesID().contains(speciality.getId())) {
+
+                logger.info("Employee has the speciality");
 
                 // Check if the employee has a reservation at the same time
-                for(Reservation res : e.getReservations()) {
+                
+                if(e.getReservations() == null || e.getReservations().isEmpty()) {
 
-                    // If it has a reservation that is inside a time period of half hour from the reservation timestamp, break the loop and go to the next employee
-                    if(res.getTimestamp() - 1800000 < timestamp && timestamp < res.getTimestamp() + 1800000) {
+                    designatedEmployee = e;
 
-                        break;
+                    logger.info("Employee found: " + e.getFullName());
 
-                    // If it doesn't have a reservation at the same time, assign the employee to the reservation
-                    } else {
+                    found = true;
+                    break;
 
-                        designatedEmployee = e;
-                        found = true;
-                        break;
+                } else {
 
+                    for(Reservation res : e.getReservations()) {
+
+                        // If it has a reservation that is inside a time period of half hour from the reservation timestamp, break the loop and go to the next employee
+                        if(res.getTimestamp() - 180000  < timestamp && timestamp < res.getTimestamp() + 1800000) {
+
+                            logger.info("Employee has a reservation at the same time");
+
+                            found = false;
+                            break;
+
+                        // If it doesn't have a reservation at the same time, assign the employee to the reservation
+                        } else {
+
+                            designatedEmployee = e;
+
+                            logger.info("Employee found: " + e.getFullName());
+
+                            found = true;
+                            break;
+
+                        }
                     }
                 }
 
@@ -220,6 +254,8 @@ public class ReservationService {
                 break;
 
         }
+
+        logger.info("Employee found: " + designatedEmployee);
 
         return designatedEmployee;
 

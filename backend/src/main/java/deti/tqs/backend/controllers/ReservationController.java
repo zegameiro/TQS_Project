@@ -25,10 +25,9 @@ import jakarta.persistence.EntityNotFoundException;
 @Tag(name = "Reservation", description = "Operations pertaining to reservations in the system.")
 public class ReservationController {
 
-    private static final Logger logger = LoggerFactory.getLogger(FacilityController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ReservationController.class);
 
     private final ReservationService reservationService;
-
 
     @Autowired
     public ReservationController(ReservationService reservationService) {
