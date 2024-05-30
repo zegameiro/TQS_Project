@@ -31,7 +31,6 @@ const Reservation = () => {
   const [clientName, setClientName] = useState("");
   const [clientEmail, setClientEmail] = useState("");
   const [clientPhone, setClientPhone] = useState("");
-  const [clientAddress, setClientAddress] = useState("");
 
   // payment
   const [priceToPay, setPriceToPay] = useState(0);
@@ -50,11 +49,13 @@ const Reservation = () => {
     queryFn: () => getSpecialitiesByBeautyServiceID(axios, room?.data?.beautyServiceId),
   })
 
+  console.log(specialities?.data)
   const specialitiesList = specialities?.data?.map(speciality => ({
     name: speciality.name,
     price: speciality.price,
   }))
 
+  const allSpecialities = specialities?.data;
 
   // navigation
   const navigate = useNavigate();
@@ -77,7 +78,7 @@ const Reservation = () => {
       document.getElementById("warning-label").innerHTML = "Please select a date and time";
       return;
     }
-    if (currentStep === 2 && (clientName === "" || clientEmail === "" || clientPhone === "" || clientAddress === "")) {
+    if (currentStep === 2 && (clientName === "" || clientEmail === "" || clientPhone === "")) {
       document.getElementById("warning-label").innerHTML = "Please fill all the fields";
       return;
     }
@@ -113,8 +114,8 @@ const Reservation = () => {
               {
                 currentStep === 0 ? <ChooseService service={room.data.name} services={specialitiesList} selectedServices={selectedServices} setSelectedServices={setSelectedServices} /> :
                   currentStep === 1 ? <PickTimeSlot selectedDate={selectedDate} setSelectedDate={setSelectedDate} selectedHour={selectedHour} setSelectedHour={setSelectedHour} selectedMinute={selectedMinute} setSelectedMinute={setSelectedMinute} /> :
-                    currentStep === 2 ? <Payment services={specialitiesList} selectedServices={selectedServices} selectedPaymentData={[clientName, clientEmail, clientPhone, clientAddress]} setSelectedPaymentData={[setClientName, setClientEmail, setClientPhone, setClientAddress]} setPriceToPay={setPriceToPay} /> :
-                      currentStep === 3 ? <Confirmation reservationDetails={{ location, roomID, service, selectedServices, priceToPay }} userData={[clientName, clientEmail, clientPhone, clientAddress]} /> :
+                    currentStep === 2 ? <Payment services={specialitiesList} selectedServices={selectedServices} selectedPaymentData={[clientName, clientEmail, clientPhone]} setSelectedPaymentData={[setClientName, setClientEmail, setClientPhone]} setPriceToPay={setPriceToPay} /> :
+                      currentStep === 3 ? <Confirmation reservationDetails={{ roomID, selectedServices, allSpecialities }} userData={[clientName, clientEmail, clientPhone]} /> :
                         components[currentStep]
               }
             </div>
