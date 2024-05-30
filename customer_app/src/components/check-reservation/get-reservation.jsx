@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 import axios from "../../../api";
 import { getReservationBySecretCode } from "../../../actions/getActions";
+import { deleteReservation } from "../../../actions/deleteActions";
 
 const ReservationField = ({ label, value }) => {
     let isPrice = false;
@@ -47,7 +48,9 @@ const GetReservation = ({ token, setCurrentStep }) => {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
     const handleCancel = () => {
-        alert("Reservation canceled");
+        const reservationId = reservationGet.data.id;
+        deleteReservation(axios, reservationId);
+        setCurrentStep(0);
     }
 
     return (

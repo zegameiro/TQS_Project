@@ -56,7 +56,7 @@ public class SecurityConfiguration {
         .requestMatchers(HttpMethod.POST, apiRoomadmin).permitAll()
         .requestMatchers(HttpMethod.PUT, apiRoomadmin).permitAll()
         .requestMatchers(HttpMethod.DELETE, apiRoomadmin).permitAll()
-        .requestMatchers(HttpMethod.GET, "/api/reservation/**").permitAll()
+        .requestMatchers(HttpMethod.DELETE, "/api/reservation/**").permitAll()
         .requestMatchers(HttpMethod.GET, "/api/reservation/**").permitAll()
         .requestMatchers(HttpMethod.POST, "/api/reservation/**").permitAll()
         .requestMatchers(HttpMethod.GET, "/api/speciality/**").permitAll()
