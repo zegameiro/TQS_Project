@@ -40,8 +40,6 @@ public class Employee {
   @Column(nullable = false, unique = true)
   private String phoneNumber;
 
-  @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
-  @JsonIgnore
   private List<Long> specialitiesID;
 
 }
