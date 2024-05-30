@@ -1,12 +1,15 @@
 package deti.tqs.backend.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.stereotype.Service;
 
 import deti.tqs.backend.models.Employee;
 import deti.tqs.backend.repositories.EmployeeRepository;
 import jakarta.persistence.EntityExistsException;
 import java.lang.NoSuchFieldException;
+
+import javax.xml.stream.FactoryConfigurationError;
 
 @Service
 public class EmployeeService {
@@ -28,9 +31,15 @@ public class EmployeeService {
         return employeeRepository.save(employee);
     }
 
-    public Employee remove(Employee employee) {
-        // TODO: Implement this method
-        throw new UnsupportedOperationException("Removing Employees Not Implemented Yet");
+    public Boolean remove(Long employeeID) throws NoSuchFieldException, EntityExistsException {
+        Employee employee = employeeRepository.findById(employeeID).orElse(null);
+        if (employee == null)
+            throw new NoSuchFieldException("Employee with this ID does not exist");
+        if (employee.isAdmin())
+            if (employeeRepository.count() == 1)
+                throw new EntityExistsException("Cannot delete last admin");
+        employeeRepository.delete(employee);
+        return true;
     }
 
     private void checkIfEntityExists(Employee employee) throws EntityExistsException {
