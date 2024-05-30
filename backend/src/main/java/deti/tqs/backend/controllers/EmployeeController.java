@@ -66,4 +66,11 @@ public class EmployeeController {
         return new ResponseEntity<Employee>(status);
     }
 
+    @PostMapping("/admin/delete")
+    public ResponseEntity<Employee> deleteEmployee(@Valid @RequestBody(required = true) EmployeeSchema employeeSchema) {
+
+        //TODO: Implement delete employee
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
 }
