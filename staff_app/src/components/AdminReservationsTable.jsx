@@ -1,6 +1,16 @@
+import { useQuery } from "@tanstack/react-query"
 import { Table } from "flowbite-react"
+import { getAllReservations } from "../../actions/getActions"
+import axios from "../../api"
 
 export default function AdminReservationsTable() {
+  const allReservations = useQuery({
+    queryKey: ["allReservations"],
+    queryFn: () => getAllReservations(axios),
+  })
+
+  console.log(allReservations.data)
+
   return (
     <Table hoverable>
       <Table.Head>
@@ -12,48 +22,21 @@ export default function AdminReservationsTable() {
         <Table.HeadCell>Room</Table.HeadCell>
       </Table.Head>
       <Table.Body className="divide-y">
-        <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-            {"Ana Silva"}
-          </Table.Cell>
-          <Table.Cell>Hairdresser</Table.Cell>
-          <Table.Cell>Online</Table.Cell>
-          <Table.Cell>
-            <span className="font-medium text-cyan-600 hover:underline dark:text-cyan-500">
-              Edit
-            </span>
-          </Table.Cell>
-        </Table.Row>
-        <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-            Bruno Duarte
-          </Table.Cell>
-          <Table.Cell>Hairdresser</Table.Cell>
-          <Table.Cell>Online</Table.Cell>
-          <Table.Cell>
-            <a
-              href="#"
-              className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
-            >
-              Edit
-            </a>
-          </Table.Cell>
-        </Table.Row>
-        <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-          <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-            Carolina Guerreira
-          </Table.Cell>
-          <Table.Cell>Masseuse</Table.Cell>
-          <Table.Cell>Offline</Table.Cell>
-          <Table.Cell>
-            <a
-              href="#"
-              className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
-            >
-              Edit
-            </a>
-          </Table.Cell>
-        </Table.Row>
+        {allReservations.data?.map((reservation) => (
+          <Table.Row
+            key={reservation.id}
+            className="bg-white dark:border-gray-700 dark:bg-gray-800"
+          >
+            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+              {reservation.timestamp}
+            </Table.Cell>
+            <Table.Cell>{reservation.customerName}</Table.Cell>
+            <Table.Cell>{reservation.customerEmail}</Table.Cell>
+            <Table.Cell>{reservation.customerPhone}</Table.Cell>
+            <Table.Cell>{reservation.specialtyId}</Table.Cell>
+            <Table.Cell>{reservation.roomId}</Table.Cell>
+          </Table.Row>
+        ))}
       </Table.Body>
     </Table>
   )
