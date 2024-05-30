@@ -65,6 +65,8 @@ public class SecurityConfiguration {
         .requestMatchers(HttpMethod.DELETE, apiChairAdmin).permitAll()
         .requestMatchers(HttpMethod.GET, apiEmployeeAdmin).permitAll()
         .requestMatchers(HttpMethod.POST, apiEmployeeAdmin).permitAll()
+        .requestMatchers(HttpMethod.PUT, apiEmployeeAdmin).permitAll()
+        .requestMatchers(HttpMethod.DELETE, apiEmployeeAdmin).permitAll()
         .requestMatchers(HttpMethod.GET, "/docs").permitAll()
         .requestMatchers(HttpMethod.GET, "/swagger-ui/*").permitAll()
         .requestMatchers(HttpMethod.GET, "/v3/api-docs/*").permitAll()
