@@ -1,6 +1,9 @@
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
+import { useQuery } from "@tanstack/react-query";
 
 import React, { useState } from "react";
+import axios from "../../../api";
+import { getReservationBySecretCode } from "../../../actions/getActions";
 
 const ReservationField = ({ label, value }) => {
     let isPrice = false;
@@ -17,9 +20,26 @@ const ReservationField = ({ label, value }) => {
 };
 
 
-const GetReservation = ({ token, allReservations, setCurrentStep }) => {
+const GetReservation = ({ token, setCurrentStep }) => {
 
-    const reservation = allReservations.find(reservation => reservation.id === token);
+    const reservationGet = useQuery({
+        queryKey: ["reservation", token],
+        queryFn: () => getReservationBySecretCode(axios, token),
+    });
+    // console.log(reservationGet?.data)
+    const reservation = {}
+    reservation.costumer = 
+    {
+        "name" : reservationGet.data?.customerName,
+        "email" : reservationGet.data?.customerEmail,
+        "phone" : reservationGet.data?.customerPhoneNumber
+    }
+
+    reservation.reservationDetails =
+    {
+        "employee" : reservationGet.data?.employee.fullName,
+        "date" : new Date(reservationGet.data?.timestamp).toLocaleString()
+    }
 
     // Modal
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -30,7 +50,7 @@ const GetReservation = ({ token, allReservations, setCurrentStep }) => {
 
     return (
         <>
-            {reservation ? (
+            {reservationGet &&
                 <>
                     <div className="h-[40vh]" style={{ display: 'flex', flexDirection: 'row', overflowY: "auto" }}>
 
@@ -39,22 +59,15 @@ const GetReservation = ({ token, allReservations, setCurrentStep }) => {
                             <ReservationField label="Name" value={reservation.costumer.name} />
                             <ReservationField label="Email" value={reservation.costumer.email} />
                             <ReservationField label="Phone" value={reservation.costumer.phone} />
-                            <ReservationField label="Address" value={reservation.costumer.address} />
                         </div>
 
                         <div className="w-[45vw] px-5">
                             <h1 className="text-3xl font-bold mb-5" >Reservation Details</h1>
-                            <ReservationField label="Facility" value={reservation.reservationDetails.facility} />
-                            <ReservationField label="Section" value={reservation.reservationDetails.section} />
-                            <div className="text-xl mt-3">
-                                <span className="font-bold">Services: </span>
-                                <ul>
-                                    {reservation.reservationDetails.services.map((service, index) => (
-                                        <li key={index}>{service}</li>
-                                    ))}
-                                </ul>
-                            </div>
-                            <ReservationField label="Price" value={reservation.reservationDetails.price} />
+                            {/* <ReservationField label="Facility" value={reservation.reservationDetails.facility} /> */}
+                            {/* <ReservationField label="Section" value={reservation.reservationDetails.section} /> */}
+                            {/* <ReservationField label="Price" value={reservation.reservationDetails.price} /> */}
+                            <ReservationField label="Employee" value={reservation.reservationDetails.employee} />
+                            <ReservationField label="Date" value={reservation.reservationDetails.date} />
                         </div>
 
                     </div>
@@ -64,12 +77,11 @@ const GetReservation = ({ token, allReservations, setCurrentStep }) => {
                         <Button color="danger" className="text-white m-1 mt-8" size="lg" onPress={onOpen}>Cancel Reservation</Button>
                     </div>
                 </>
-            ) : (
-                <div className="flex justify-center items-center h-[100%]" style={{ flexDirection: 'column' }}>
-                    <h1 className="text-5xl text-danger font-bold">Reservation not found</h1>
-                    <Button color="primary" className="text-white mt-[20vh]" size="lg" onClick={() => setCurrentStep(0)}>Back</Button>
-                </div>
-            )}
+                // <div className="flex justify-center items-center h-[100%]" style={{ flexDirection: 'column' }}>
+                //     <h1 className="text-5xl text-danger font-bold">Reservation not found</h1>
+                //     <Button color="primary" className="text-white mt-[20vh]" size="lg" onClick={() => setCurrentStep(0)}>Back</Button>
+                // </div>
+            }
 
             <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
                 <ModalContent>

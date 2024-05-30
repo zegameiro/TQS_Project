@@ -28,6 +28,12 @@ export const getSpecialitiesByBeautyServiceID = async (axios, beautyServiceID) =
   })
 }
 
+export const getReservationBySecretCode = async (axios, secretCode) => {
+  return axios.get(`reservation/code/${secretCode}`).then((res) => {
+    return res.data
+  })
+}
+
 // export const getRoomsByFacilityID = async (axios, facilityID) => {
 //   return axios.get(`room/search?facilityID=${facilityID}`).then((res) => {
 //     return res.data
