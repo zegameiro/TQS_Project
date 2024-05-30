@@ -8,6 +8,7 @@ import { deleteRoom } from "../../actions/deleteActions"
 import { getRoomsByFacilityID } from "../../actions/getActions"
 import axios from "../../api"
 import AdminRoomModal from "./AdminRoomModal"
+import { beautyServices } from "../utils/beautyServices"
 
 AdminRoomsTable.propTypes = {
   facilityID: PropTypes.number.isRequired,
@@ -38,6 +39,10 @@ export default function AdminRoomsTable({ facilityID }) {
     setIsOpenRoomModal(true)
   }
 
+  const getBeautyService = (serviceId) => {
+    return beautyServices[serviceId]
+  }
+
   return (
     <>
       <div className="flex flex-wrap gap-2 my-5">
@@ -51,7 +56,7 @@ export default function AdminRoomsTable({ facilityID }) {
         {roomsOfFacility.data?.map((room) => (
           <Accordion.Panel key={room.id}>
             <Accordion.Title>
-              {room.id} - {room.name} - Max. Chairs: {room.maxChairsCapacity}
+              {room.id} - {room.name} - Max. Chairs: {room.maxChairsCapacity} - Service: {getBeautyService(room.beautyServiceId)}
             </Accordion.Title>
             <Accordion.Content>
               <h3 className="text-xl font-medium text-gray-900 dark:text-white">

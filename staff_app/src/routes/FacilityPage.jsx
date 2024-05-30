@@ -44,7 +44,7 @@ export default function FacilityPage() {
               </div>
             </div>
           </div>
-          <AdminRoomsTable facilityID={facilityID} />
+          <AdminRoomsTable facilityID={parseInt(facilityID)} />
         </div>
       </div>
     </>
