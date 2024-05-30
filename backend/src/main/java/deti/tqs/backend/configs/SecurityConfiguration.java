@@ -39,9 +39,10 @@ public class SecurityConfiguration {
 
   @Bean
   SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-
-    String apiFacilityadmin = "/api/facility/admin/*";
-    String apiRoomadmin = "/api/room/admin/*";
+    
+    String apiFacilityAdmin = "/api/facility/admin/*";
+    String apiRoomAdmin = "/api/room/admin/*";
+    String apiChairAdmin = "/api/chair/admin/*";
 
     return httpSecurity
       .cors(cors -> cors.configurationSource(corsConfigurationSource()))
@@ -49,13 +50,18 @@ public class SecurityConfiguration {
       .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
       .authorizeHttpRequests(authorize -> authorize
         .requestMatchers(HttpMethod.GET, "/api/facility/*").permitAll()
-        .requestMatchers(HttpMethod.POST, apiFacilityadmin).permitAll()
-        .requestMatchers(HttpMethod.PUT, apiFacilityadmin).permitAll()
-        .requestMatchers(HttpMethod.DELETE, apiFacilityadmin).permitAll()
+        .requestMatchers(HttpMethod.POST, apiFacilityAdmin).permitAll()
+        .requestMatchers(HttpMethod.PUT, apiFacilityAdmin).permitAll()
+        .requestMatchers(HttpMethod.DELETE, apiFacilityAdmin).permitAll()
         .requestMatchers(HttpMethod.GET, "/api/room/*").permitAll()
-        .requestMatchers(HttpMethod.POST, apiRoomadmin).permitAll()
-        .requestMatchers(HttpMethod.PUT, apiRoomadmin).permitAll()
-        .requestMatchers(HttpMethod.DELETE, apiRoomadmin).permitAll()
+        .requestMatchers(HttpMethod.POST, apiRoomAdmin).permitAll()
+        .requestMatchers(HttpMethod.PUT, apiRoomAdmin).permitAll()
+        .requestMatchers(HttpMethod.DELETE, apiRoomAdmin).permitAll()
+        .requestMatchers(HttpMethod.GET, "/api/chair/*").permitAll()
+        .requestMatchers(HttpMethod.POST, "/api/chair/room/*").permitAll()
+        .requestMatchers(HttpMethod.POST, apiChairAdmin).permitAll()
+        .requestMatchers(HttpMethod.PUT, apiChairAdmin).permitAll()
+        .requestMatchers(HttpMethod.DELETE, apiChairAdmin).permitAll()
         .requestMatchers(HttpMethod.GET, "/docs").permitAll()
         .requestMatchers(HttpMethod.GET, "/swagger-ui/*").permitAll()
         .requestMatchers(HttpMethod.GET, "/v3/api-docs/*").permitAll()

@@ -97,7 +97,7 @@ class DeleteRoomTestsIT {
       .contentType("application/json")
       .port(port)
     .when()
-      .delete("/room/admin/delete?id=2")
+      .delete("/room/admin/delete?id=2281")
     .then()
       .statusCode(404);
 

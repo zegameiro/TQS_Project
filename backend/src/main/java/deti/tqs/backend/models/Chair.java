@@ -27,7 +27,7 @@ public class Chair {
   private String name;
 
   @Column
-  private boolean available;
+  private boolean available = true;
 
   @ManyToOne
   @JoinColumn
