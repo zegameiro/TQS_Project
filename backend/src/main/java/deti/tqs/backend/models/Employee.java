@@ -15,6 +15,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import java.lang.Long;
 
 @Entity
 @Getter
@@ -22,25 +23,23 @@ import lombok.Setter;
 @NoArgsConstructor
 @Table(name = "EMPLOYEE")
 public class Employee {
-  
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
   @Column(nullable = false)
-  private boolean isAdmin;
+  private boolean isAdmin = false;
 
   @Column(nullable = false)
   private String fullName;
 
-  @Column(nullable = false)
+  @Column(nullable = false, unique = true)
   private String email;
 
-  @Column(nullable = false)
+  @Column(nullable = false, unique = true)
   private String phoneNumber;
 
-  @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
-  @JsonIgnore
-  private List<Speciality> specialities;
+  private List<Long> specialitiesID;
 
 }
