@@ -43,7 +43,7 @@ public class SecurityConfiguration {
     String apiFacilityAdmin = "/api/facility/admin/*";
     String apiRoomAdmin = "/api/room/admin/*";
     String apiChairAdmin = "/api/chair/admin/*";
-    String apiEmployeeAdmin = "/api/employee/admin/**";
+    String apiEmployeeAdmin = "/api/employee/**";
 
     return httpSecurity
       .cors(cors -> cors.configurationSource(corsConfigurationSource()))
