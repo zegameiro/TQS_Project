@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom"
 import AdminRoomsTable from "../components/AdminRoomsTable"
 
 export default function FacilityPage() {
-  const facilityID = useParams()?.id
+  const facilityID = parseInt(useParams()?.id)
 
   const facility = useQuery({
     queryKey: ["selectedFacility"],

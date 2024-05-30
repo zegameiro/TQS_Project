@@ -27,3 +27,21 @@ export const getRoomsByFacilityID = async (axios, facilityID) => {
     return res.data
   })
 }
+
+export const getChairById = async (axios, id) => {
+  return axios.get(`chair/${id}`).then((res) => {
+    return res.data
+  })
+}
+
+export const getChairsByRoomID = async (axios, roomID) => {
+  return axios.get(`chair/search?roomID=${roomID}`).then((res) => {
+    return res.data
+  })
+}
+
+export const getAllChairs = async (axios) => {
+  return axios.get("chair/all").then((res) => {
+    return res.data
+  })
+}
