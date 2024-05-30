@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import axios from "../../../api";
 import { getReservationBySecretCode } from "../../../actions/getActions";
 import { deleteReservation } from "../../../actions/deleteActions";
+import { checkInReservation } from "../../../actions/postActions";
 
 const ReservationField = ({ label, value }) => {
     let isPrice = false;
@@ -40,10 +41,16 @@ const GetReservation = ({ token, setCurrentStep }) => {
         reservation.reservationDetails =
         {
             "employee": reservationGet.data?.employee.fullName,
-            "date": new Date(reservationGet.data?.timestamp).toLocaleString()
+            "date": new Date(reservationGet.data?.timestamp).toLocaleString(),
+            "local": reservationGet.data?.employee.facility.name,
         }
     }
 
+    const handleCheckIn = () => {
+        const reservationId = reservationGet.data.id;
+        checkInReservation(axios, reservationId);
+    }
+    
     // Modal
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -70,11 +77,9 @@ const GetReservation = ({ token, setCurrentStep }) => {
 
                                 <div className="w-[45vw] px-5">
                                     <h1 className="text-3xl font-bold mb-5" >Reservation Details</h1>
-                                    {/* <ReservationField label="Facility" value={reservation.reservationDetails.facility} /> */}
-                                    {/* <ReservationField label="Section" value={reservation.reservationDetails.section} /> */}
-                                    {/* <ReservationField label="Price" value={reservation.reservationDetails.price} /> */}
                                     <ReservationField label="Employee" value={reservation.reservationDetails.employee} />
                                     <ReservationField label="Date" value={reservation.reservationDetails.date} />
+                                    <ReservationField label="Local" value={reservation.reservationDetails.local} />
                                 </div>
 
                             </div>
@@ -82,6 +87,7 @@ const GetReservation = ({ token, setCurrentStep }) => {
                             <div className="mt-5" style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                                 <Button color="primary" className="text-white m-1 mt-8" size="lg" onClick={() => setCurrentStep(0)}>Search Another Reservation</Button>
                                 <Button color="danger" className="text-white m-1 mt-8" size="lg" onPress={onOpen}>Cancel Reservation</Button>
+                                <Button color="secondary" className="text-white m-1 mt-8" size="lg" onClick={handleCheckIn}>Check In</Button>
                             </div>
                         </>
                     ) : (
