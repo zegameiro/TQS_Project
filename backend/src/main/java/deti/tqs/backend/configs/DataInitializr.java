@@ -1,7 +1,10 @@
 package deti.tqs.backend.configs;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -341,7 +344,42 @@ public class DataInitializr implements ApplicationRunner {
         // Employee
 
         logger.info("Creating default employees");
+        Set<String> generatedNames = new HashSet<>();
+        Set<String> generatedPhoneNumbers = new HashSet<>();
 
+
+        List<String> randomNames = List.of("John", "Jane", "Alice", "Bob", "Charlie", "Dora", "Eve", "Frank", "Grace", "Henry", "Ivy", "Jack", "Katie", "Liam", "Mia", "Noah", "Olivia", "Peter", "Quinn", "Ryan", "Sophia", "Tom", "Uma", "Victor", "Wendy", "Xavier", "Yara", "Zack", "Ava", "Ben", "Cara", "David", "Emma", "Finn", "Gina", "Hugo", "Iris", "Jake", "Kara", "Luke", "Mara", "Nate", "Olive", "Paul", "Quinn", "Rory", "Sara", "Tim", "Uma", "Vince", "Wendy", "Xander", "Yara", "Zane", "Avery", "Bella", "Caleb", "Daisy", "Ethan", "Fiona", "Gabe", "Hannah", "Ian", "Jade", "Kai", "Lila", "Milo", "Nora", "Owen", "Piper", "Quinn", "Riley", "Seth", "Tessa", "Uri", "Violet", "Wyatt", "Xena", "Yuri", "Zara", "Aiden", "Brooke", "Cameron", "Dylan", "Ella", "Finn", "Grace", "Hannah", "Isaac", "Jenna", "Kylie", "Liam", "Megan", "Nathan", "Olivia", "Peyton", "Quinn", "Riley", "Sophia", "Tristan", "Uma", "Violet", "Wyatt", "Xander", "Yara", "Zane", "Ava", "Bryce", "Chloe", "Drew", "Eva", "Fiona", "Gavin", "Haley", "Ivy", "Jade", "Kara", "Lila", "Milo", "Nora", "Owen", "Piper", "Quinn", "Riley", "Seth", "Tessa", "Uri", "Violet", "Wyatt", "Xena", "Yuri", "Zara");
+        List<String> randomSurnames = List.of("Doe", "Brown", "Explorer", "Builder", "Wonderland", "Smith", "Johnson", "Williams", "Jones", "Brown", "Davis", "Miller", "Wilson", "Moore", "Taylor", "Anderson", "Thomas", "Jackson", "White", "Harris", "Martin", "Thompson", "Garcia", "Martinez", "Robinson", "Clark", "Rodriguez", "Lewis", "Lee", "Walker", "Hall", "Allen", "Young", "Hernandez", "King", "Wright", "Lopez", "Hill", "Scott", "Green", "Adams", "Baker", "Gonzalez", "Nelson", "Carter", "Mitchell", "Perez", "Roberts", "Turner", "Phillips", "Campbell", "Parker", "Evans", "Edwards", "Collins", "Stewart", "Sanchez", "Morris", "Rogers", "Reed", "Cook", "Morgan", "Bell", "Murphy", "Bailey", "Rivera", "Cooper", "Richardson", "Cox", "Howard", "Ward", "Torres", "Peterson", "Gray", "Ramirez", "James", "Watson", "Brooks", "Kelly", "Sanders", "Price", "Bennett", "Wood", "Barnes", "Ross", "Henderson", "Cole", "Jenkins", "Perry", "Powell", "Long", "Patterson", "Hughes", "Flores", "Washington", "Butler", "Simmons", "Foster", "Gonzales", "Bryant", "Alexander", "Russell", "Griffin", "Diaz", "Hayes");
+
+        for (Facility facility : facilities) {
+            List<Employee> employeesByFacility = new ArrayList<>();
+            for (int i = 0; i < facility.getMaxRoomsCapacity(); i++) {
+                for (int j = 0; j < facility.getMaxRoomsCapacity(); j++) {
+                    String name, surname, phoneNumber;
+                    do {
+                        name = randomNames.get((int) (Math.random() * randomNames.size()));
+                        surname = randomSurnames.get((int) (Math.random() * randomSurnames.size()));
+                    } while (!generatedNames.add(name + " " + surname));
+                    do {
+                        phoneNumber = "9" + ((int) (Math.random() * 90000000) + 10000000);
+                    } while (!generatedPhoneNumbers.add(phoneNumber));
+
+                    Employee employee = new Employee();
+                    employee.setFullName(name + " " + surname);
+                    employee.setPhoneNumber(phoneNumber);
+                    employee.setFacility(facility);
+                    List<Speciality> speciliatiesToAdd = specialityRepository.findByBeautyServiceId(i);
+                    employee.setSpecialitiesID(speciliatiesToAdd.stream().map(Speciality::getId).collect(Collectors.toList()));
+                    employee.setEmail(name.toLowerCase() + "." + surname.toLowerCase() + "@plaza.pt");
+                    employeeRepository.save(employee);
+                }
+            }
+            facility.setEmployees(employeesByFacility);
+        }
+
+
+
+        /*
         Employee employee1 = new Employee();
         employee1.setFullName("John Doe");
         employee1.setPhoneNumber("912345678");
@@ -389,6 +427,7 @@ public class DataInitializr implements ApplicationRunner {
         aveiro.setEmployees(List.of(employee1, employee2));
         lisbon.setEmployees(List.of(employee3, employee4));
         porto.setEmployees(List.of(employee5, employee6));
+         */
 
         facilityRepository.saveAll(List.of(aveiro, lisbon, porto));
 
