@@ -43,6 +43,9 @@ const Confirmation = ({ reservationDetails, userData }) => {
         mutationFn: () => addNewReservation(axios, reservation),
         onSuccess: () => {
         },
+        onError: (error) => {
+            console.log("ERROR ", error);
+        }
     })
 
     useEffect(() => {

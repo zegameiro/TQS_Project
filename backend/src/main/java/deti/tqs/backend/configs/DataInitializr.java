@@ -325,7 +325,7 @@ public class DataInitializr implements ApplicationRunner {
             speciality25,
             speciality26,
             speciality27,
-            speciality28,
+            speciality28,   
             speciality29,
             speciality30,
             speciality31

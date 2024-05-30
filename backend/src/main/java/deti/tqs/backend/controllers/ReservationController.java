@@ -56,7 +56,7 @@ public class ReservationController {
         } catch (IllegalArgumentException e) {
 
             logger.error("Error creating reservation: " + e.getMessage());
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No employee available for the reservation");
 
         }
 
@@ -64,7 +64,7 @@ public class ReservationController {
         
     }
 
-    @PostMapping("/checkin/{id}")
+    @PostMapping("/checkin/{reservationID}")
     @Operation(summary = "Check-in a reservation", description = "A customer check-in a reservation in the system.")
     public ResponseEntity<Reservation> checkInReservation(@PathVariable(required = true) String reservationID) {
 
@@ -94,7 +94,7 @@ public class ReservationController {
         
     }
 
-    @PostMapping("/pay/{id}")
+    @PostMapping("/pay/{reservationID}")
     @Operation(summary = "Pay a reservation", description = "A customer pay a reservation in the system.")
     public ResponseEntity<Reservation> payReservation(@PathVariable(required = true) String reservationID) {
 
@@ -124,7 +124,7 @@ public class ReservationController {
         
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{reservationID}")
     @Operation(summary = "Get a reservation", description = "Get a reservation by its ID.")
     public ResponseEntity<Reservation> getReservation(@PathVariable(required = true) String reservationID) {
 
@@ -159,7 +159,7 @@ public class ReservationController {
         
     }
 
-    @GetMapping("/employee/{id}")
+    @GetMapping("/employee/{employeeID}")
     @Operation(summary = "Get reservations by employee ID", description = "Get all reservations assigned to an employee.")
     public ResponseEntity<Iterable<Reservation>> getReservationsByEmployee(@PathVariable(required = true) String employeeID) {
 
@@ -192,7 +192,8 @@ public class ReservationController {
 
         Reservation res = null;
 
-        try {
+        try io-8080-exec-9] .w.s.m.a.ResponseStatusExceptionResolver : Resolved [org.springframework.web.server.ResponseStatusException: 400 BAD_REQUEST "No employee available for the reservation"]
+        {
 
             res = reservationService.getReservationBySecretCode(code);
             logger.info("Reservation retrieved");
