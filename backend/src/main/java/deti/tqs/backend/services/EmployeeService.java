@@ -54,10 +54,10 @@ public class EmployeeService {
             throw new NoSuchFieldException("Employee must have a full name");
 
         if (isNullOrEmpty(employee.getEmail()))
-            throw new NoSuchFieldException("Employee must have an email");
+            throw new NoSuchFieldException("Employee must have a valid email");
 
         if (isNullOrEmpty(employee.getPhoneNumber()))
-            throw new NoSuchFieldException("Employee must have a phone number");
+            throw new NoSuchFieldException("Employee must have a valid phone number");
     }
 
     private boolean isNullOrEmpty(String str) {
@@ -72,7 +72,7 @@ public class EmployeeService {
     }
 
     private void checkIfPhoneNumberIsValid(Employee employee) throws NoSuchFieldException {
-        if (!employee.getPhoneNumber().matches("^[0-9]+$"))
+        if (!employee.getPhoneNumber().matches("^[0-9]{9}$"))
             throw new NoSuchFieldException("Employee must have a valid phone number");
     }
 }
