@@ -67,12 +67,14 @@ const Confirmation = ({ reservationDetails, userData }) => {
                     <p key={index}><span style={{ color: '#1F0F53', fontWeight: 'bold' }}>{index + 1}.</span> {note}</p>
                 ))}
             </div>
+            {/* 
             <div className="flex justify-center items-center mt-10">
                 <span className='text-xl text-center'>JSON example of the reservation:</span >
             </div>
             <div className="flex justify-center items-center mt-1">
                 <pre>{JSON.stringify(reservation, null, 2)}</pre>
-            </div>
+            </div> 
+            */}
         </div>
     );
 };
