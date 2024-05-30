@@ -41,6 +41,20 @@ public class DeleteEmployeeControllerTests {
     private String validID = "{\"employeeId\": 1}";
     private String invalidID = "{\"employeeId\": 3}";
 
+    /*
+     * NECESSARY TESTS
+     * 
+     * 1. Delete an employee with success
+     * 2. Delete an admin with success
+     * 2. Fail to delete an employee with 
+     *          null id
+     *          invalid id
+     * 5. Fail to delete an admin with 
+     *          null id
+     *          invalid id
+     * 6. Fail to delete the only admin
+     */
+
     @Test
     @DisplayName("Test receive status code isOk when deleting an employee with success")
     void testDeleteEmployeeWithSuccess() throws Exception {
