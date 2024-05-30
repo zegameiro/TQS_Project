@@ -28,6 +28,11 @@ public class EmployeeService {
         return employeeRepository.save(employee);
     }
 
+    public Employee remove(Employee employee) {
+        // TODO: Implement this method
+        throw new UnsupportedOperationException("Removing Employees Not Implemented Yet");
+    }
+
     private void checkIfEntityExists(Employee employee) throws EntityExistsException {
         if (employeeRepository.findByEmail(employee.getEmail()) != null)
             throw new EntityExistsException("Employee with this email already exists"); 
