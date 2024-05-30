@@ -346,42 +346,42 @@ public class DataInitializr implements ApplicationRunner {
         employee1.setFullName("John Doe");
         employee1.setPhoneNumber("912345678");
         employee1.setFacility(aveiro);
-        employee1.setSpecialitiesID(List.of(speciality1.getId(), speciality2.getId(), speciality3.getId(), speciality4.getId()));
+        employee1.setSpecialitiesID(List.of(speciality1.getId(), speciality2.getId(), speciality3.getId(), speciality4.getId(), speciality11.getId(), speciality12.getId(), speciality13.getId(), speciality14.getId(), speciality15.getId(), speciality16.getId(), speciality17.getId(), speciality18.getId(), speciality19.getId(), speciality20.getId(), speciality21.getId(), speciality22.getId(), speciality23.getId()));
         employee1.setEmail("john.doe@plaza.pt");
 
         Employee employee2 = new Employee();
         employee2.setFullName("Jane Doe");
         employee2.setPhoneNumber("837267913");
         employee2.setFacility(aveiro);
-        employee2.setSpecialitiesID(List.of(speciality5.getId(), speciality6.getId(), speciality7.getId(), speciality8.getId(), speciality9.getId(), speciality10.getId()));
+        employee2.setSpecialitiesID(List.of(speciality5.getId(), speciality6.getId(), speciality7.getId(), speciality8.getId(), speciality9.getId(), speciality10.getId(), speciality24.getId(), speciality25.getId(), speciality26.getId(), speciality27.getId(), speciality28.getId(), speciality29.getId(), speciality30.getId(), speciality31.getId()));
         employee2.setEmail("janedoes@plaza.pt");
 
         Employee employee3 = new Employee();
         employee3.setFullName("Alice Wonderland");
         employee3.setPhoneNumber("836750192");
         employee3.setFacility(lisbon);
-        employee3.setSpecialitiesID(List.of(speciality11.getId(), speciality12.getId(), speciality13.getId(), speciality14.getId(), speciality15.getId()));
+        employee3.setSpecialitiesID(List.of(speciality1.getId(), speciality2.getId(), speciality3.getId(), speciality4.getId(), speciality11.getId(), speciality12.getId(), speciality13.getId(), speciality14.getId(), speciality15.getId(), speciality16.getId(), speciality17.getId(), speciality18.getId(), speciality19.getId(), speciality20.getId(), speciality21.getId(), speciality22.getId(), speciality23.getId()));
         employee3.setEmail("alice@plaza.pt");
 
         Employee employee4 = new Employee();
         employee4.setFullName("Bob Builder");
         employee4.setPhoneNumber("128492043");
         employee4.setFacility(lisbon);
-        employee4.setSpecialitiesID(List.of(speciality16.getId(), speciality17.getId(), speciality18.getId(), speciality19.getId(), speciality20.getId(), speciality21.getId()));
+        employee4.setSpecialitiesID(List.of(speciality5.getId(), speciality6.getId(), speciality7.getId(), speciality8.getId(), speciality9.getId(), speciality10.getId(), speciality24.getId(), speciality25.getId(), speciality26.getId(), speciality27.getId(), speciality28.getId(), speciality29.getId(), speciality30.getId(), speciality31.getId()));
         employee4.setEmail("bbuilder@plaza.pt");
 
         Employee employee5 = new Employee();
         employee5.setFullName("Charlie Brown");
         employee5.setPhoneNumber("726354910");
         employee5.setFacility(porto);
-        employee5.setSpecialitiesID(List.of(speciality22.getId(), speciality23.getId()));
+        employee5.setSpecialitiesID(List.of(speciality1.getId(), speciality2.getId(), speciality3.getId(), speciality4.getId(), speciality11.getId(), speciality12.getId(), speciality13.getId(), speciality14.getId(), speciality15.getId(), speciality16.getId(), speciality17.getId(), speciality18.getId(), speciality19.getId(), speciality20.getId(), speciality21.getId(), speciality22.getId(), speciality23.getId()));
         employee5.setEmail("charlie@plaza.pt");
 
         Employee employee6 = new Employee();
         employee6.setFullName("Dora Explorer");
         employee6.setPhoneNumber("625348901");
         employee6.setFacility(porto);
-        employee6.setSpecialitiesID(List.of(speciality24.getId(), speciality25.getId(), speciality26.getId(), speciality27.getId(), speciality28.getId(), speciality29.getId()));
+        employee6.setSpecialitiesID(List.of(speciality5.getId(), speciality6.getId(), speciality7.getId(), speciality8.getId(), speciality9.getId(), speciality10.getId(), speciality24.getId(), speciality25.getId(), speciality26.getId(), speciality27.getId(), speciality28.getId(), speciality29.getId(), speciality30.getId(), speciality31.getId()));
         employee6.setEmail("dora@plaza.pt");
 
         employeeRepository.saveAll(List.of(employee1, employee2, employee3, employee4, employee5, employee6));
