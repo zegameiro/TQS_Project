@@ -2,6 +2,8 @@ package deti.tqs.backend.services;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,8 @@ import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class ReservationService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ReservationService.class);
 
     private ReservationRepository reservationRepository;
     private RoomRepository roomRepository;
@@ -171,9 +175,17 @@ public class ReservationService {
         if(roomFound == null)
             throw new EntityNotFoundException("Room not found");
 
+        logger.info("Room founddddddddddddd: " + roomFound.getName());
 
         List<Employee> employees = roomFound.getFacility().getEmployees();
+
+        for(Employee e: employees) {
+            logger.info("Employee: " + e.getSpecialities());
+        }
+
         Speciality speciality = specialityRepository.findById(Long.parseLong(r.specialityID()));
+
+        logger.info("Speciality: " + speciality.getName());
         
         long timestamp = Long.parseLong(r.timestamp());
         boolean found = false;

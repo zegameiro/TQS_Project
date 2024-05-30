@@ -192,8 +192,7 @@ public class ReservationController {
 
         Reservation res = null;
 
-        try io-8080-exec-9] .w.s.m.a.ResponseStatusExceptionResolver : Resolved [org.springframework.web.server.ResponseStatusException: 400 BAD_REQUEST "No employee available for the reservation"]
-        {
+        try {
 
             res = reservationService.getReservationBySecretCode(code);
             logger.info("Reservation retrieved");

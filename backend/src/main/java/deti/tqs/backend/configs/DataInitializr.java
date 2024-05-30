@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import deti.tqs.backend.models.BeautyService;
 import deti.tqs.backend.models.Chair;
+import deti.tqs.backend.models.Employee;
 import deti.tqs.backend.models.Facility;
 import deti.tqs.backend.models.Reservation;
 import deti.tqs.backend.models.ReservationQueue;
@@ -20,6 +21,7 @@ import deti.tqs.backend.models.Room;
 import deti.tqs.backend.models.Speciality;
 import deti.tqs.backend.models.Validity;
 import deti.tqs.backend.repositories.ChairRepository;
+import deti.tqs.backend.repositories.EmployeeRepository;
 import deti.tqs.backend.repositories.FacilityRepository;
 import deti.tqs.backend.repositories.ReservationQueueRepository;
 import deti.tqs.backend.repositories.ReservationRepository;
@@ -39,12 +41,14 @@ public class DataInitializr implements ApplicationRunner {
     private final ReservationRepository reservationRepository;
     private final SpecialityRepository specialityRepository;
     private final ReservationQueueRepository reservationQueueRepository;
+    private final EmployeeRepository employeeRepository;
 
     @Autowired
-    public DataInitializr(FacilityRepository facilityRepository, ReservationRepository reservationRepository,
+    public DataInitializr(FacilityRepository facilityRepository, ReservationRepository reservationRepository, EmployeeRepository employeeRepository,
             RoomRepository roomRepository, ChairRepository chairRepository, SpecialityRepository specialityRepository, ReservationQueueRepository reservationQueueRepository) {
         this.facilityRepository = facilityRepository;
         this.reservationRepository = reservationRepository;
+        this.employeeRepository = employeeRepository;
         this.roomRepository = roomRepository;
         this.chairRepository = chairRepository;
         this.specialityRepository = specialityRepository;
@@ -63,6 +67,7 @@ public class DataInitializr implements ApplicationRunner {
         facilityRepository.deleteAll();
         specialityRepository.deleteAll();
         reservationQueueRepository.deleteAll();
+        employeeRepository.deleteAll();
 
         logger.info("Creating default values");
 
@@ -332,6 +337,60 @@ public class DataInitializr implements ApplicationRunner {
         );
 
         specialityRepository.saveAll(specialities);
+
+        // Employee
+
+        logger.info("Creating default employees");
+
+        Employee employee1 = new Employee();
+        employee1.setFullName("John Doe");
+        employee1.setPhoneNumber("912345678");
+        employee1.setFacility(aveiro);
+        employee1.setSpecialities(List.of(speciality1, speciality2, speciality3, speciality4));
+        employee1.setEmail("john.doe@plaza.pt");
+
+        Employee employee2 = new Employee();
+        employee2.setFullName("Jane Doe");
+        employee2.setPhoneNumber("837267913");
+        employee2.setFacility(aveiro);
+        employee2.setSpecialities(List.of(speciality5, speciality6, speciality7, speciality8, speciality9, speciality10));
+        employee2.setEmail("janedoes@plaza.pt");
+
+        Employee employee3 = new Employee();
+        employee3.setFullName("Alice Wonderland");
+        employee3.setPhoneNumber("836750192");
+        employee3.setFacility(lisbon);
+        employee3.setSpecialities(List.of(speciality11, speciality12, speciality13, speciality14, speciality15));
+        employee3.setEmail("alice@plaza.pt");
+
+        Employee employee4 = new Employee();
+        employee4.setFullName("Bob Builder");
+        employee4.setPhoneNumber("128492043");
+        employee4.setFacility(lisbon);
+        employee4.setSpecialities(List.of(speciality16, speciality17, speciality18, speciality19, speciality20, speciality21));
+        employee4.setEmail("bbuilder@plaza.pt");
+
+        Employee employee5 = new Employee();
+        employee5.setFullName("Charlie Brown");
+        employee5.setPhoneNumber("726354910");
+        employee5.setFacility(porto);
+        employee5.setSpecialities(List.of(speciality22, speciality23));
+        employee5.setEmail("charlie@plaza.pt");
+
+        Employee employee6 = new Employee();
+        employee6.setFullName("Dora Explorer");
+        employee6.setPhoneNumber("625348901");
+        employee6.setFacility(porto);
+        employee6.setSpecialities(List.of(speciality24, speciality25, speciality26, speciality27, speciality28, speciality29));
+        employee6.setEmail("dora@plaza.pt");
+
+        employeeRepository.saveAll(List.of(employee1, employee2, employee3, employee4, employee5, employee6));
+
+        aveiro.setEmployees(List.of(employee1, employee2));
+        lisbon.setEmployees(List.of(employee3, employee4));
+        porto.setEmployees(List.of(employee5, employee6));
+
+        facilityRepository.saveAll(List.of(aveiro, lisbon, porto));
 
         // // Reservation Queues
 
