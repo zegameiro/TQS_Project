@@ -1,15 +1,11 @@
 package deti.tqs.backend.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.stereotype.Service;
 
 import deti.tqs.backend.models.Employee;
 import deti.tqs.backend.repositories.EmployeeRepository;
 import jakarta.persistence.EntityExistsException;
-import java.lang.NoSuchFieldException;
-
-import javax.xml.stream.FactoryConfigurationError;
 
 @Service
 public class EmployeeService {
@@ -74,6 +70,10 @@ public class EmployeeService {
     private void checkIfPhoneNumberIsValid(Employee employee) throws NoSuchFieldException {
         if (!employee.getPhoneNumber().matches("^[0-9]+$"))
             throw new NoSuchFieldException("Employee must have a valid phone number");
+    }
+
+    public Iterable<Employee> getAll() {
+        return employeeRepository.findAll();
     }
 }
 
