@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import deti.tqs.backend.dtos.FacilitySchema;
 import deti.tqs.backend.models.Facility;
@@ -66,11 +65,13 @@ public class FacilityController {
 
     } catch (EntityExistsException e) {
 
-      throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+      logger.error("Error creating a facility 1 : " +  e.getMessage());
+      return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
       
     } catch (IllegalArgumentException e) {
 
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+      logger.error("Error creating a facility 2 : " +  e.getMessage());
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 
     }
 
@@ -100,7 +101,8 @@ public class FacilityController {
       
     } catch (EntityNotFoundException e) {
 
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+      logger.error("Error updating a facility : " +  e.getMessage());
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
     }
 
@@ -120,7 +122,8 @@ public class FacilityController {
       
     } catch (IllegalArgumentException e) {
 
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+      logger.error("Error deleting a facility : " +  e.getMessage());
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
     }
 

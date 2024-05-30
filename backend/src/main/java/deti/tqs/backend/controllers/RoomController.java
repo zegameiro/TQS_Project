@@ -60,23 +60,23 @@ public class RoomController {
 
     } catch (NoSuchFieldException e) {
 
-      logger.error(e.getMessage());
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+      logger.error("Error Creating a new room 1: " + e.getMessage());
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 
     } catch (EntityNotFoundException e) {
       
-      logger.error(e.getMessage());
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+      logger.error("Error Creating a new room 2: " + e.getMessage());
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
     } catch (EntityExistsException e) {
 
-      logger.error(e.getMessage());
-      throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+      logger.error("Error Creating a new room 3: " + e.getMessage());
+      return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
       
     } catch (IllegalStateException e) {
 
-      logger.error(e.getMessage());
-      throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+      logger.error("Error Creating a new room 4: " + e.getMessage());
+      return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(null);
 
     }
 
@@ -99,8 +99,8 @@ public class RoomController {
 
     } catch (EntityNotFoundException e) {
 
-      logger.error(e.getMessage());
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+      logger.error("Error getting the room by ID: " + e.getMessage());
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
     }
 
@@ -138,13 +138,13 @@ public class RoomController {
 
     } catch (EntityNotFoundException e) {
 
-      logger.error(e.getMessage());
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+      logger.error("Error searching for a room 1: " + e.getMessage());
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
     } catch (NoSuchFieldException e) {
 
-      logger.error(e.getMessage());
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+      logger.error("Error searching for a room 2: " + e.getMessage());
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 
     }
 
@@ -170,19 +170,23 @@ public class RoomController {
       
     } catch (EntityNotFoundException e) {
 
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+      logger.error("Error updating a room 1: " + e.getMessage());
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
     } catch (NoSuchFieldException e) {
 
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+      logger.error("Error updating a room 2: " + e.getMessage());
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 
     } catch (IllegalStateException e) {
 
-      throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+      logger.error("Error updating a room 3: " + e.getMessage());
+      return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(null);
 
     } catch (EntityExistsException e) {
 
-      throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+      logger.error("Error updating a room 4: " + e.getMessage());
+      return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
 
     }
 
@@ -203,8 +207,8 @@ public class RoomController {
 
     } catch (EntityNotFoundException e) {
 
-      logger.error(e.getMessage());
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+      logger.error("Error deleting a room: " + e.getMessage());
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
     }
 
