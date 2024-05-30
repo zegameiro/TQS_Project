@@ -83,7 +83,8 @@ class CreateRoomTestsIT {
     RoomSchema rs1 = new RoomSchema(
       "Room 1",
       10,
-      1L
+      1L,
+      "1"
     );
 
     HashMap<String, String> response = 
@@ -112,7 +113,8 @@ class CreateRoomTestsIT {
     RoomSchema rs2 = new RoomSchema(
       "Room 1",
       29,
-      1L
+      1L,
+      "0"
     );
 
     given()
@@ -133,7 +135,8 @@ class CreateRoomTestsIT {
     RoomSchema rs3 = new RoomSchema(
       "",
       29,
-      1L
+      1L,
+      "2"
     );
 
     given()
@@ -154,7 +157,8 @@ class CreateRoomTestsIT {
     RoomSchema rs4 = new RoomSchema(
       "Room 2",
       -120,
-      1L
+      1L,
+      "2"
     );
 
     given()
@@ -175,7 +179,8 @@ class CreateRoomTestsIT {
     RoomSchema rs5 = new RoomSchema(
       "Room 3",
       29,
-      140L
+      140L,
+      "2"
     );
 
     given()
@@ -196,7 +201,8 @@ class CreateRoomTestsIT {
     RoomSchema rs6 = new RoomSchema(
       "Room 4",
       29,
-      1L
+      1L,
+      "4"
     );
 
     given()

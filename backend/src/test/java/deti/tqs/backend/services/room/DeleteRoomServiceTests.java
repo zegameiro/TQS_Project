@@ -52,6 +52,7 @@ class DeleteRoomServiceTests {
     r1.setName("Room 1");
     r1.setMaxChairsCapacity(10);
     r1.setFacility(f);
+    r1.setBeautyServiceId(1);
 
   }
 

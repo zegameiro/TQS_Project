@@ -8,6 +8,7 @@ public record RoomSchema(
 
   @Valid String name,
   @Valid int maxChairsCapacity,
-  @Valid long facilityID
+  @Valid long facilityID,
+  @Valid String beautyServiceID
 
 ) {}

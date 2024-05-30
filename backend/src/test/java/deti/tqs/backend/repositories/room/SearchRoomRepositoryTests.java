@@ -71,6 +71,7 @@ class SearchRoomRepositoryTests {
     r.setName("Room 1");
     r.setMaxChairsCapacity(10);
     r.setFacility(f);
+    r.setBeautyServiceId(0);
 
     roomRepository.saveAndFlush(r);
 
@@ -79,7 +80,9 @@ class SearchRoomRepositoryTests {
     assertAll(
       () -> assertThat(foundRoom).isNotNull(),
       () -> assertThat(foundRoom.getName()).isEqualTo("Room 1"),
-      () -> assertThat(foundRoom.getMaxChairsCapacity()).isEqualTo(10)
+      () -> assertThat(foundRoom.getMaxChairsCapacity()).isEqualTo(10),
+      () -> assertThat(foundRoom.getFacility()).isEqualTo(f),
+      () -> assertThat(foundRoom.getBeautyServiceId()).isEqualTo(0)
     );
 
   }
@@ -112,6 +115,7 @@ class SearchRoomRepositoryTests {
     r.setName("Room 2");
     r.setMaxChairsCapacity(20);
     r.setFacility(f);
+    r.setBeautyServiceId(1);
 
     roomRepository.saveAndFlush(r);
 
@@ -121,7 +125,8 @@ class SearchRoomRepositoryTests {
       () -> assertThat(foundRoom).isNotNull(),
       () -> assertThat(foundRoom.getName()).isEqualTo("Room 2"),
       () -> assertThat(foundRoom.getMaxChairsCapacity()).isEqualTo(20),
-      () -> assertThat(foundRoom.getFacility()).isEqualTo(f)
+      () -> assertThat(foundRoom.getFacility()).isEqualTo(f),
+      () -> assertThat(foundRoom.getBeautyServiceId()).isEqualTo(1)
     );
 
   }
@@ -154,11 +159,13 @@ class SearchRoomRepositoryTests {
     r1.setName("Room 3");
     r1.setMaxChairsCapacity(30);
     r1.setFacility(f);
+    r1.setBeautyServiceId(2);
 
     Room r2 = new Room();
     r2.setName("Room 4");
     r2.setMaxChairsCapacity(40);
     r2.setFacility(f);
+    r2.setBeautyServiceId(4);
 
     roomRepository.saveAllAndFlush(List.of(r1, r2));
 
@@ -201,11 +208,13 @@ class SearchRoomRepositoryTests {
     r1.setName("Room 5");
     r1.setMaxChairsCapacity(50);
     r1.setFacility(f);
+    r1.setBeautyServiceId(1);
 
     Room r2 = new Room();
     r2.setName("Room 6");
     r2.setMaxChairsCapacity(60);
     r2.setFacility(f);
+    r2.setBeautyServiceId(2);
 
     roomRepository.saveAllAndFlush(List.of(r1, r2));
 
@@ -248,6 +257,7 @@ class SearchRoomRepositoryTests {
     r1.setName("Room 7");
     r1.setMaxChairsCapacity(70);
     r1.setFacility(f);
+    r1.setBeautyServiceId(0);
 
     roomRepository.saveAndFlush(r1);
 
@@ -280,21 +290,25 @@ class SearchRoomRepositoryTests {
     r1.setName("Room 8");
     r1.setMaxChairsCapacity(80);
     r1.setFacility(f);
+    r1.setBeautyServiceId(1);
 
     Room r2 = new Room();
     r2.setName("Room 9");
     r2.setMaxChairsCapacity(90);
     r2.setFacility(f);
+    r2.setBeautyServiceId(2);
 
     Room r3 = new Room();
     r3.setName("Room 10");
     r3.setMaxChairsCapacity(100);
     r3.setFacility(f);
+    r3.setBeautyServiceId(3);
 
     Room r4 = new Room();
     r4.setName("Room 11");
     r4.setMaxChairsCapacity(110);
     r4.setFacility(f);
+    r4.setBeautyServiceId(4);
 
     roomRepository.saveAllAndFlush(List.of(r1, r2, r3, r4));
 

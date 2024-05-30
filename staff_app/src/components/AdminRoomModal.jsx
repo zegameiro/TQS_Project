@@ -1,10 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { Button, Label, Modal, TextInput } from "flowbite-react"
+import { Button, Label, Modal, Select, TextInput } from "flowbite-react"
 import PropTypes from "prop-types"
 import { useForm } from "react-hook-form"
 import { addNewRoom } from "../../actions/postActions"
 import { editRoom } from "../../actions/putActions"
 import axios from "../../api"
+import { beautyServices } from "../utils/beautyServices"
 
 AdminRoomModal.propTypes = {
   openModal: PropTypes.bool.isRequired,
@@ -45,7 +46,8 @@ export default function AdminRoomModal({
 
   const editRoomMutation = useMutation({
     mutationKey: ["editRoom"],
-    mutationFn: (roomData) => console.log(roomData) & editRoom(axios, roomData, selectedRoom.id),
+    mutationFn: (roomData) =>
+      console.log(roomData) & editRoom(axios, roomData, selectedRoom.id),
     onSuccess: () => {
       queryClient.refetchQueries("roomsOfFacility", "allRooms")
     },
@@ -53,15 +55,11 @@ export default function AdminRoomModal({
 
   const onSubmit = (data) => {
     if (mode === "create") {
-
       data.facilityID = facilityID
       addRoomMutation.mutate(data)
-
     } else if (mode === "edit") {
-
       data.facilityID = 0
       editRoomMutation.mutate(data)
-
     }
     onCloseModal()
   }
@@ -83,7 +81,7 @@ export default function AdminRoomModal({
                 {...register("name", {
                   required: "This fields is required",
                   maxLength: { value: 50, message: "The name is too long" },
-                  minLength: { value: 5, message: "The name is too short" },
+                  minLength: { value: 3, message: "The name is too short" },
                 })}
                 id="name"
                 placeholder="The room's name"
@@ -113,8 +111,34 @@ export default function AdminRoomModal({
                 </span>
               )}
             </div>
+            <div>
+              <div className="mb-2 block">
+                <Label htmlFor="beautyServiceID" value="Beauty service" />
+              </div>
+              <Select
+                {...register("beautyServiceID", {
+                  required: "This field is required",
+                })}
+                id="beautyServiceID"
+                defaultValue={selectedRoom?.beautyServiceId.toString()}
+                required
+              >
+                {Object.entries(beautyServices).map(([key, value]) => (
+                  <option key={key} value={key}>
+                    {value}
+                  </option>
+                ))}
+              </Select>
+              {errors.beautyServiceID && (
+                <span className="text-red-500">
+                  {errors.beautyServiceID?.message}
+                </span>
+              )}
+            </div>
             <div className="flex flex-row mt-4 space-x-5">
-              <Button type="submit">{mode === "create" ? "Create" : "Edit"} room</Button>
+              <Button type="submit">
+                {mode === "create" ? "Create" : "Edit"} room
+              </Button>
               <Button onClick={() => reset()}>Clear</Button>
             </div>
           </form>

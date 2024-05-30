@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import QRCode from 'qrcode.react';
+import { Button } from "@nextui-org/react";
+
+import { useMutation, useQuery } from "@tanstack/react-query"
+import axios from "../../../api"
+import { addNewReservation } from "../../../actions/postActions";
 
 const Confirmation = ({ reservationDetails, userData }) => {
-
-    console.log(reservationDetails);
-    console.log(userData);
 
     const [token, setToken] = useState('');
 
@@ -22,23 +24,33 @@ const Confirmation = ({ reservationDetails, userData }) => {
         "A copy of the reservation will be sent to the email provided.",
     ]
 
+    const allSpecialities = reservationDetails.allSpecialities;
+    const specialityToPost = reservationDetails.selectedServices[0];
+    const specialityID = allSpecialities.find(speciality => speciality.name === specialityToPost).id;
+
     const reservation = {
-        id: token,
-        reservationDetails: {
-            facility: reservationDetails.location,
-            section: reservationDetails.service,
-            services: reservationDetails.selectedServices,
-            price: reservationDetails.priceToPay
-        },
-        costumer: {
-            name: userData[0],
-            email: userData[1],
-            phone: userData[2],
-            address: userData[3]
-        }
+        timestamp: new Date().getTime().toString(),
+        secretCode: token,
+        customerName: userData[0],
+        customerEmail: userData[1],
+        customerPhoneNumber: userData[2],
+        specialityID: specialityID.toString(),
+        roomID: reservationDetails.roomID,
     }
 
-    console.log(reservation);
+    const addReservationMutation = useMutation({
+        mutationKey: ["addReservation"],
+        mutationFn: () => addNewReservation(axios, reservation),
+        onSuccess: () => {
+        },
+        onError: (error) => {
+            console.log("ERROR ", error);
+        }
+    })
+
+    useEffect(() => {
+        addReservationMutation.mutate();
+    }, []);
 
     return (
         <div>

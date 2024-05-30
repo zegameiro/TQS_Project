@@ -1,6 +1,6 @@
 import { CheckboxGroup, Checkbox } from "@nextui-org/react";
 
-const ChooseService = ({ services, selectedServices, setSelectedServices }) => {
+const ChooseService = ({ service, services, selectedServices, setSelectedServices }) => {
     const chunkArray = (arr, chunkSize) => {
         const chunkedArr = [];
         for (let i = 0; i < arr.length; i += chunkSize) {
@@ -18,6 +18,7 @@ const ChooseService = ({ services, selectedServices, setSelectedServices }) => {
 
     return (
         <div>
+            <h1 className="text-center text-primary text-2xl mb-5">{service}</h1>
             <CheckboxGroup orientation="vertical" style={{ display: 'flex' }} defaultValue={selectedServices} onChange={updateSelectedServices()}>
                 {chunkedServices.map((chunk, index) => (
                     <div key={index} style={{display:'flex', flexDirection:'row'}} >

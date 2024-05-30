@@ -9,7 +9,6 @@ const Payment = ({ services, selectedServices, selectedPaymentData, setSelectedP
         { label: "Name", type: "name" },
         { label: "Email", type: "email" },
         { label: "Phone", type: "tel" },
-        { label: "Address", type: "text" },
     ]
 
     let priceToPay = 0;

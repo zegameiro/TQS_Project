@@ -1,6 +1,7 @@
 
 import React, { useState } from "react";
 import { Button, Progress } from "@nextui-org/react";
+import { format } from 'date-fns';
 
 import NavbarFixed from "../components/NavbarFixed"
 import ChooseService from "../components/make-reservation/chooseService";
@@ -10,6 +11,10 @@ import Confirmation from "../components/make-reservation/confirmation";
 
 import { useNavigate } from "react-router-dom";
 
+import { useMutation, useQuery } from "@tanstack/react-query"
+import axios from "../../api"
+import { getRoomById, getSpecialitiesByBeautyServiceID } from "../../actions/getActions";
+
 const Reservation = () => {
 
   const steps = ["Choose services", "Pick a Time Slot", "Payment", "Here it is your reservation"]
@@ -18,25 +23,39 @@ const Reservation = () => {
 
   const [selectedServices, setSelectedServices] = useState([]);
 
+  const [selectedDate, setSelectedDate] = useState(format(new Date(), 'yyyy-MM-dd'));
+  const [selectedHour, setSelectedHour] = useState("");
+  const [selectedMinute, setSelectedMinute] = useState("");
+
   // client data
   const [clientName, setClientName] = useState("");
   const [clientEmail, setClientEmail] = useState("");
   const [clientPhone, setClientPhone] = useState("");
-  const [clientAddress, setClientAddress] = useState("");
 
   // payment
   const [priceToPay, setPriceToPay] = useState(0);
 
   // get URL
   const url = window.location.href.split('?')[1];
-  const location = url.split('+')[0];
-  const service = decodeURIComponent(url.split('+')[1]);
+  const roomID = url.split('+')[0];
 
-  const categories = JSON.parse(localStorage.getItem("categories"));
-  // simulate API call
-  const selectedCategory = categories.find(category => category.title === service);
+  const room = useQuery({
+    queryKey: ["room", roomID],
+    queryFn: () => getRoomById(axios, roomID),
+  })
 
+  const specialities = useQuery({
+    queryKey: ["specialities"],
+    queryFn: () => getSpecialitiesByBeautyServiceID(axios, room?.data?.beautyServiceId),
+  })
 
+  console.log(specialities?.data)
+  const specialitiesList = specialities?.data?.map(speciality => ({
+    name: speciality.name,
+    price: speciality.price,
+  }))
+
+  const allSpecialities = specialities?.data;
 
   // navigation
   const navigate = useNavigate();
@@ -55,7 +74,11 @@ const Reservation = () => {
       document.getElementById("warning-label").innerHTML = "Please select at least one service";
       return;
     }
-    if (currentStep === 2 && (clientName === "" || clientEmail === "" || clientPhone === "" || clientAddress === "" )) {
+    if (currentStep === 1 && (selectedDate === null || selectedHour === "" || selectedMinute === "")) {
+      document.getElementById("warning-label").innerHTML = "Please select a date and time";
+      return;
+    }
+    if (currentStep === 2 && (clientName === "" || clientEmail === "" || clientPhone === "")) {
       document.getElementById("warning-label").innerHTML = "Please fill all the fields";
       return;
     }
@@ -85,14 +108,20 @@ const Reservation = () => {
 
       <div className="m-5">
         <h1 style={{ textAlign: 'center', color: '#1F0F53', fontSize: '40px', fontWeight: 'bold' }}>{steps[currentStep]}</h1>
-        <div className="w-[70%] ml-[15%] mt-5 mb-10 h-[50vh] p-10 border-primary" style={{ border: '.125rem solid #220f67', borderRadius: '1rem', overflowY:'auto' }}>
-          {
-            currentStep === 0 ? <ChooseService services={selectedCategory.services} selectedServices={selectedServices} setSelectedServices={setSelectedServices} /> :
-              currentStep === 2 ? <Payment services={selectedCategory.services} selectedServices={selectedServices} selectedPaymentData={[clientName, clientEmail, clientPhone, clientAddress]} setSelectedPaymentData={[setClientName, setClientEmail, setClientPhone, setClientAddress]} setPriceToPay={setPriceToPay} /> :
-                currentStep === 3 ? <Confirmation reservationDetails={{location, service, selectedServices, priceToPay}} userData={[clientName, clientEmail, clientPhone, clientAddress]}/> :
-                  components[currentStep]
+        <div className="w-[70%] ml-[15%] mt-5 mb-10 h-[50vh] p-10 border-primary" style={{ border: '.125rem solid #220f67', borderRadius: '1rem', overflowY: 'auto' }}>
+          {specialitiesList &&
+            <div>
+              {
+                currentStep === 0 ? <ChooseService service={room.data.name} services={specialitiesList} selectedServices={selectedServices} setSelectedServices={setSelectedServices} /> :
+                  currentStep === 1 ? <PickTimeSlot selectedDate={selectedDate} setSelectedDate={setSelectedDate} selectedHour={selectedHour} setSelectedHour={setSelectedHour} selectedMinute={selectedMinute} setSelectedMinute={setSelectedMinute} /> :
+                    currentStep === 2 ? <Payment services={specialitiesList} selectedServices={selectedServices} selectedPaymentData={[clientName, clientEmail, clientPhone]} setSelectedPaymentData={[setClientName, setClientEmail, setClientPhone]} setPriceToPay={setPriceToPay} /> :
+                      currentStep === 3 ? <Confirmation reservationDetails={{ roomID, selectedServices, allSpecialities }} userData={[clientName, clientEmail, clientPhone]} /> :
+                        components[currentStep]
+              }
+            </div>
           }
         </div>
+
 
         {!isLastStep() ? (
           <div style={{ margin: '0 5vw', display: 'flex', flexDirection: 'row' }}>

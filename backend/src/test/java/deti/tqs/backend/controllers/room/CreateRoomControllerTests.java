@@ -73,12 +73,15 @@ class CreateRoomControllerTests {
     rs1 = new RoomSchema(
       "Room 1",
       10,
-      1L 
+      1L,
+      "1"
     );
 
     r1.setId(1L);
     r1.setName("Room 1");
     r1.setMaxChairsCapacity(10);
+    r1.setFacility(f1);
+    r1.setBeautyServiceId(0);
   }
 
   @Test
@@ -127,7 +130,7 @@ class CreateRoomControllerTests {
     mvc.perform(
       post("/api/room/admin/add")
         .contentType(MediaType.APPLICATION_JSON)
-        .content(JsonUtils.toJson(new RoomSchema(null, 10, 1L))
+        .content(JsonUtils.toJson(new RoomSchema(null, 10, 1L, "2"))
     ))
       .andExpect(status().isBadRequest());
 
@@ -144,7 +147,7 @@ class CreateRoomControllerTests {
     mvc.perform(
       post("/api/room/admin/add")
         .contentType(MediaType.APPLICATION_JSON)
-        .content(JsonUtils.toJson(new RoomSchema("Room 1", 0, 1L))
+        .content(JsonUtils.toJson(new RoomSchema("Room 1", 0, 1L, "2"))
     ))
       .andExpect(status().isBadRequest());
 
