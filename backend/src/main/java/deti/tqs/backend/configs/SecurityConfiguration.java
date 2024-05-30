@@ -43,6 +43,7 @@ public class SecurityConfiguration {
     String apiFacilityAdmin = "/api/facility/admin/*";
     String apiRoomAdmin = "/api/room/admin/*";
     String apiChairAdmin = "/api/chair/admin/*";
+    String apiEmployeeAdmin = "/api/employee/admin/**";
 
     return httpSecurity
       .cors(cors -> cors.configurationSource(corsConfigurationSource()))
@@ -62,6 +63,8 @@ public class SecurityConfiguration {
         .requestMatchers(HttpMethod.POST, apiChairAdmin).permitAll()
         .requestMatchers(HttpMethod.PUT, apiChairAdmin).permitAll()
         .requestMatchers(HttpMethod.DELETE, apiChairAdmin).permitAll()
+        .requestMatchers(HttpMethod.GET, apiEmployeeAdmin).permitAll()
+        .requestMatchers(HttpMethod.POST, apiEmployeeAdmin).permitAll()
         .requestMatchers(HttpMethod.GET, "/docs").permitAll()
         .requestMatchers(HttpMethod.GET, "/swagger-ui/*").permitAll()
         .requestMatchers(HttpMethod.GET, "/v3/api-docs/*").permitAll()
