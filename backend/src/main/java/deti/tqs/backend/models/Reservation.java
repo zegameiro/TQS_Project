@@ -28,7 +28,7 @@ public class Reservation {
   @Column(nullable = false)
   private long timestamp;
 
-  @Column(nullable = false)
+  @Column(nullable = false, unique = true)
   private String secretCode;
 
   @Column(nullable = false)

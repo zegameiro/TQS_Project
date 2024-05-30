@@ -9,3 +9,7 @@
 export const addNewReservation = async (axios, reservationData) => {
   return axios.post("reservation/add", reservationData)
 }
+
+export const checkInReservation = async (axios, reservationId) => { 
+  return axios.post(`reservation/checkin/${reservationId}`)
+}

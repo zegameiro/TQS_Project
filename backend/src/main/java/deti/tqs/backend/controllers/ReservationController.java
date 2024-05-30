@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -204,6 +205,31 @@ public class ReservationController {
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(res);
+        
+    }
+
+    @DeleteMapping("/{reservationID}")
+    @Operation(summary = "Delete a reservation", description = "Delete a reservation by its ID.")
+    public ResponseEntity<String> deleteReservation(@PathVariable(required = true) String reservationID) {
+
+        logger.info("Deleting reservation");
+
+        long id = Long.parseLong(reservationID);
+
+        try {
+            Reservation res = reservationService.getReservation(id);
+
+            reservationService.deleteReservation(res);
+            logger.info("Reservation deleted");
+
+        } catch (EntityNotFoundException e) {
+
+            logger.error("Error deleting reservation: " + e.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body("Reservation deleted");
         
     }
 
