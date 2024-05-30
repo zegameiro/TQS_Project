@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ch.qos.logback.core.status.Status;
 import deti.tqs.backend.dtos.EmployeeSchema;
 import deti.tqs.backend.models.Employee;
 import deti.tqs.backend.services.EmployeeService;
@@ -16,8 +15,8 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.persistence.EntityExistsException;
 import jakarta.validation.Valid;
 
+
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/employee")
@@ -67,10 +66,17 @@ public class EmployeeController {
     }
 
     @PostMapping("/admin/delete")
-    public ResponseEntity<Employee> deleteEmployee(@Valid @RequestBody(required = true) EmployeeSchema employeeSchema) {
-
-        //TODO: Implement delete employee
-        throw new UnsupportedOperationException("Not implemented yet");
+    public ResponseEntity<Employee> deleteEmployee(@RequestBody(required = true) Long employeeId) {
+        try {
+            employeeService.remove(employeeId);
+            return new ResponseEntity<Employee>(HttpStatus.OK);
+        } catch (EntityExistsException e) {
+            return new ResponseEntity<Employee>(HttpStatus.CONFLICT);
+        } catch (NoSuchFieldException e) {
+            return new ResponseEntity<Employee>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<Employee>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }
