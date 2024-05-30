@@ -112,7 +112,7 @@ const Reservation = () => {
           {specialitiesList &&
             <div>
               {
-                currentStep === 0 ? <ChooseService service={room.data.name} services={specialitiesList} selectedServices={selectedServices} setSelectedServices={setSelectedServices} /> :
+                currentStep === 0 ? <ChooseService service={room.data?.name} services={specialitiesList} selectedServices={selectedServices} setSelectedServices={setSelectedServices} /> :
                   currentStep === 1 ? <PickTimeSlot selectedDate={selectedDate} setSelectedDate={setSelectedDate} selectedHour={selectedHour} setSelectedHour={setSelectedHour} selectedMinute={selectedMinute} setSelectedMinute={setSelectedMinute} /> :
                     currentStep === 2 ? <Payment services={specialitiesList} selectedServices={selectedServices} selectedPaymentData={[clientName, clientEmail, clientPhone]} setSelectedPaymentData={[setClientName, setClientEmail, setClientPhone]} setPriceToPay={setPriceToPay} /> :
                       currentStep === 3 ? <Confirmation reservationDetails={{ roomID, selectedServices, allSpecialities }} userData={[clientName, clientEmail, clientPhone]} /> :
