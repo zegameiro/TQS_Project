@@ -207,5 +207,17 @@ public class ReservationController {
         
     }
 
+    @GetMapping("/all")
+    @Operation(summary = "Get all reservations", description = "Get all reservations in the system.")
+    public ResponseEntity<Iterable<Reservation>> getAllReservations() {
+
+        logger.info("Getting all reservations");
+
+        Iterable<Reservation> res = reservationService.findAll();
+
+        return ResponseEntity.status(HttpStatus.OK).body(res);
+        
+    }
+
 
 }
