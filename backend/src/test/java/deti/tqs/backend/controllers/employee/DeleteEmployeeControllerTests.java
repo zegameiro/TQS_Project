@@ -34,13 +34,7 @@ public class DeleteEmployeeControllerTests {
     @MockBean
     private EmployeeService employeeService;
 
-    private Employee employee = new Employee();
-
     private NoSuchFieldException employeeDoesntExist = new NoSuchFieldException("Employee with this ID does not exist");
-    private String nullID = "{\"employeeId\": null}";
-    private String validID = "{\"employeeId\": 1}";
-    private String invalidID = "{\"employeeId\": 3}";
-
     /*
      * NECESSARY TESTS
      * 
@@ -60,9 +54,8 @@ public class DeleteEmployeeControllerTests {
     void testDeleteEmployeeWithSuccess() throws Exception {
         when(employeeService.remove(any())).thenReturn(true);
 
-        mvc.perform(post("/api/employee/admin/delete")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(validID))
+        mvc.perform(post("/api/employee/admin/delete/1")
+            .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
     }
 
@@ -72,10 +65,9 @@ public class DeleteEmployeeControllerTests {
 
         when(employeeService.remove(any())).thenThrow(employeeDoesntExist);
 
-        mvc.perform(post("/api/employee/admin/delete")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(nullID))
-            .andExpect(status().isBadRequest());
+        mvc.perform(post("/api/employee/admin/delete/")
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound());
     }
 
     @Test
@@ -83,9 +75,8 @@ public class DeleteEmployeeControllerTests {
     void testDeleteEmployeeWithInvalidId() throws Exception {
         when(employeeService.remove(any())).thenThrow(employeeDoesntExist);
 
-        mvc.perform(post("/api/employee/admin/delete")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(invalidID))
+        mvc.perform(post("/api/employee/admin/delete/3")
+            .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest());
     }
 
@@ -95,9 +86,8 @@ public class DeleteEmployeeControllerTests {
 
         when(employeeService.remove(any())).thenReturn(true);
 
-        mvc.perform(post("/api/employee/admin/delete")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(validID))
+        mvc.perform(post("/api/employee/admin/delete/1")
+            .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
     }
 
@@ -107,10 +97,9 @@ public class DeleteEmployeeControllerTests {
 
         when(employeeService.remove(any())).thenThrow(employeeDoesntExist);
 
-        mvc.perform(post("/api/employee/admin/delete")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(nullID))
-            .andExpect(status().isBadRequest());
+        mvc.perform(post("/api/employee/admin/delete/")
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound());
     }
 
     @Test
@@ -119,9 +108,8 @@ public class DeleteEmployeeControllerTests {
 
         when(employeeService.remove(any())).thenThrow(new EntityExistsException("Cannot delete last admin"));
 
-        mvc.perform(post("/api/employee/admin/delete")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(validID))
+        mvc.perform(post("/api/employee/admin/delete/1")
+            .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isConflict());
     }
 
@@ -131,9 +119,8 @@ public class DeleteEmployeeControllerTests {
 
         when(employeeService.remove(any())).thenThrow(employeeDoesntExist);
 
-        mvc.perform(post("/api/employee/admin/delete")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(invalidID))
+        mvc.perform(post("/api/employee/admin/delete/3")
+            .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest());
     }
 }
