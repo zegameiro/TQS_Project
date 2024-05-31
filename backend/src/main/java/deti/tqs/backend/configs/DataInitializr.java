@@ -373,8 +373,8 @@ public class DataInitializr implements ApplicationRunner {
                 for (int j = 0; j < facility.getMaxRoomsCapacity(); j++) {
                     String name, surname, phoneNumber;
                     do {
-                        name = randomNames.get((int) (random.nextInt() * randomNames.size()));
-                        surname = randomSurnames.get((int) (random.nextInt() * randomSurnames.size()));
+                        name = randomNames.get((int) (random.nextInt(randomNames.size())));
+                        surname = randomSurnames.get((int) (random.nextInt(randomSurnames.size())));
                     } while (!generatedNames.add(name + " " + surname));
                     do {
                         phoneNumber = "9" + ((int) (random.nextInt() * 90000000) + 10000000);
