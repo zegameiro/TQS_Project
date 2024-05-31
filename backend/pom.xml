@@ -23,6 +23,9 @@
 
 	<properties>
 
+		<sonar.organization>zegameiro</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+
 		<java.version>17</java.version>
 
 		<spring-boot-starter.version>3.2.3</spring-boot-starter.version>
@@ -58,6 +61,11 @@
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 			<version>${spring-boot-starter.version}</version>
 		</dependency>
@@ -67,7 +75,6 @@
 			<artifactId>spring-boot-devtools</artifactId>
 			<version>${spring-boot-starter.version}</version>
 			<scope>runtime</scope>
-			<optional>true</optional>
 		</dependency>
 
 		<dependency>
@@ -75,7 +82,6 @@
 			<artifactId>lombok</artifactId>
 			<version>1.18.32</version>
 			<scope>provided</scope>
-			<optional>true</optional>
 		</dependency>
 
 		<dependency>
@@ -83,6 +89,15 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<version>${spring-boot-starter.version}</version>
 			<scope>test</scope>
+		</dependency>
+
+		<!-- Database Dependency -->
+
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
+			<version>42.7.3</version>
 		</dependency>
 
 		<!-- Log Dependencies -->
@@ -136,11 +151,31 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>spring-mock-mvc</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-failsafe-plugin</artifactId>
+			<version>3.2.5</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>2.2.224</version>
+			<scope>runtime</scope>
+		</dependency>
+
 		<!-- Swagger Dependency -->
 		<dependency>
 			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-ui</artifactId>
-			<version>1.8.0</version>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.2.0</version>
 		</dependency>
 
 	</dependencies>
