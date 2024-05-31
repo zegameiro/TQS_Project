@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import {
   Button,
   Checkbox,
@@ -9,6 +9,7 @@ import {
 } from "flowbite-react"
 import { useState } from "react"
 import { getAllEmployees } from "../../actions/getActions"
+import { deleteEmployee } from "../../actions/deleteActions"
 import axios from "../../api"
 
 export default function AdminStaffTable() {
@@ -21,10 +22,18 @@ export default function AdminStaffTable() {
     queryFn: () => getAllEmployees(axios),
   })
 
+  const deleteEmployeeMutation = useMutation({
+    mutationKey: ["deleteEmployee"],
+    mutationFn: (id) => deleteEmployee(axios, id),
+    onSuccess: () => allEmployees.refetch(),
+  })
+
   function onCloseModal() {
     setOpenModal(false)
     setEmail("")
   }
+
+  console.log(allEmployees?.data)
 
   return (
     <Table hoverable>
@@ -35,6 +44,9 @@ export default function AdminStaffTable() {
         <Table.HeadCell>Specialties</Table.HeadCell>
         <Table.HeadCell>
           <span className="sr-only">Edit</span>
+        </Table.HeadCell>
+        <Table.HeadCell>
+          <span className="sr-only">Delete</span>
         </Table.HeadCell>
       </Table.Head>
       <Table.Body className="divide-y">
@@ -48,7 +60,7 @@ export default function AdminStaffTable() {
             </Table.Cell>
             <Table.Cell>{employee.email}</Table.Cell>
             <Table.Cell>{employee.phoneNumber}</Table.Cell>
-            <Table.Cell>{employee.specialtiesId}</Table.Cell>
+            <Table.Cell>{employee.specialitiesID}</Table.Cell>
             <Table.Cell>
               <span
                 className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
@@ -132,6 +144,11 @@ export default function AdminStaffTable() {
                   </div>
                 </Modal.Body>
               </Modal>
+            </Table.Cell>
+            <Table.Cell>
+              <Button className="btn-sm bg-red-600 hover:bg-red-600" onClick={() => deleteEmployeeMutation.mutate(employee.id)}>
+                Delete
+              </Button>
             </Table.Cell>
           </Table.Row>
         ))}
