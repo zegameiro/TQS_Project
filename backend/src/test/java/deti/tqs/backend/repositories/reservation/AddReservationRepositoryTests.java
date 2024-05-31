@@ -74,7 +74,7 @@ class AddReservationRepositoryTests {
 
     reservationRepository.save(reservation);
 
-    Reservation foundReservation = reservationRepository.findById(1);
+    Reservation foundReservation = reservationRepository.findById(reservation.getId());
 
     assertAll(
       () -> assertThat(foundReservation).isNotNull(),
