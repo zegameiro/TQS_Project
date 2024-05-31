@@ -33,8 +33,6 @@ public class EmployeeController {
     @PostMapping("/admin/add")
     public ResponseEntity<Employee> createEmployee(@Valid @RequestBody(required = true) EmployeeSchema employeeSchema) {
 
-        
-
         logger.info("Creating employee");
 
         Employee employee;

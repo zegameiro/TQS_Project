@@ -44,17 +44,6 @@ public class ReservationService {
         this.employeeRepository = employeeRepository;
     }
 
-    public Reservation findById(Long id) {
-
-        Reservation reservation = reservationRepository.findById(id).orElse(null);
-
-        if(reservation == null)
-            throw new EntityNotFoundException("Reservation not found");
-
-        return reservation;
-
-    }
-
     public List<Reservation> findAll() {
         return reservationRepository.findAll();
     }
