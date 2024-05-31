@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -65,8 +66,8 @@ public class EmployeeController {
         return new ResponseEntity<Employee>(status);
     }
 
-    @PostMapping("/admin/delete")
-    public ResponseEntity<Employee> deleteEmployee(@RequestBody(required = true) Long employeeId) {
+    @PostMapping("/admin/delete/{employeeId}")
+    public ResponseEntity<Employee> deleteEmployee(@PathVariable(required = true) Long employeeId) {
         try {
             employeeService.remove(employeeId);
             return new ResponseEntity<Employee>(HttpStatus.OK);
