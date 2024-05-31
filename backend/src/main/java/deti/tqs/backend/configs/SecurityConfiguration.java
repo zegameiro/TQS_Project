@@ -70,6 +70,8 @@ public class SecurityConfiguration {
         .requestMatchers(HttpMethod.GET, "/docs").permitAll()
         .requestMatchers(HttpMethod.GET, "/swagger-ui/*").permitAll()
         .requestMatchers(HttpMethod.GET, "/v3/api-docs/*").permitAll()
+        .requestMatchers(HttpMethod.GET, "/api/employee/*").permitAll()
+        .requestMatchers(HttpMethod.POST, "/api/employee/admin/*").permitAll()
         .anyRequest().authenticated())
       .build();
   }

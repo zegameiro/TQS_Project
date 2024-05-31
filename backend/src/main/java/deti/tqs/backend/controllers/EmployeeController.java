@@ -44,7 +44,6 @@ public class EmployeeController {
 
         try {
             employee = new Employee();
-            employee.setId(1);
             employee.setFullName(employeeSchema.fullName());
             employee.setEmail(employeeSchema.email());
             employee.setPhoneNumber(employeeSchema.phoneNumber());

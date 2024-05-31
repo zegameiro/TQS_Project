@@ -9,7 +9,7 @@ import jakarta.validation.Valid;
 @Generated
 public record EmployeeSchema(
 
-        @Valid Boolean isValid,
+        @Valid Boolean isAdmin,
         @Valid String fullName,
         @Valid String email,
         @Valid String phoneNumber,
