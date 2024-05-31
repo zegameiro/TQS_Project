@@ -59,6 +59,7 @@ class DeleteFacilityTestsIT {
     f.setPostalCode("9213-842");
     f.setStreetName("Rua de Lisboa");
     f.setMaxRoomsCapacity(20);
+    f.setReservationQueueId(1L);
 
     // create a facility first
     given()

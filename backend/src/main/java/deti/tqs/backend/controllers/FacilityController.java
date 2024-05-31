@@ -20,11 +20,14 @@ import org.springframework.web.bind.annotation.RestController;
 import deti.tqs.backend.dtos.FacilitySchema;
 import deti.tqs.backend.models.Facility;
 import deti.tqs.backend.services.FacilityService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 
 @RestController
 @RequestMapping("/api/facility")
+@Tag(name = "Facility", description = "Operations pertaining to facilities in the system.")
 public class FacilityController {
 
   private static final Logger logger = LoggerFactory.getLogger(FacilityController.class);
@@ -37,6 +40,7 @@ public class FacilityController {
   }
 
   @PostMapping("/admin/add")
+  @Operation(summary = "Create a new facility", description = "An admin create a new facility in the system.")
   public ResponseEntity<Facility> createFacility(@RequestBody(required = true) FacilitySchema facilitySchema) throws Exception {
 
     if (facilitySchema.name() == null || facilitySchema.city() == null || facilitySchema.phoneNumber() == null || facilitySchema.postalCode() == null || facilitySchema.streetName() == null)
@@ -61,10 +65,12 @@ public class FacilityController {
 
     } catch (EntityExistsException e) {
 
+      logger.error("Error creating a facility 1 : " +  e.getMessage());
       return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
       
     } catch (IllegalArgumentException e) {
 
+      logger.error("Error creating a facility 2 : " +  e.getMessage());
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 
     }
@@ -74,6 +80,7 @@ public class FacilityController {
   }
 
   @PutMapping("/admin/update")
+  @Operation(summary = "Update a facility", description = "An admin update a facility in the system.")
   public ResponseEntity<Facility> updateFacility(@RequestBody(required = true) FacilitySchema facilitySchema, @RequestParam(required = true) long id) {
 
     logger.info("Updating facility");
@@ -94,6 +101,7 @@ public class FacilityController {
       
     } catch (EntityNotFoundException e) {
 
+      logger.error("Error updating a facility : " +  e.getMessage());
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
     }
@@ -103,6 +111,7 @@ public class FacilityController {
   }
 
   @DeleteMapping("/admin/delete")
+  @Operation(summary = "Delete a facility", description = "An admin delete a facility in the system.")
   public ResponseEntity<Void> deleteFacility(@RequestParam(required = true) long id) {
 
     logger.info("Deleting facility");
@@ -113,6 +122,7 @@ public class FacilityController {
       
     } catch (IllegalArgumentException e) {
 
+      logger.error("Error deleting a facility : " +  e.getMessage());
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
     }
@@ -122,6 +132,7 @@ public class FacilityController {
   }
 
   @GetMapping("/{id}")
+  @Operation(summary = "Get a facility", description = "Get a facility by id.")
   public ResponseEntity<Facility> getFacility(@PathVariable long id) {
 
     Facility foundFacility = facilityService.getFacilityById(id);
@@ -134,6 +145,7 @@ public class FacilityController {
   }
 
   @GetMapping("/all")
+  @Operation(summary = "Get all facilities", description = "Get all facilities in the system.")
   public ResponseEntity<Iterable<Facility>> getAllFacilities() {
 
     List<Facility> facilities = facilityService.getAllFacilities();

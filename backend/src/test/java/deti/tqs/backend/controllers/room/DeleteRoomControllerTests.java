@@ -64,6 +64,7 @@ class DeleteRoomControllerTests {
     r1.setName("Room 1");
     r1.setMaxChairsCapacity(10);
     r1.setFacility(f1);
+    r1.setBeautyServiceId(4);
 
   }
 

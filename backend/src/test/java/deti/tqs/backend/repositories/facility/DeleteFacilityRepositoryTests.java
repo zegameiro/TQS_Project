@@ -31,7 +31,7 @@ class DeleteFacilityRepositoryTests {
   @Test
   @DisplayName("Test save a facility with success and delete it")
   void testSaveFacilityAndDeleteIt() {
-
+    
     Facility f = new Facility();
     f.setName("Facility 1");
     f.setCity("Aveiro");

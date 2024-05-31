@@ -57,10 +57,10 @@ const NavbarFixed = () => {
           onClick={() => navigate("/")}
         />
         <NavbarItem
-          {...(url === "/" || url.startsWith("/reservation?")) && { isActive: true }}
+          {...(url === "/" || url === "/reservation") && { isActive: true }}
         >
           <Link href="/"
-            {...(url === "/" || url.startsWith("/reservation?")) ?
+            {...(url === "/" || url === "/reservation") ?
               { color: "warning" } :
               { className: "text-white" }}
           >
