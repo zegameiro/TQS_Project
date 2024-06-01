@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -17,7 +18,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.autoconfigure.rsocket.RSocketProperties.Server.Spec;
 
 import deti.tqs.backend.models.Employee;
 import deti.tqs.backend.models.Reservation;
@@ -163,6 +163,112 @@ class SearchReservationServiceTests {
 
   }
 
+  @Test
+  @DisplayName("Find all reservations with success")
+  void findAllReservations() {
 
+    when(reservationRepository.findAll()).thenReturn(List.of(reservation1, reservation2, reservation3, reservation4, reservation5));
+
+    List<Reservation> found = reservationService.findAll();
+
+    assertAll(
+      () -> assertThat(found).isNotNull().hasSize(5),
+      () -> assertThat(found).contains(reservation1, reservation2, reservation3, reservation4, reservation5)
+    );
+
+    verify(reservationRepository, times(1)).findAll();
+
+  }
+
+  @Test
+  @DisplayName("Find all reservations associate to a customer's email")
+  void findAllReservationsByCustomerEmail() {
+
+    when(reservationRepository.findByCustomerEmail(anyString())).thenReturn(List.of(reservation1, reservation4, reservation5));
+
+    List<Reservation> found = reservationService.getReservationsByCustomerEmail("john@gmail.com");
+
+    assertAll(
+      () -> assertThat(found).isNotNull().hasSize(3),
+      () -> assertThat(found).contains(reservation1, reservation4, reservation5)
+    );
+
+    verify(reservationRepository, times(1)).findByCustomerEmail(anyString());
+
+  }
+
+  @Test
+  @DisplayName("Find all reservations associate to a customer's email that doesn't exists")
+  void findAllReservationsByCustomerEmailThatDoesntExists() {
+
+    when(reservationRepository.findByCustomerEmail(anyString())).thenReturn(List.of());
+
+    List<Reservation> found = reservationService.getReservationsByCustomerEmail("asdkj@akjlf.qwlk");
+
+    assertThat(found).isNotNull().isEmpty();
+
+    verify(reservationRepository, times(1)).findByCustomerEmail(anyString());
+
+  }
+
+  @Test
+  @DisplayName("Find all reservations associate to a employee's id")
+  void findAllReservationsByEmployeeID() {
+
+    when(reservationRepository.findByEmployee_Id(anyLong())).thenReturn(List.of(reservation1, reservation3, reservation5));
+
+    List<Reservation> found = reservationService.getReservationsByEmployeeID(1L);
+
+    assertAll(
+      () -> assertThat(found).isNotNull().hasSize(3),
+      () -> assertThat(found).contains(reservation1, reservation3, reservation5)
+    );
+
+    verify(reservationRepository, times(1)).findByEmployee_Id(anyLong());
+
+  }
+
+  @Test
+  @DisplayName("Find all reservations associate to a employee's id that doesn't exists")
+  void findAllReservationsByEmployeeIDThatDoesntExists() {
+
+    when(reservationRepository.findByEmployee_Id(anyLong())).thenReturn(List.of());
+
+    List<Reservation> found = reservationService.getReservationsByEmployeeID(10L);
+
+    assertThat(found).isNotNull().isEmpty();
+
+    verify(reservationRepository, times(1)).findByEmployee_Id(anyLong());
+
+  }
+
+  @Test
+  @DisplayName("Find a reservation by its secret code with success")
+  void whenValidSecretCode_thenReservationShouldBeFound() {
+
+    when(reservationRepository.findBySecretCode(anyString())).thenReturn(reservation2);
+
+    Reservation found = reservationService.getReservationBySecretCode("utyen12mc");
+
+    assertAll(
+      () -> assertThat(found).isNotNull().isEqualTo(reservation2),
+      () -> assertThat(found.getValidityID()).isZero()
+    );
+
+    verify(reservationRepository, times(1)).findBySecretCode(anyString());
+
+  }
+
+  @Test
+  @DisplayName("Find a reservation by its secret code with a code that doesn't exists")
+  void whenInvalidSecretCode_thenReservationShouldNotBeFound() {
+
+    when(reservationRepository.findBySecretCode(anyString())).thenReturn(null);
+
+    assertThrows(EntityNotFoundException.class, () -> reservationService.getReservationBySecretCode("asjd32982382"));
+
+    verify(reservationRepository, times(1)).findBySecretCode(anyString());
+
+  }
 
 }

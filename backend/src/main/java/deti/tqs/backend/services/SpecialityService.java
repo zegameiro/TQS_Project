@@ -21,15 +21,15 @@ public class SpecialityService {
 
     public Speciality save(Speciality speciality) throws Exception {
 
+        // Check if there are some fields missing
+        if(speciality.getName() == null)
+            throw new NoSuchFieldException("Speciality must have all fields filled");
+
         Speciality found = specialityRepository.findByName(speciality.getName());
         
         // Check if a speciality with the same name already exists
         if (found != null)
             throw new EntityExistsException("Speciality with this name already exists");
-
-        // Check if there are some fields missing
-        if(speciality.getName() == null || speciality == null)
-            throw new NoSuchFieldException("Speciality must have all fields filled");
 
         return specialityRepository.save(speciality);
 

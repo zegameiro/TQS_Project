@@ -1,5 +1,8 @@
 package deti.tqs.backend.models;
 
+import deti.tqs.backend.configs.Generated;
+
+@Generated
 public enum BeautyService {
   
   BASIC_HAIRDRESSER(0),

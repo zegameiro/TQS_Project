@@ -3,6 +3,7 @@ package deti.tqs.backend.configs;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -14,15 +15,12 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
-import deti.tqs.backend.models.BeautyService;
 import deti.tqs.backend.models.Chair;
 import deti.tqs.backend.models.Employee;
 import deti.tqs.backend.models.Facility;
-import deti.tqs.backend.models.Reservation;
 import deti.tqs.backend.models.ReservationQueue;
 import deti.tqs.backend.models.Room;
 import deti.tqs.backend.models.Speciality;
-import deti.tqs.backend.models.Validity;
 import deti.tqs.backend.repositories.ChairRepository;
 import deti.tqs.backend.repositories.EmployeeRepository;
 import deti.tqs.backend.repositories.FacilityRepository;
@@ -45,6 +43,8 @@ public class DataInitializr implements ApplicationRunner {
     private final SpecialityRepository specialityRepository;
     private final ReservationQueueRepository reservationQueueRepository;
     private final EmployeeRepository employeeRepository;
+
+    private Random random = new Random();
 
     @Autowired
     public DataInitializr(FacilityRepository facilityRepository, ReservationRepository reservationRepository, EmployeeRepository employeeRepository,
@@ -105,7 +105,23 @@ public class DataInitializr implements ApplicationRunner {
         aveiro.setRooms(new ArrayList<>());
         aveiro.setEmployees(new ArrayList<>());
 
-        List<Facility> facilities = List.of(lisbon, porto, aveiro);
+        List<Facility> facilities = List.of(lisbon, porto, aveiro);        // Reservation
+        logger.info("Creating default reservations");
+
+        // // criar 5 reservas para rooms e facilities aleatorios
+        // for (int i = 0; i < 5; i++) {
+        //     Facility facility = facilities.get(i % 3);
+        //     Room room = facility.getRooms().get(i % facility.getMaxRoomsCapacity());
+
+        //     Reservation reservation = new Reservation();
+        //     reservation.setTimestamp(System.currentTimeMillis());
+        //     reservation.setSpeciality(room.getName());
+        //     reservation.setRoom(room);
+
+        //     reservationRepository.save(reservation);
+        //     room.getReservations().add(reservation);
+        //     roomRepository.save(room);
+        // } 
         facilityRepository.saveAll(facilities);
         logger.info("Facility Lisbon, Porto and Aveiro created");
 
@@ -357,11 +373,11 @@ public class DataInitializr implements ApplicationRunner {
                 for (int j = 0; j < facility.getMaxRoomsCapacity(); j++) {
                     String name, surname, phoneNumber;
                     do {
-                        name = randomNames.get((int) (Math.random() * randomNames.size()));
-                        surname = randomSurnames.get((int) (Math.random() * randomSurnames.size()));
+                        name = randomNames.get((int) (random.nextInt() * randomNames.size()));
+                        surname = randomSurnames.get((int) (random.nextInt() * randomSurnames.size()));
                     } while (!generatedNames.add(name + " " + surname));
                     do {
-                        phoneNumber = "9" + ((int) (Math.random() * 90000000) + 10000000);
+                        phoneNumber = "9" + ((int) (random.nextInt() * 90000000) + 10000000);
                     } while (!generatedPhoneNumbers.add(phoneNumber));
 
                     Employee employee = new Employee();
@@ -377,57 +393,6 @@ public class DataInitializr implements ApplicationRunner {
             facility.setEmployees(employeesByFacility);
         }
 
-
-
-        /*
-        Employee employee1 = new Employee();
-        employee1.setFullName("John Doe");
-        employee1.setPhoneNumber("912345678");
-        employee1.setFacility(aveiro);
-        employee1.setSpecialitiesID(List.of(speciality1.getId(), speciality2.getId(), speciality3.getId(), speciality4.getId(), speciality11.getId(), speciality12.getId(), speciality13.getId(), speciality14.getId(), speciality15.getId(), speciality16.getId(), speciality17.getId(), speciality18.getId(), speciality19.getId(), speciality20.getId(), speciality21.getId(), speciality22.getId(), speciality23.getId()));
-        employee1.setEmail("john.doe@plaza.pt");
-
-        Employee employee2 = new Employee();
-        employee2.setFullName("Jane Doe");
-        employee2.setPhoneNumber("837267913");
-        employee2.setFacility(aveiro);
-        employee2.setSpecialitiesID(List.of(speciality5.getId(), speciality6.getId(), speciality7.getId(), speciality8.getId(), speciality9.getId(), speciality10.getId(), speciality24.getId(), speciality25.getId(), speciality26.getId(), speciality27.getId(), speciality28.getId(), speciality29.getId(), speciality30.getId(), speciality31.getId()));
-        employee2.setEmail("janedoes@plaza.pt");
-
-        Employee employee3 = new Employee();
-        employee3.setFullName("Alice Wonderland");
-        employee3.setPhoneNumber("836750192");
-        employee3.setFacility(lisbon);
-        employee3.setSpecialitiesID(List.of(speciality1.getId(), speciality2.getId(), speciality3.getId(), speciality4.getId(), speciality11.getId(), speciality12.getId(), speciality13.getId(), speciality14.getId(), speciality15.getId(), speciality16.getId(), speciality17.getId(), speciality18.getId(), speciality19.getId(), speciality20.getId(), speciality21.getId(), speciality22.getId(), speciality23.getId()));
-        employee3.setEmail("alice@plaza.pt");
-
-        Employee employee4 = new Employee();
-        employee4.setFullName("Bob Builder");
-        employee4.setPhoneNumber("128492043");
-        employee4.setFacility(lisbon);
-        employee4.setSpecialitiesID(List.of(speciality5.getId(), speciality6.getId(), speciality7.getId(), speciality8.getId(), speciality9.getId(), speciality10.getId(), speciality24.getId(), speciality25.getId(), speciality26.getId(), speciality27.getId(), speciality28.getId(), speciality29.getId(), speciality30.getId(), speciality31.getId()));
-        employee4.setEmail("bbuilder@plaza.pt");
-
-        Employee employee5 = new Employee();
-        employee5.setFullName("Charlie Brown");
-        employee5.setPhoneNumber("726354910");
-        employee5.setFacility(porto);
-        employee5.setSpecialitiesID(List.of(speciality1.getId(), speciality2.getId(), speciality3.getId(), speciality4.getId(), speciality11.getId(), speciality12.getId(), speciality13.getId(), speciality14.getId(), speciality15.getId(), speciality16.getId(), speciality17.getId(), speciality18.getId(), speciality19.getId(), speciality20.getId(), speciality21.getId(), speciality22.getId(), speciality23.getId()));
-        employee5.setEmail("charlie@plaza.pt");
-
-        Employee employee6 = new Employee();
-        employee6.setFullName("Dora Explorer");
-        employee6.setPhoneNumber("625348901");
-        employee6.setFacility(porto);
-        employee6.setSpecialitiesID(List.of(speciality5.getId(), speciality6.getId(), speciality7.getId(), speciality8.getId(), speciality9.getId(), speciality10.getId(), speciality24.getId(), speciality25.getId(), speciality26.getId(), speciality27.getId(), speciality28.getId(), speciality29.getId(), speciality30.getId(), speciality31.getId()));
-        employee6.setEmail("dora@plaza.pt");
-
-        employeeRepository.saveAll(List.of(employee1, employee2, employee3, employee4, employee5, employee6));
-
-        aveiro.setEmployees(List.of(employee1, employee2));
-        lisbon.setEmployees(List.of(employee3, employee4));
-        porto.setEmployees(List.of(employee5, employee6));
-         */
 
         facilityRepository.saveAll(List.of(aveiro, lisbon, porto));
 
@@ -452,22 +417,5 @@ public class DataInitializr implements ApplicationRunner {
 
         reservationQueueRepository.saveAll(List.of(queue1, queue2, queue3));
 
-        // Reservation
-        logger.info("Creating default reservations");
-
-        // // criar 5 reservas para rooms e facilities aleatorios
-        // for (int i = 0; i < 5; i++) {
-        //     Facility facility = facilities.get(i % 3);
-        //     Room room = facility.getRooms().get(i % facility.getMaxRoomsCapacity());
-
-        //     Reservation reservation = new Reservation();
-        //     reservation.setTimestamp(System.currentTimeMillis());
-        //     reservation.setSpeciality(room.getName());
-        //     reservation.setRoom(room);
-
-        //     reservationRepository.save(reservation);
-        //     room.getReservations().add(reservation);
-        //     roomRepository.save(room);
-        // } 
     }
 }

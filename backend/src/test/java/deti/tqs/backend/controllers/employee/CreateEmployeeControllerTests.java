@@ -2,7 +2,6 @@ package deti.tqs.backend.controllers.employee;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.calls;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -20,12 +19,10 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import deti.tqs.backend.JsonUtils;
 import deti.tqs.backend.controllers.EmployeeController;
-import deti.tqs.backend.dtos.EmployeeSchema;
 import deti.tqs.backend.models.Employee;
 import deti.tqs.backend.services.EmployeeService;
 
 import java.lang.NoSuchFieldException;
-import java.util.List;
 
 @WebMvcTest(EmployeeController.class)
 @AutoConfigureMockMvc(addFilters = false)
