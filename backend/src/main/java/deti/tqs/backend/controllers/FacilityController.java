@@ -65,12 +65,10 @@ public class FacilityController {
 
     } catch (EntityExistsException e) {
 
-      logger.error(e.getMessage());
       return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
       
     } catch (IllegalArgumentException e) {
 
-      logger.error(e.getMessage());
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 
     }
@@ -101,7 +99,6 @@ public class FacilityController {
       
     } catch (EntityNotFoundException e) {
 
-      logger.error(e.getMessage());
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
     }
@@ -122,7 +119,6 @@ public class FacilityController {
       
     } catch (IllegalArgumentException e) {
 
-      logger.error(e.getMessage());
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
     }
