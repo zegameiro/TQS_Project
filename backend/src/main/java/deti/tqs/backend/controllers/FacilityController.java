@@ -65,12 +65,12 @@ public class FacilityController {
 
     } catch (EntityExistsException e) {
 
-      logger.error("Error creating a facility 1 : " +  e.getMessage());
+      logger.error(e.getMessage());
       return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
       
     } catch (IllegalArgumentException e) {
 
-      logger.error("Error creating a facility 2 : " +  e.getMessage());
+      logger.error(e.getMessage());
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 
     }
@@ -101,7 +101,7 @@ public class FacilityController {
       
     } catch (EntityNotFoundException e) {
 
-      logger.error("Error updating a facility : " +  e.getMessage());
+      logger.error(e.getMessage());
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
     }
@@ -122,7 +122,7 @@ public class FacilityController {
       
     } catch (IllegalArgumentException e) {
 
-      logger.error("Error deleting a facility : " +  e.getMessage());
+      logger.error(e.getMessage());
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
     }

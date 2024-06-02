@@ -130,7 +130,7 @@ class CreateRoomServiceTests {
 
   @Test
   @DisplayName("When saving a Room with missing fields, it should return null")
-  void saveRoomWithMissingFields() throws Exception {
+  void saveRoomWithMissingFields() {
     
     long id = f2.getId();
 
@@ -164,7 +164,7 @@ class CreateRoomServiceTests {
 
   @Test
   @DisplayName("When saving a Room with an invalid chairs capacity, it should return null")
-  void saveRoomWithInvalidChairsCapacity() throws Exception {
+  void saveRoomWithInvalidChairsCapacity() {
     
     r2.setName("Room 2");
     r2.setMaxChairsCapacity(0);
@@ -183,7 +183,7 @@ class CreateRoomServiceTests {
 
   @Test
   @DisplayName("When saving a Room in a facility that already has the maximum number of rooms filled, it should return null")
-  void saveRoomInFullCapacityFacility() throws Exception {
+  void saveRoomInFullCapacityFacility() {
     
     f1.setMaxRoomsCapacity(1);
 

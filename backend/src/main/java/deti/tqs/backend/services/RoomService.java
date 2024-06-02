@@ -15,7 +15,9 @@ import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class RoomService {
-  
+
+  private static final String ROOM_NOT_FOUND = "Room does not exist";
+
   private RoomRepository roomRepository;
   private FacilityRepository facilityRepository;
 
@@ -70,7 +72,7 @@ public class RoomService {
     Room found = roomRepository.findById(roomID);
 
     if (found == null)
-      throw new EntityNotFoundException("Room does not exist");
+      throw new EntityNotFoundException(ROOM_NOT_FOUND);
 
     // Check if the name is missing
     
@@ -126,7 +128,7 @@ public class RoomService {
     Room found = roomRepository.findById(id);
 
     if (found == null)
-      throw new EntityNotFoundException("Room does not exist");
+      throw new EntityNotFoundException(ROOM_NOT_FOUND);
 
     return found;
 
@@ -141,12 +143,12 @@ public class RoomService {
     Room found = roomRepository.findByName(name);
 
     if (found == null)
-      throw new EntityNotFoundException("Room does not exist");
+      throw new EntityNotFoundException(ROOM_NOT_FOUND);
 
     return found;
   }
 
-  public List<Room> searchByFacilityInfo(String name, long facilityID) throws Exception {
+  public List<Room> searchByFacilityInfo(String name, long facilityID) throws NoSuchFieldException {
 
     List<Room> found = new ArrayList<>();
 
@@ -162,7 +164,7 @@ public class RoomService {
       Room r = roomRepository.findByNameAndFacilityId(name, facilityID);
 
       if(r == null)
-        throw new EntityNotFoundException("Room does not exist");
+        throw new EntityNotFoundException(ROOM_NOT_FOUND);
 
       found.add(r);
 
@@ -172,16 +174,16 @@ public class RoomService {
 
       found = roomRepository.findByFacilityName(name);
 
-      if (found.size() == 0)
-        throw new EntityNotFoundException("Room does not exist");
+      if (found.isEmpty())
+        throw new EntityNotFoundException(ROOM_NOT_FOUND);
     
     // else search by facility ID
     } else {
 
       found = roomRepository.findByFacilityId(facilityID);
 
-      if (found.size() == 0)
-        throw new EntityNotFoundException("Room does not exist");
+      if (found.isEmpty())
+        throw new EntityNotFoundException(ROOM_NOT_FOUND);
 
     }
 
@@ -194,7 +196,7 @@ public class RoomService {
     Room found = roomRepository.findById(roomID);
 
     if (found == null)
-      throw new EntityNotFoundException("Room does not exist");
+      throw new EntityNotFoundException(ROOM_NOT_FOUND);
 
     roomRepository.delete(found);
 

@@ -22,11 +22,9 @@ import deti.tqs.backend.controllers.EmployeeController;
 import deti.tqs.backend.models.Employee;
 import deti.tqs.backend.services.EmployeeService;
 
-import java.lang.NoSuchFieldException;
-
 @WebMvcTest(EmployeeController.class)
 @AutoConfigureMockMvc(addFilters = false)
-public class CreateEmployeeControllerTests {
+class CreateEmployeeControllerTests {
     
     private MockMvc mvc;
 
@@ -318,7 +316,5 @@ public class CreateEmployeeControllerTests {
         ))
         .andExpect(status().isBadRequest());
     }
-
-
 
 }

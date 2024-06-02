@@ -82,7 +82,7 @@ class SearchRoomRepositoryTests {
       () -> assertThat(foundRoom.getName()).isEqualTo("Room 1"),
       () -> assertThat(foundRoom.getMaxChairsCapacity()).isEqualTo(10),
       () -> assertThat(foundRoom.getFacility()).isEqualTo(f),
-      () -> assertThat(foundRoom.getBeautyServiceId()).isEqualTo(0)
+      () -> assertThat(foundRoom.getBeautyServiceId()).isZero()
     );
 
   }
@@ -172,8 +172,7 @@ class SearchRoomRepositoryTests {
     List<Room> foundRoom = roomRepository.findByFacilityId(f.getId());
 
     assertAll(
-      () -> assertThat(foundRoom).isNotNull(),
-      () -> assertThat(foundRoom.size()).isEqualTo(2),
+      () -> assertThat(foundRoom).isNotNull().hasSize(2),
       () -> assertThat(foundRoom.get(0)).isEqualTo(r1),
       () -> assertThat(foundRoom.get(1)).isEqualTo(r2)
     );
@@ -221,8 +220,7 @@ class SearchRoomRepositoryTests {
     List<Room> foundRoom = roomRepository.findByFacilityName("Facility 1");
 
     assertAll(
-      () -> assertThat(foundRoom).isNotNull(),
-      () -> assertThat(foundRoom.size()).isEqualTo(2),
+      () -> assertThat(foundRoom).isNotNull().hasSize(2),
       () -> assertThat(foundRoom.get(0)).isEqualTo(r1),
       () -> assertThat(foundRoom.get(1)).isEqualTo(r2)
     );
@@ -315,8 +313,7 @@ class SearchRoomRepositoryTests {
     List<Room> foundRoom = roomRepository.findAll();
 
     assertAll(
-      () -> assertThat(foundRoom).isNotNull(),
-      () -> assertThat(foundRoom.size()).isEqualTo(4),
+      () -> assertThat(foundRoom).isNotNull().hasSize(4),
       () -> assertThat(foundRoom.get(0)).isEqualTo(r1),
       () -> assertThat(foundRoom.get(1)).isEqualTo(r2),
       () -> assertThat(foundRoom.get(2)).isEqualTo(r3),

@@ -106,7 +106,7 @@ public class ChairService {
         Chair foundChair = chairRepository.findById(id);
 
         if (foundChair == null)
-            throw new EntityNotFoundException("Chair not found");
+            throw new EntityNotFoundException(CHAIR_NOT_FOUND);
 
         chairRepository.delete(foundChair);
 

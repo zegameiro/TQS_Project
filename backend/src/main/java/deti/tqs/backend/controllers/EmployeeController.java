@@ -38,7 +38,10 @@ public class EmployeeController {
         Employee employee;
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
 
+        ResponseEntity<Employee> response;
+
         try {
+
             employee = new Employee();
             employee.setId(1);
             employee.setFullName(employeeSchema.fullName());
@@ -50,16 +53,28 @@ public class EmployeeController {
             
             status = HttpStatus.CREATED;
 
-            return new ResponseEntity<Employee>(employee, status);
+            response = new ResponseEntity<>(employee, status);
+
+            return response;
+
         } catch (EntityExistsException e) {
+            
             status = HttpStatus.CONFLICT;
+
         } catch (NoSuchFieldException e) {
+
             status = HttpStatus.BAD_REQUEST;
+
         } catch (Exception e) {
+
             status = HttpStatus.INTERNAL_SERVER_ERROR;
+
         }
 
-        return new ResponseEntity<Employee>(status);
+        response = new ResponseEntity<>(status);
+
+        return response;
+
     }
 
 }

@@ -108,23 +108,8 @@ public class DataInitializr implements ApplicationRunner {
         List<Facility> facilities = List.of(lisbon, porto, aveiro);        // Reservation
         logger.info("Creating default reservations");
 
-        // // criar 5 reservas para rooms e facilities aleatorios
-        // for (int i = 0; i < 5; i++) {
-        //     Facility facility = facilities.get(i % 3);
-        //     Room room = facility.getRooms().get(i % facility.getMaxRoomsCapacity());
-
-        //     Reservation reservation = new Reservation();
-        //     reservation.setTimestamp(System.currentTimeMillis());
-        //     reservation.setSpeciality(room.getName());
-        //     reservation.setRoom(room);
-
-        //     reservationRepository.save(reservation);
-        //     room.getReservations().add(reservation);
-        //     roomRepository.save(room);
-        // } 
         facilityRepository.saveAll(facilities);
         logger.info("Facility Lisbon, Porto and Aveiro created");
-
 
         // Room
         List<String> roomExamples = List.of("Basic Hairdresser", "Complex Hairdresser", "Makeup", "Depilation", "Manicure/Pedicure", "Spa");
@@ -364,17 +349,20 @@ public class DataInitializr implements ApplicationRunner {
         Set<String> generatedPhoneNumbers = new HashSet<>();
 
 
-        List<String> randomNames = List.of("John", "Jane", "Alice", "Bob", "Charlie", "Dora", "Eve", "Frank", "Grace", "Henry", "Ivy", "Jack", "Katie", "Liam", "Mia", "Noah", "Olivia", "Peter", "Quinn", "Ryan", "Sophia", "Tom", "Uma", "Victor", "Wendy", "Xavier", "Yara", "Zack", "Ava", "Ben", "Cara", "David", "Emma", "Finn", "Gina", "Hugo", "Iris", "Jake", "Kara", "Luke", "Mara", "Nate", "Olive", "Paul", "Quinn", "Rory", "Sara", "Tim", "Uma", "Vince", "Wendy", "Xander", "Yara", "Zane", "Avery", "Bella", "Caleb", "Daisy", "Ethan", "Fiona", "Gabe", "Hannah", "Ian", "Jade", "Kai", "Lila", "Milo", "Nora", "Owen", "Piper", "Quinn", "Riley", "Seth", "Tessa", "Uri", "Violet", "Wyatt", "Xena", "Yuri", "Zara", "Aiden", "Brooke", "Cameron", "Dylan", "Ella", "Finn", "Grace", "Hannah", "Isaac", "Jenna", "Kylie", "Liam", "Megan", "Nathan", "Olivia", "Peyton", "Quinn", "Riley", "Sophia", "Tristan", "Uma", "Violet", "Wyatt", "Xander", "Yara", "Zane", "Ava", "Bryce", "Chloe", "Drew", "Eva", "Fiona", "Gavin", "Haley", "Ivy", "Jade", "Kara", "Lila", "Milo", "Nora", "Owen", "Piper", "Quinn", "Riley", "Seth", "Tessa", "Uri", "Violet", "Wyatt", "Xena", "Yuri", "Zara");
+        List<String> randomNames = List.of("John", "Jane", "Alice", "Bob", "Charlie", "Dora", "Eve", "Frank", "Grace", "Henry", "Ivy", "Jack", "Katie", "Liam", "Mia", "Noah", "Olivia", "Peter", "Ryan", "Sophia", "Tom", "Uma", "Victor", "Wendy", "Xavier", "Yara", "Zack", "Ava", "Ben", "Cara", "David", "Emma", "Finn", "Gina", "Hugo", "Iris", "Jake", "Kara", "Luke", "Mara", "Nate", "Olive", "Paul", "Rory", "Sara", "Tim", "Uma", "Vince", "Wendy", "Xander", "Yara", "Zane", "Avery", "Bella", "Caleb", "Daisy", "Ethan", "Fiona", "Gabe", "Hannah", "Ian", "Jade", "Kai", "Lila", "Milo", "Nora", "Owen", "Piper", "Seth", "Tessa", "Uri", "Xena", "Yuri", "Zara", "Aiden", "Brooke", "Cameron", "Dylan", "Ella", "Finn", "Grace", "Hannah", "Isaac", "Jenna", "Kylie", "Liam", "Megan", "Nathan", "Olivia", "Peyton", "Quinn", "Sophia", "Tristan", "Uma", "Xander", "Yara", "Zane", "Ava", "Bryce", "Chloe", "Drew", "Eva", "Fiona", "Gavin", "Haley", "Ivy", "Jade", "Kara", "Lila", "Milo", "Nora", "Owen", "Piper", "Riley", "Seth", "Tessa", "Uri", "Violet", "Wyatt", "Xena", "Yuri", "Zara");
         List<String> randomSurnames = List.of("Doe", "Brown", "Explorer", "Builder", "Wonderland", "Smith", "Johnson", "Williams", "Jones", "Brown", "Davis", "Miller", "Wilson", "Moore", "Taylor", "Anderson", "Thomas", "Jackson", "White", "Harris", "Martin", "Thompson", "Garcia", "Martinez", "Robinson", "Clark", "Rodriguez", "Lewis", "Lee", "Walker", "Hall", "Allen", "Young", "Hernandez", "King", "Wright", "Lopez", "Hill", "Scott", "Green", "Adams", "Baker", "Gonzalez", "Nelson", "Carter", "Mitchell", "Perez", "Roberts", "Turner", "Phillips", "Campbell", "Parker", "Evans", "Edwards", "Collins", "Stewart", "Sanchez", "Morris", "Rogers", "Reed", "Cook", "Morgan", "Bell", "Murphy", "Bailey", "Rivera", "Cooper", "Richardson", "Cox", "Howard", "Ward", "Torres", "Peterson", "Gray", "Ramirez", "James", "Watson", "Brooks", "Kelly", "Sanders", "Price", "Bennett", "Wood", "Barnes", "Ross", "Henderson", "Cole", "Jenkins", "Perry", "Powell", "Long", "Patterson", "Hughes", "Flores", "Washington", "Butler", "Simmons", "Foster", "Gonzales", "Bryant", "Alexander", "Russell", "Griffin", "Diaz", "Hayes");
+
+        String name;
+        String surname;
+        String phoneNumber;
 
         for (Facility facility : facilities) {
             List<Employee> employeesByFacility = new ArrayList<>();
             for (int i = 0; i < facility.getMaxRoomsCapacity(); i++) {
                 for (int j = 0; j < facility.getMaxRoomsCapacity(); j++) {
-                    String name, surname, phoneNumber;
                     do {
-                        name = randomNames.get((int) (random.nextInt() * randomNames.size()));
-                        surname = randomSurnames.get((int) (random.nextInt() * randomSurnames.size()));
+                        name = randomNames.get((int) (random.nextInt(randomNames.size())));
+                        surname = randomSurnames.get((int) (random.nextInt(randomSurnames.size())));
                     } while (!generatedNames.add(name + " " + surname));
                     do {
                         phoneNumber = "9" + ((int) (random.nextInt() * 90000000) + 10000000);

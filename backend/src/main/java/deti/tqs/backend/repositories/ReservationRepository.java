@@ -12,7 +12,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
   
   Reservation findById(long id);
 
-  List<Reservation> findByEmployee_Id(Long employee_id);
+  List<Reservation> findByEmployeeId(Long employeeId);
 
   Reservation findBySecretCode(String secretCode);
 

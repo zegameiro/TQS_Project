@@ -10,7 +10,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -135,7 +134,7 @@ class CreateReservationControllerTests {
 
   @Test
   @DisplayName("Create a reservation with success")
-  void createReservationWithSuccess() throws IOException, Exception {
+  void createReservationWithSuccess() throws Exception {
 
     when(reservationService.createReservation(reservationSchema1)).thenReturn(reservation1);
 
