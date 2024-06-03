@@ -20,7 +20,7 @@ import org.springframework.http.MediaType;
 
 @WebMvcTest(SpecialityController.class)
 @AutoConfigureMockMvc(addFilters = false)
-public class CreateSpecialityControllerTests {
+class CreateSpecialityControllerTests {
     
     private MockMvc mvc;
 
@@ -39,7 +39,7 @@ public class CreateSpecialityControllerTests {
      */
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         Speciality speciality = new Speciality();
         speciality.setName("Speciality");
         speciality.setPrice(10.0);
@@ -48,7 +48,7 @@ public class CreateSpecialityControllerTests {
 
     @Test
     @DisplayName("Create speciality with success")
-    public void createSpecialityWithSuccess() throws Exception {
+    void createSpecialityWithSuccess() throws Exception {
         // Arrange
         Speciality speciality = new Speciality();
         speciality.setName("Speciality");

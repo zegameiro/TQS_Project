@@ -105,7 +105,7 @@ class CreateChairServiceTests {
 
   @Test
   @DisplayName("Save a Chair with a name that already exists in a room")
-  void saveChairWithSameName() throws Exception {
+  void saveChairWithSameName() {
 
     when(roomRepository.findById(anyLong())).thenReturn(r1);
     when(chairRepository.findByNameAndRoomId(anyString(), anyLong())).thenReturn(c1);
@@ -120,7 +120,7 @@ class CreateChairServiceTests {
 
   @Test
   @DisplayName("Save a chair with an invalid name")
-  void saveChairWithInvalidName() throws Exception {
+  void saveChairWithInvalidName() {
 
     c1.setName("");
 
@@ -134,7 +134,7 @@ class CreateChairServiceTests {
 
   @Test
   @DisplayName("Save a chair with an null name")
-  void saveChairWithNullName() throws Exception {
+  void saveChairWithNullName() {
 
     c1.setName(null);
 
@@ -162,7 +162,7 @@ class CreateChairServiceTests {
 
   @Test
   @DisplayName("Save a chair in a room that already has the maximum number of chairs filled")
-  void saveChairInFullRoom() throws Exception {
+  void saveChairInFullRoom() {
 
     r2.setChairs(List.of(c2));
 

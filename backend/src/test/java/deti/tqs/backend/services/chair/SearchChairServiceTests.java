@@ -26,7 +26,7 @@ import deti.tqs.backend.services.ChairService;
 import jakarta.persistence.EntityNotFoundException;
 
 @ExtendWith(MockitoExtension.class)
-public class SearchChairServiceTests {
+class SearchChairServiceTests {
   
   @Mock
   private ChairRepository chairRepository;
@@ -176,8 +176,7 @@ public class SearchChairServiceTests {
     List<Chair> chairs = chairService.getAllChairs();
 
     assertAll(
-      () -> assertThat(chairs).isNotNull(),
-      () -> assertThat(chairs.size()).isEqualTo(4),
+      () -> assertThat(chairs).isNotNull().hasSize(4),
       () -> assertThat(chairs).contains(c1, c2, c3, c4)
     );
 
@@ -194,8 +193,7 @@ public class SearchChairServiceTests {
     List<Chair> chairs = chairService.getChairsByRoomID(r1.getId());
 
     assertAll(
-      () -> assertThat(chairs).isNotNull(),
-      () -> assertThat(chairs.size()).isEqualTo(4),
+      () -> assertThat(chairs).isNotNull().hasSize(4),
       () -> assertThat(chairs).contains(c1, c2, c3, c4)
     );
 

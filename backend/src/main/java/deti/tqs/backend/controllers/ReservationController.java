@@ -48,12 +48,10 @@ public class ReservationController {
 
         } catch (EntityNotFoundException e) {
 
-            logger.error("Error creating reservation 1: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
         } catch (IllegalArgumentException e) {
 
-            logger.error("Error creating reservation 2: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 
         }
@@ -78,12 +76,10 @@ public class ReservationController {
 
         } catch (EntityNotFoundException e) {
 
-            logger.error("Error checking in reservation 1: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
         } catch (IllegalArgumentException e) {
 
-            logger.error("Error checking in reservation 2: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 
         }
@@ -108,12 +104,10 @@ public class ReservationController {
 
         } catch (EntityNotFoundException e) {
 
-            logger.error("Error paying reservation 1: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
         } catch (IllegalArgumentException e) {
 
-            logger.error("Error paying reservation 2: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 
         }
@@ -138,7 +132,6 @@ public class ReservationController {
 
         } catch (EntityNotFoundException e) {
 
-            logger.error("Error getting reservation: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
         }
@@ -185,7 +178,6 @@ public class ReservationController {
 
         } catch (EntityNotFoundException e) {
 
-            logger.error("Error getting reservation by code: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
         }

@@ -46,6 +46,12 @@ export const getAllChairs = async (axios) => {
   })
 }
 
+export const getAllEmployees = async (axios) => {
+  return axios.get("employee/all").then((res) => {
+    return res.data
+  })
+}
+
 export const getAllReservations = async (axios) => {
   return axios.get("reservation/all").then((res) => {
     return res.data

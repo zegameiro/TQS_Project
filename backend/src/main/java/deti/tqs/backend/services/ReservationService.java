@@ -26,6 +26,8 @@ public class ReservationService {
 
     private static final Logger logger = LoggerFactory.getLogger(ReservationService.class);
 
+    private static final String RESERVATION_NOT_FOUND = "Reservation not found";
+
     private ReservationRepository reservationRepository;
     private RoomRepository roomRepository;
     private SpecialityRepository specialityRepository;
@@ -60,7 +62,7 @@ public class ReservationService {
         Room roomFound = roomRepository.findById(Long.parseLong(reservationSchema.roomID()));
 
         if(roomFound == null)
-            throw new EntityNotFoundException("Room not found");
+            throw new EntityNotFoundException(RESERVATION_NOT_FOUND);
 
         // Check if the speciality exists
         Speciality specialityFound = specialityRepository.findById(Long.parseLong(reservationSchema.specialityID()));
@@ -77,7 +79,7 @@ public class ReservationService {
         // Get the the reservation queue of the facility to add this reservation
         ReservationQueue reserQueue = reservationQueueRepository.findById(roomFound.getFacility().getReservationQueueId());
 
-        if(reserQueue == null)
+        if(reserQueue == null) {
         
             reserQueue = new ReservationQueue();
             roomFound.getFacility().setReservationQueueId(reserQueue.getId());
@@ -86,6 +88,8 @@ public class ReservationService {
             facilityRepository.save(roomFound.getFacility());
 
             logger.info("Reservation queue created");
+
+        }
 
         // Set the reservation attributes
         reservation.setTimestamp(Long.parseLong(reservationSchema.timestamp()));
@@ -121,7 +125,7 @@ public class ReservationService {
         Reservation found = reservationRepository.findById(reservationID);
 
         if(found == null)
-            throw new EntityNotFoundException("Reservation not found");
+            throw new EntityNotFoundException(RESERVATION_NOT_FOUND);
 
         return found;
     }
@@ -134,7 +138,7 @@ public class ReservationService {
 
     public List<Reservation> getReservationsByEmployeeID(long employeeID) {
 
-        return reservationRepository.findByEmployee_Id(employeeID);
+        return reservationRepository.findByEmployeeId(employeeID);
 
     }
 
@@ -143,7 +147,7 @@ public class ReservationService {
         Reservation found = reservationRepository.findBySecretCode(secretCode);
 
         if(found == null)
-            throw new EntityNotFoundException("Reservation not found");
+            throw new EntityNotFoundException(RESERVATION_NOT_FOUND);
 
         return found;
 
@@ -155,7 +159,7 @@ public class ReservationService {
         Reservation reserv = reservationRepository.findById(reservationID);
 
         if(reserv == null)
-            throw new EntityNotFoundException("Reservation not found");
+            throw new EntityNotFoundException(RESERVATION_NOT_FOUND);
 
         switch(status) {
 
@@ -202,9 +206,6 @@ public class ReservationService {
         Employee designatedEmployee = null;
 
         for (Employee e : employees) {
-            
-            logger.info("Employee specialities: " +  e.getSpecialitiesID() );
-            logger.info("Speciality found: " +  specialityFound.getId() + " with name: " + specialityFound.getName());
 
             // Check if the employee has the required speciality for the reservation
             if(e.getSpecialitiesID() != null && e.getSpecialitiesID().contains(specialityFound.getId())) {   
@@ -217,7 +218,7 @@ public class ReservationService {
 
                     designatedEmployee = e;
 
-                    logger.info("Employee found1");
+                    logger.info("Employee found with no reservations");
 
                     break;
 
@@ -244,8 +245,6 @@ public class ReservationService {
             }
 
         }
-
-        logger.info("Employee found3: " + designatedEmployee);
 
         return designatedEmployee;
 

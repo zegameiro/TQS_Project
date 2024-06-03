@@ -215,7 +215,7 @@ class SearchReservationServiceTests {
   @DisplayName("Find all reservations associate to a employee's id")
   void findAllReservationsByEmployeeID() {
 
-    when(reservationRepository.findByEmployee_Id(anyLong())).thenReturn(List.of(reservation1, reservation3, reservation5));
+    when(reservationRepository.findByEmployeeId(anyLong())).thenReturn(List.of(reservation1, reservation3, reservation5));
 
     List<Reservation> found = reservationService.getReservationsByEmployeeID(1L);
 
@@ -224,7 +224,7 @@ class SearchReservationServiceTests {
       () -> assertThat(found).contains(reservation1, reservation3, reservation5)
     );
 
-    verify(reservationRepository, times(1)).findByEmployee_Id(anyLong());
+    verify(reservationRepository, times(1)).findByEmployeeId(anyLong());
 
   }
 
@@ -232,13 +232,13 @@ class SearchReservationServiceTests {
   @DisplayName("Find all reservations associate to a employee's id that doesn't exists")
   void findAllReservationsByEmployeeIDThatDoesntExists() {
 
-    when(reservationRepository.findByEmployee_Id(anyLong())).thenReturn(List.of());
+    when(reservationRepository.findByEmployeeId(anyLong())).thenReturn(List.of());
 
     List<Reservation> found = reservationService.getReservationsByEmployeeID(10L);
 
     assertThat(found).isNotNull().isEmpty();
 
-    verify(reservationRepository, times(1)).findByEmployee_Id(anyLong());
+    verify(reservationRepository, times(1)).findByEmployeeId(anyLong());
 
   }
 

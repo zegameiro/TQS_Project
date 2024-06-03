@@ -50,22 +50,18 @@ public class ChairController {
 
         } catch (EntityNotFoundException e) {
 
-            logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
         } catch (NoSuchFieldException e) {
 
-            logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 
         } catch (IllegalStateException e) {
 
-            logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(null);
 
         } catch (EntityExistsException e) {
 
-            logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
 
         }
@@ -88,7 +84,6 @@ public class ChairController {
 
         } catch (EntityNotFoundException e) {
 
-            logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
         }
@@ -125,7 +120,6 @@ public class ChairController {
 
         } catch (EntityNotFoundException e) {
 
-            logger.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
         }

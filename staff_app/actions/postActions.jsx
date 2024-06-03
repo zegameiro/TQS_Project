@@ -9,3 +9,7 @@ export const addNewRoom = async (axios, roomData) => {
 export const addNewChair = async (axios, chairData) => {
   return axios.post("chair/admin/add", chairData)
 }
+
+export const addNewEmployee = async (axios, employeeData) => {
+  return axios.post("employee/admin/add", employeeData)
+}
