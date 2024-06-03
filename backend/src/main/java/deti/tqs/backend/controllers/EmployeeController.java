@@ -4,20 +4,21 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ch.qos.logback.core.status.Status;
 import deti.tqs.backend.dtos.EmployeeSchema;
 import deti.tqs.backend.models.Employee;
 import deti.tqs.backend.services.EmployeeService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.persistence.EntityExistsException;
 import jakarta.validation.Valid;
 
+
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/employee")
@@ -44,7 +45,6 @@ public class EmployeeController {
 
         try {
             employee = new Employee();
-            employee.setId(1);
             employee.setFullName(employeeSchema.fullName());
             employee.setEmail(employeeSchema.email());
             employee.setPhoneNumber(employeeSchema.phoneNumber());
@@ -66,4 +66,22 @@ public class EmployeeController {
         return new ResponseEntity<Employee>(status);
     }
 
+    @PostMapping("/admin/delete/{employeeId}")
+    public ResponseEntity<Employee> deleteEmployee(@PathVariable(required = true) Long employeeId) {
+        try {
+            employeeService.remove(employeeId);
+            return new ResponseEntity<Employee>(HttpStatus.OK);
+        } catch (EntityExistsException e) {
+            return new ResponseEntity<Employee>(HttpStatus.CONFLICT);
+        } catch (NoSuchFieldException e) {
+            return new ResponseEntity<Employee>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<Employee>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<Iterable<Employee>> getAllEmployees() {
+        return new ResponseEntity<Iterable<Employee>>(employeeService.getAll(), HttpStatus.OK);
+    }
 }

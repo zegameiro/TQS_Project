@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import deti.tqs.backend.models.Employee;
 import deti.tqs.backend.repositories.EmployeeRepository;
 import jakarta.persistence.EntityExistsException;
-import java.lang.NoSuchFieldException;
 
 @Service
 public class EmployeeService {
@@ -28,6 +27,17 @@ public class EmployeeService {
         return employeeRepository.save(employee);
     }
 
+    public Boolean remove(Long employeeID) throws NoSuchFieldException, EntityExistsException {
+        Employee employee = employeeRepository.findById(employeeID).orElse(null);
+        if (employee == null)
+            throw new NoSuchFieldException("Employee with this ID does not exist");
+        if (employee.isAdmin())
+            if (employeeRepository.count() == 1)
+                throw new EntityExistsException("Cannot delete last admin");
+        employeeRepository.delete(employee);
+        return true;
+    }
+
     private void checkIfEntityExists(Employee employee) throws EntityExistsException {
         if (employeeRepository.findByEmail(employee.getEmail()) != null)
             throw new EntityExistsException("Employee with this email already exists"); 
@@ -40,10 +50,10 @@ public class EmployeeService {
             throw new NoSuchFieldException("Employee must have a full name");
 
         if (isNullOrEmpty(employee.getEmail()))
-            throw new NoSuchFieldException("Employee must have an email");
+            throw new NoSuchFieldException("Employee must have a valid email");
 
         if (isNullOrEmpty(employee.getPhoneNumber()))
-            throw new NoSuchFieldException("Employee must have a phone number");
+            throw new NoSuchFieldException("Employee must have a valid phone number");
     }
 
     private boolean isNullOrEmpty(String str) {
@@ -58,8 +68,12 @@ public class EmployeeService {
     }
 
     private void checkIfPhoneNumberIsValid(Employee employee) throws NoSuchFieldException {
-        if (!employee.getPhoneNumber().matches("^[0-9]+$"))
+        if (!employee.getPhoneNumber().matches("^[0-9]{9}$"))
             throw new NoSuchFieldException("Employee must have a valid phone number");
+    }
+
+    public Iterable<Employee> getAll() {
+        return employeeRepository.findAll();
     }
 }
 

@@ -9,3 +9,7 @@ export const deleteRoom = (axios, id) => {
 export const deleteChair = (axios, id) => {
   return axios.delete(`chair/admin/delete?id=${id}`)
 }
+
+export const deleteEmployee = (axios, id) => {
+  return axios.post(`employee/admin/delete/${id}`)
+}
