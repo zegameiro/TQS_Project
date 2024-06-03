@@ -1,17 +1,19 @@
 package deti.tqs.backend.services.employee;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import jakarta.persistence.EntityExistsException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -20,6 +22,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import deti.tqs.backend.models.Employee;
 import deti.tqs.backend.repositories.EmployeeRepository;
 import deti.tqs.backend.services.EmployeeService;
+
+import java.util.stream.Stream;
 
 @ExtendWith(MockitoExtension.class)
 public class CreateEmployeeServiceTests {
@@ -35,27 +39,30 @@ public class CreateEmployeeServiceTests {
     /*
      * NECESSARY TESTS
      * 
-     * 1. Save an employee with success
-     * 2. Fail to save an employee with null fullName
-     * 3. Fail to save an employee with empty fullName
-     * 4. Fail to save an employee with null email
-     * 5. Fail to save an employee with empty email
-     * 6. Fail to save an employee with null phoneNumber
-     * 7. Fail to save an employee with empty phoneNumber
-     * 8. Fail to save an employee with existing email
-     * 9. Fail to save an employee with existing phoneNumber
-     * 10. Fail to save an employee with email not containing '@'
-     * 11. Fail to save an employee with email not containing '.'
-     * 12. Fail to save an employee with email containing '@' and '.', but not in the right order
-     * 13. Fail to save an employee with email containing more then one '@'
-     * 14. Fail to save an employee with email containing only '@.'
-     * 13. Fail to save an employee with a phoneNumber not containing only numbers
+     * 1. Receive status code isCreated when Saving an employee with success
+     * 2. Receive status code badRequest when saving an employee with 
+     *          null fullName
+     *          empty fullName
+     * 4. Receive status code badRequest when saving an employee with 
+     *          null email
+     *          empty email
+     *          not containing '@'
+     *          not containing '.'
+     *          containing '@' and '.', but in the wrong order
+     *          containing more then one '@'
+     *          containing only '@.'
+     * 11. Receive status code badRequest when saving an employee with 
+     *          null phoneNumber
+     *          empty phoneNumber
+     *          not containing only numbers
+     *          with less then 9 digits
+     *          with more then 9 digits
+     * 16. Receive status code badRequest when saving an employee with existing email
+     * 17. Receive status code badRequest when saving an employee with existing phoneNumber
      */
 
     @BeforeEach
     void setUp() {
-        employeeRepository.deleteAll();
-
         employee = new Employee();
         employee.setId(1L);
         employee.setAdmin(false);
@@ -63,18 +70,14 @@ public class CreateEmployeeServiceTests {
         employee.setEmail("johndoe@gmail.com");
         employee.setPhoneNumber("123456789");
         employee.setSpecialitiesID(null);
-
     }
-
+    
     @Test
     @DisplayName("Test save an employee with success")
-    void whenSaveEmployee_thenCreateEmployee() {
-
-        employee.setId(1L);
-
+    void whenSaveEmployee_thenCreateEmployee() throws Exception {
         when(employeeRepository.save(employee)).thenReturn(employee);
 
-        Employee savedEmployee = employeeRepository.save(employee);
+        Employee savedEmployee = employeeService.save(employee);
 
         assertAll(
             () -> assertThat(savedEmployee).isNotNull(),
@@ -84,218 +87,97 @@ public class CreateEmployeeServiceTests {
         );
 
         verify(employeeRepository, times(1)).save(employee);
-
     }
 
-    @Test
-    @DisplayName("Test fail to save an employee with null fullName")
-    void whenSaveEmployeeWithNullFullName_thenThrowException() {
+    private static Stream<String> invalidNames() {
+        return Stream.of(
+                null, // null full name
+                "" // empty full name
+        );
+    }
 
-        employee.setFullName(null);
+    @ParameterizedTest
+    @MethodSource("invalidNames")
+    @DisplayName("Test fail to save an employee with invalid full names")
+    void whenSaveEmployeeWithInvalidName_thenThrowException(String invalidName) {
+        employee.setFullName(invalidName);
 
-        assertThatThrownBy(
-                () -> employeeService.save(employee))
+        assertThatThrownBy(() -> employeeService.save(employee))
                 .isInstanceOf(NoSuchFieldException.class)
                 .hasMessage("Employee must have a full name");
 
         verify(employeeRepository, times(0)).save(employee);
-
     }
 
-    @Test
-    @DisplayName("Test fail to save an employee with an empty fullName")
-    void whenSaveEmployeeWithEmptyFullName_thenThrowException() {
-
-        employee.setFullName("");
-
-        assertThatThrownBy(
-                () -> employeeService.save(employee))
-                .isInstanceOf(NoSuchFieldException.class)
-                .hasMessage("Employee must have a full name");
-
-        verify(employeeRepository, times(0)).save(employee);
-
+    private static Stream<String> invalidEmails() {
+        return Stream.of(
+                null, // null email
+                "", // empty email
+                "johndoegmail.com", // email not containing '@'
+                "johndoe@gmailcom", // email not containing '.'
+                "johndoe.gmail@com", // email with '@' and '.', but in the wrong order
+                "johndoe@@gmail.com", // email containing more than one '@'
+                "@." // email containing only '@.'
+        );
     }
 
-    @Test
-    @DisplayName("Test fail to save an employee with null email")
-    void whenSaveEmployeeWithNullEmail_thenThrowException() {
+    @ParameterizedTest
+    @MethodSource("invalidEmails")
+    @DisplayName("Test fail to save an employee with invalid emails")
+    void whenSaveEmployeeWithInvalidEmail_thenThrowException(String invalidEmail) {
+        employee.setEmail(invalidEmail);
 
-        employee.setEmail(null);
-
-        assertThatThrownBy(
-                () -> employeeService.save(employee))
+        assertThatThrownBy(() -> employeeService.save(employee))
                 .isInstanceOf(NoSuchFieldException.class)
-                .hasMessage("Employee must have an email");
+                .hasMessage("Employee must have a valid email");
 
         verify(employeeRepository, times(0)).save(employee);
-
     }
 
-    @Test
-    @DisplayName("Test fail to save an employee with empty email")
-    void whenSaveEmployeeWithEmptyEmail_thenThrowException() {
-
-        employee.setEmail("");
-
-        assertThatThrownBy(
-                () -> employeeService.save(employee))
-                .isInstanceOf(NoSuchFieldException.class)
-                .hasMessage("Employee must have an email");
-
-        verify(employeeRepository, times(0)).save(employee);
-
+    private static Stream<String> invalidNumbers() {
+        return Stream.of(
+                null, // null phone number
+                "", // empty phone number
+                "123456789a", // phone number containing letters
+                "1230", // phone number with less than 9 digits
+                "1234567890" // phone number with more than 9 digits
+        );
     }
 
-    @Test
-    @DisplayName("Test fail to save an employee with null phoneNumber")
-    void whenSaveEmployeeWithNullPhoneNumber_thenThrowException() {
+    @ParameterizedTest
+    @MethodSource("invalidNumbers")
+    @DisplayName("Test fail to save an employee with invalid phone numbers")
+    void whenSaveEmployeeWithInvalidPhoneNumber_thenThrowException(String invalidNumber) {
+        employee.setPhoneNumber(invalidNumber);
 
-        employee.setPhoneNumber(null);
-
-        assertThatThrownBy(
-                () -> employeeService.save(employee))
+        assertThatThrownBy(() -> employeeService.save(employee))
                 .isInstanceOf(NoSuchFieldException.class)
-                .hasMessage("Employee must have a phone number");
+                .hasMessage("Employee must have a valid phone number");
 
         verify(employeeRepository, times(0)).save(employee);
-
-    }
-
-    @Test
-    @DisplayName("Test fail to save an employee with empty phoneNumber")
-    void whenSaveEmployeeWithEmptyPhoneNumber_thenThrowException() {
-
-        employee.setPhoneNumber("");
-
-        assertThatThrownBy(
-                () -> employeeService.save(employee))
-                .isInstanceOf(NoSuchFieldException.class)
-                .hasMessage("Employee must have a phone number");
-
-        verify(employeeRepository, times(0)).save(employee);
-
     }
 
     @Test
     @DisplayName("Test fail to save an employee with existing email")
     void whenSaveEmployeeWithExistingEmail_thenThrowException() {
-
         when(employeeRepository.findByEmail("johndoe@gmail.com")).thenReturn(employee);
 
-        assertThatThrownBy(
-                () -> employeeService.save(employee))
+        assertThatThrownBy(() -> employeeService.save(employee))
                 .isInstanceOf(EntityExistsException.class)
                 .hasMessage("Employee with this email already exists");
 
         verify(employeeRepository, times(0)).save(employee);
-
     }
 
     @Test
     @DisplayName("Test fail to save an employee with existing phoneNumber")
     void whenSaveEmployeeWithExistingPhoneNumber_thenThrowException() {
-
         when(employeeRepository.findByPhoneNumber("123456789")).thenReturn(employee);
 
-        assertThatThrownBy(
-                () -> employeeService.save(employee))
+        assertThatThrownBy(() -> employeeService.save(employee))
                 .isInstanceOf(EntityExistsException.class)
                 .hasMessage("Employee with this phone number already exists");
 
         verify(employeeRepository, times(0)).save(employee);
-
     }
-
-    @Test
-    @DisplayName("Test fail to save an employee with email not containing '@'")
-    void whenSaveEmployeeWithEmailNotContainingAt_thenThrowException() {
-
-        employee.setEmail("johndoegmail.com");
-
-        assertThatThrownBy(
-                () -> employeeService.save(employee))
-                .isInstanceOf(NoSuchFieldException.class)
-                .hasMessage("Employee must have a valid email");
-
-        verify(employeeRepository, times(0)).save(employee);
-
-    }
-
-    @Test
-    @DisplayName("Test fail to save an employee with email not containing '.'")
-    void whenSaveEmployeeWithEmailNotContainingDot_thenThrowException() {
-
-        employee.setEmail("johndoe@gmailcom");
-
-        assertThatThrownBy(
-                () -> employeeService.save(employee))
-                .isInstanceOf(NoSuchFieldException.class)
-                .hasMessage("Employee must have a valid email");
-
-        verify(employeeRepository, times(0)).save(employee);
-
-    }
-
-    @Test
-    @DisplayName("Test fail to save an employee with email containing '@' and '.', but not in the right order")
-    void whenSaveEmployeeWithEmailNotInRightOrder_thenThrowException() {
-
-        employee.setEmail("johndoe.gmail@com");
-
-        assertThatThrownBy(
-                () -> employeeService.save(employee))
-                .isInstanceOf(NoSuchFieldException.class)
-                .hasMessage("Employee must have a valid email");
-
-        verify(employeeRepository, times(0)).save(employee);
-
-    }
-
-    @Test
-    @DisplayName("Test fail to save an employee with email containing more then one '@'")
-    void whenSaveEmployeeWithEmailContainingMoreThanOneAt_thenThrowException() {
-
-        employee.setEmail("johndoe@@gmail.com");
-
-        assertThatThrownBy(
-                () -> employeeService.save(employee))
-                .isInstanceOf(NoSuchFieldException.class)
-                .hasMessage("Employee must have a valid email");
-
-        verify(employeeRepository, times(0)).save(employee);
-
-    }
-
-    @Test
-    @DisplayName("Test fail to save an employee with email containing only '@.'")
-    void whenSaveEmployeeWithEmailContainingOnlyAtDot_thenThrowException() {
-
-        employee.setEmail("@.");
-
-        assertThatThrownBy(
-                () -> employeeService.save(employee))
-                .isInstanceOf(NoSuchFieldException.class)
-                .hasMessage("Employee must have a valid email");
-
-        verify(employeeRepository, times(0)).save(employee);
-
-    }
-
-    @Test
-    @DisplayName("Test fail to save an employee with a phoneNumber not containing only numbers")
-    void whenSaveEmployeeWithPhoneNumberNotContainingOnlyNumbers_thenThrowException() {
-
-        employee.setPhoneNumber("123456789a");
-
-        assertThatThrownBy(
-                () -> employeeService.save(employee))
-                .isInstanceOf(NoSuchFieldException.class)
-                .hasMessage("Employee must have a valid phone number");
-
-        verify(employeeRepository, times(0)).save(employee);
-
-    }
-
-
 }

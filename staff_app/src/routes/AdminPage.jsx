@@ -14,11 +14,11 @@ export default function AdminPage() {
         <NavbarComponent />
         <div className="pt-5 mx-10">
           <Tabs aria-label="Tabs with underline" style="underline">
-            <Tabs.Item active title="Reservations" icon={RiReservedLine}>
-              <AdminReservationsTable />
-            </Tabs.Item>
-            <Tabs.Item title="People" icon={HiUserCircle}>
+            <Tabs.Item active title="Staff" icon={HiUserCircle}>
               <AdminStaffTable />
+            </Tabs.Item>
+            <Tabs.Item title="Reservations" icon={RiReservedLine}>
+              <AdminReservationsTable />
             </Tabs.Item>
             <Tabs.Item title="Facilities" icon={IoIosBusiness}>
               <AdminFacilitiesTable />

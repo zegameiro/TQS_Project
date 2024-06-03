@@ -10,6 +10,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -21,6 +23,11 @@ import deti.tqs.backend.JsonUtils;
 import deti.tqs.backend.controllers.EmployeeController;
 import deti.tqs.backend.models.Employee;
 import deti.tqs.backend.services.EmployeeService;
+import jakarta.persistence.EntityExistsException;
+
+import java.lang.NoSuchFieldException;
+import java.util.List;
+import java.util.stream.Stream;
 
 @WebMvcTest(EmployeeController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -42,20 +49,25 @@ class CreateEmployeeControllerTests {
      * NECESSARY TESTS
      * 
      * 1. Receive status code isCreated when Saving an employee with success
-     * 2. Receive status code badRequest when saving an employee with null fullName
-     * 3. Receive status code badRequest when saving an employee with empty fullName
-     * 4. Receive status code badRequest when saving an employee with null email
-     * 5. Receive status code badRequest when saving an employee with empty email
-     * 6. Receive status code badRequest when saving an employee with null phoneNumber
-     * 7. Receive status code badRequest when saving an employee with empty phoneNumber
-     * 8. Receive status code badRequest when saving an employee with existing email
-     * 9. Receive status code badRequest when saving an employee with existing phoneNumber
-     * 10. Receive status code badRequest when saving an employee with email not containing '@'
-     * 11. Receive status code badRequest when saving an employee with email not containing '.'
-     * 12. Receive status code badRequest when saving an employee with email containing '@' and '.', but not in the right order
-     * 13. Receive status code badRequest when saving an employee with email containing more then one '@'
-     * 14. Receive status code badRequest when saving an employee with email containing only '@.'
-     * 13. Receive status code badRequest when saving an employee with a phoneNumber not containing only numbers
+     * 2. Receive status code badRequest when saving an employee with 
+     *          null fullName
+     *          empty fullName
+     * 4. Receive status code badRequest when saving an employee with 
+     *          null email
+     *          empty email
+     *          not containing '@'
+     *          not containing '.'
+     *          containing '@' and '.', but in the wrong order
+     *          containing more then one '@'
+     *          containing only '@.'
+     * 11. Receive status code badRequest when saving an employee with 
+     *          null phoneNumber
+     *          empty phoneNumber
+     *          not containing only numbers
+     *          with less then 9 digits
+     *          with more then 9 digits
+     * 16. Receive status code badRequest when saving an employee with existing email
+     * 17. Receive status code badRequest when saving an employee with existing phoneNumber
      */
 
     @BeforeEach
@@ -98,174 +110,110 @@ class CreateEmployeeControllerTests {
     }
 
     @Test
-    @DisplayName("Test save an employee with null fullName")
-    void whenSaveEmployeeWithNullFullName_thenBadRequest() throws Exception {
-
-        employee.setFullName(null);
-
-        when(employeeService.save(any())).thenThrow(NoSuchFieldException.class);
-
-        mvc.perform(
-            post("/api/employee/admin/add")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(JsonUtils.toJson(employee)
-        ))
-        .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("Test save an employee with empty fullName")
-    void whenSaveEmployeeWithEmptyFullName_thenBadRequest() throws Exception {
-
-        employee.setFullName("");
-
-        when(employeeService.save(any())).thenThrow(NoSuchFieldException.class);
-
-        mvc.perform(
-            post("/api/employee/admin/add")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(JsonUtils.toJson(employee)
-        ))
-        .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("Test save an employee with null email")
-    void whenSaveEmployeeWithNullEmail_thenBadRequest() throws Exception {
-
-        employee.setEmail(null);
-
-        when(employeeService.save(any())).thenThrow(NoSuchFieldException.class);
-
-        mvc.perform(
-            post("/api/employee/admin/add")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(JsonUtils.toJson(employee)
-        ))
-        .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("Test save an employee with empty email")
-    void whenSaveEmployeeWithEmptyEmail_thenBadRequest() throws Exception {
-
-        employee.setEmail("");
-
-        when(employeeService.save(any())).thenThrow(NoSuchFieldException.class);
-
-        mvc.perform(
-            post("/api/employee/admin/add")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(JsonUtils.toJson(employee)
-        ))
-        .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("Test save an employee with null phoneNumber")
-    void whenSaveEmployeeWithNullPhoneNumber_thenBadRequest() throws Exception {
-
-        employee.setPhoneNumber(null);
-
-        when(employeeService.save(any())).thenThrow(NoSuchFieldException.class);
-
-        mvc.perform(
-            post("/api/employee/admin/add")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(JsonUtils.toJson(employee)
-        ))
-        .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @DisplayName("Test save an employee with empty phoneNumber")
-    void whenSaveEmployeeWithEmptyPhoneNumber_thenBadRequest() throws Exception {
-
-        employee.setPhoneNumber("");
-
-        when(employeeService.save(any())).thenThrow(NoSuchFieldException.class);
-
-        mvc.perform(
-            post("/api/employee/admin/add")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(JsonUtils.toJson(employee)
-        ))
-        .andExpect(status().isBadRequest());
-    }
-
-    @Test
     @DisplayName("Test save an employee with existing email")
     void whenSaveEmployeeWithExistingEmail_thenBadRequest() throws Exception {
 
-        when(employeeService.save(any())).thenThrow(NoSuchFieldException.class);
+        when(employeeService.save(any())).thenThrow(EntityExistsException.class);
 
         mvc.perform(
             post("/api/employee/admin/add")
             .contentType(MediaType.APPLICATION_JSON)
             .content(JsonUtils.toJson(employee)
         ))
-        .andExpect(status().isBadRequest());
+        .andExpect(status().isConflict());
     }
 
     @Test
     @DisplayName("Test save an employee with existing phoneNumber")
     void whenSaveEmployeeWithExistingPhoneNumber_thenBadRequest() throws Exception {
 
-        when(employeeService.save(any())).thenThrow(NoSuchFieldException.class);
+        when(employeeService.save(any())).thenThrow(EntityExistsException.class);
 
         mvc.perform(
             post("/api/employee/admin/add")
             .contentType(MediaType.APPLICATION_JSON)
             .content(JsonUtils.toJson(employee)
         ))
+        .andExpect(status().isConflict());
+    }
+
+    private static Stream<String> invalidNames() {
+        return Stream.of(
+                null, // null full name
+                "" // empty full name
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("invalidNames")
+    @DisplayName("Test save an employee with invalid emails")
+    void whenSaveEmployeeWithInvalidName_thenBadRequest(String invalidName) throws Exception {
+        Employee employee = new Employee();
+        employee.setFullName(invalidName);
+
+        when(employeeService.save(any())).thenThrow(NoSuchFieldException.class);
+
+        mvc.perform(
+            post("/api/employee/admin/add")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtils.toJson(employee))
+        )
         .andExpect(status().isBadRequest());
     }
 
-    @Test
-    @DisplayName("Test save an employee with email not containing '@'")
-    void whenSaveEmployeeWithEmailNotContainingAt_thenBadRequest() throws Exception {
+    private static Stream<String> invalidEmails() {
+        return Stream.of(
+                null, // null email
+                "", // empty email
+                "johndoegmail.com", // email not containing '@'
+                "johndoe@gmailcom", // email not containing '.'
+                "johndoe.gmail@com", // email with '@' and '.', but in the wrong order
+                "johndoe@@gmail.com", // email containing more than one '@'
+                "@." // email containing only '@.'
+        );
+    }
 
-        employee.setEmail("johndoegmail.com");
+    @ParameterizedTest
+    @MethodSource("invalidEmails")
+    @DisplayName("Test save an employee with invalid emails")
+    void whenSaveEmployeeWithInvalidEmail_thenBadRequest(String invalidEmail) throws Exception {
+        Employee employee = new Employee();
+        employee.setEmail(invalidEmail);
 
         when(employeeService.save(any())).thenThrow(NoSuchFieldException.class);
 
         mvc.perform(
             post("/api/employee/admin/add")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(JsonUtils.toJson(employee)
-        ))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtils.toJson(employee))
+        )
         .andExpect(status().isBadRequest());
     }
 
-    @Test
-    @DisplayName("Test save an employee with email not containing '.'")
-    void whenSaveEmployeeWithEmailNotContainingDot_thenBadRequest() throws Exception {
-
-        employee.setEmail("johndoe@gmailcom");
-
-        when(employeeService.save(any())).thenThrow(NoSuchFieldException.class);
-
-        mvc.perform(
-            post("/api/employee/admin/add")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(JsonUtils.toJson(employee)
-        ))
-        .andExpect(status().isBadRequest());
+    private static Stream<String> invalidNumbers() {
+        return Stream.of(
+                null, // null phone number
+                "", // empty phone number
+                "123456789a", // phone number containing letters
+                "1230", // phone number with less then 9 digits
+                "1234567890" // phone number with more then 9 digits
+        );
     }
 
-    @Test
-    @DisplayName("Test save an employee with email containing '@' and '.', but not in the right order")
-    void whenSaveEmployeeWithEmailNotInRightOrder_thenBadRequest() throws Exception {
-
-        employee.setEmail("johndoe.gmail@com");
+    @ParameterizedTest
+    @MethodSource("invalidNumbers")
+    @DisplayName("Test save an employee with invalid emails")
+    void whenSaveEmployeeWithInvalidPhoneNumber_thenBadRequest(String invalidNumber) throws Exception {
+        Employee employee = new Employee();
+        employee.setPhoneNumber(invalidNumber);
 
         when(employeeService.save(any())).thenThrow(NoSuchFieldException.class);
 
         mvc.perform(
             post("/api/employee/admin/add")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(JsonUtils.toJson(employee)
-        ))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtils.toJson(employee))
+        )
         .andExpect(status().isBadRequest());
     }
 
