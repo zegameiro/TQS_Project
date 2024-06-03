@@ -34,10 +34,17 @@ public class Room {
 
   @Column(nullable = false)
   private int maxChairsCapacity;
+
+  @Column(nullable = false)
+  private int beautyServiceId;
   
   @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
   @JsonIgnore
   private List<Chair> chairs;
+
+  @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+  @JsonIgnore
+  private List<Reservation> reservations;
 
   @ManyToOne
   @JoinColumn

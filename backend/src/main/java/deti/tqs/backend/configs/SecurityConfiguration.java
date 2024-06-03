@@ -40,26 +40,27 @@ public class SecurityConfiguration {
   @Bean
   SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
     
-    String apiFacilityAdmin = "/api/facility/admin/*";
-    String apiRoomAdmin = "/api/room/admin/*";
-    String apiChairAdmin = "/api/chair/admin/*";
     String apiEmployeeAdmin = "/api/employee/**";
+    String apiFacilityAdmin = "/api/facility/admin/**";
+    String apiRoomAdmin = "/api/room/admin/**";
+    String apiChairAdmin = "/api/chair/admin/**";
+    String apiReservation = "/api/reservation/**";
 
     return httpSecurity
       .cors(cors -> cors.configurationSource(corsConfigurationSource()))
       .csrf(csrf -> csrf.disable())
       .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
       .authorizeHttpRequests(authorize -> authorize
-        .requestMatchers(HttpMethod.GET, "/api/facility/*").permitAll()
+        .requestMatchers(HttpMethod.GET, "/api/facility/**").permitAll()
         .requestMatchers(HttpMethod.POST, apiFacilityAdmin).permitAll()
         .requestMatchers(HttpMethod.PUT, apiFacilityAdmin).permitAll()
         .requestMatchers(HttpMethod.DELETE, apiFacilityAdmin).permitAll()
-        .requestMatchers(HttpMethod.GET, "/api/room/*").permitAll()
+        .requestMatchers(HttpMethod.GET, "/api/room/**").permitAll()
         .requestMatchers(HttpMethod.POST, apiRoomAdmin).permitAll()
         .requestMatchers(HttpMethod.PUT, apiRoomAdmin).permitAll()
         .requestMatchers(HttpMethod.DELETE, apiRoomAdmin).permitAll()
-        .requestMatchers(HttpMethod.GET, "/api/chair/*").permitAll()
-        .requestMatchers(HttpMethod.POST, "/api/chair/room/*").permitAll()
+        .requestMatchers(HttpMethod.GET, "/api/chair/**").permitAll()
+        .requestMatchers(HttpMethod.POST, "/api/chair/room/**").permitAll()
         .requestMatchers(HttpMethod.POST, apiChairAdmin).permitAll()
         .requestMatchers(HttpMethod.PUT, apiChairAdmin).permitAll()
         .requestMatchers(HttpMethod.DELETE, apiChairAdmin).permitAll()
@@ -68,10 +69,14 @@ public class SecurityConfiguration {
         .requestMatchers(HttpMethod.PUT, apiEmployeeAdmin).permitAll()
         .requestMatchers(HttpMethod.DELETE, apiEmployeeAdmin).permitAll()
         .requestMatchers(HttpMethod.GET, "/docs").permitAll()
-        .requestMatchers(HttpMethod.GET, "/swagger-ui/*").permitAll()
-        .requestMatchers(HttpMethod.GET, "/v3/api-docs/*").permitAll()
         .requestMatchers(HttpMethod.GET, "/api/employee/*").permitAll()
         .requestMatchers(HttpMethod.POST, "/api/employee/admin/*").permitAll()
+        .requestMatchers(HttpMethod.DELETE, apiReservation).permitAll()
+        .requestMatchers(HttpMethod.GET, apiReservation).permitAll()
+        .requestMatchers(HttpMethod.POST, apiReservation).permitAll()
+        .requestMatchers(HttpMethod.GET, "/api/speciality/**").permitAll()
+        .requestMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
+        .requestMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()
         .anyRequest().authenticated())
       .build();
   }

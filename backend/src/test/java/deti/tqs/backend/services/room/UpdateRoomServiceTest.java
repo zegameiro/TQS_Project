@@ -80,10 +80,12 @@ class UpdateRoomServiceTest {
     r1.setName("Room 1");
     r1.setMaxChairsCapacity(10);
     r1.setFacility(f1);
+    r1.setBeautyServiceId(4);
 
     r2.setName("Room 2");
     r2.setMaxChairsCapacity(15);
     r2.setFacility(f2);
+    r2.setBeautyServiceId(0);
 
   }
 
@@ -98,6 +100,7 @@ class UpdateRoomServiceTest {
     r.setName("Room 1 Updated");
     r.setMaxChairsCapacity(20);
     r.setFacility(f2);
+    r.setBeautyServiceId(0);
 
     when(roomRepository.save(any())).thenReturn(r);
 
@@ -118,7 +121,7 @@ class UpdateRoomServiceTest {
 
   @Test
   @DisplayName("Test update a room that does not exist")
-  void testUpdateRoomThatDoesNotExist() throws NoSuchFieldException {
+  void testUpdateRoomThatDoesNotExist() {
     
     when(roomRepository.findById(anyLong())).thenReturn(null);
 
@@ -133,7 +136,7 @@ class UpdateRoomServiceTest {
 
   @Test
   @DisplayName("Test update a room with a name that already exists in the facility")
-  void testUpdateRoomWithExistingName() throws NoSuchFieldException {
+  void testUpdateRoomWithExistingName() {
     
     when(roomRepository.findById(r1.getId())).thenReturn(r1);
     when(roomRepository.findByNameAndFacilityId(anyString(), anyLong())).thenReturn(r1);
@@ -153,7 +156,7 @@ class UpdateRoomServiceTest {
 
   @Test
   @DisplayName("Test update a room with an invalid name")
-  void testUpdateRoomWithInvalidName() throws NoSuchFieldException {
+  void testUpdateRoomWithInvalidName() {
     
     when(roomRepository.findById(r1.getId())).thenReturn(r1);
 
@@ -169,7 +172,7 @@ class UpdateRoomServiceTest {
 
   @Test
   @DisplayName("Test update a room with an invalid capacity")
-  void testUpdateRoomWithInvalidCapacity() throws NoSuchFieldException {
+  void testUpdateRoomWithInvalidCapacity() {
     
     when(roomRepository.findById(r1.getId())).thenReturn(r1);
 
@@ -185,7 +188,7 @@ class UpdateRoomServiceTest {
 
   @Test
   @DisplayName("Test update a room with a facility that does not exist")
-  void testUpdateRoomWithNonExistingFacility() throws NoSuchFieldException {
+  void testUpdateRoomWithNonExistingFacility() {
     
     when(roomRepository.findById(r1.getId())).thenReturn(r1);
     when(facilityRepository.findById(anyLong())).thenReturn(null);
@@ -201,7 +204,7 @@ class UpdateRoomServiceTest {
 
   @Test
   @DisplayName("Test update a room with a facility at full capacity")
-  void testUpdateRoomWithFacilityAtFullCapacity() throws NoSuchFieldException {
+  void testUpdateRoomWithFacilityAtFullCapacity() {
     
     f2.setRooms(List.of(r2));
 

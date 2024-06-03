@@ -20,11 +20,14 @@ import org.springframework.web.bind.annotation.RestController;
 import deti.tqs.backend.dtos.RoomSchema;
 import deti.tqs.backend.models.Room;
 import deti.tqs.backend.services.RoomService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 
 @RestController
 @RequestMapping("/api/room")
+@Tag(name = "Room", description = "Operations pertaining to rooms in the system.")
 public class RoomController {
 
   private static final Logger logger = LoggerFactory.getLogger(RoomController.class);
@@ -37,6 +40,7 @@ public class RoomController {
   }
 
   @PostMapping("/admin/add")
+  @Operation(summary = "Create a new room", description = "An admin create a new room in the system.")
   public ResponseEntity<Room> createRoom(@RequestBody(required = true) RoomSchema roomSchema)  {
 
     logger.info("Creating room");
@@ -44,6 +48,7 @@ public class RoomController {
     Room r = new Room();
     r.setName(roomSchema.name());
     r.setMaxChairsCapacity(roomSchema.maxChairsCapacity());
+    r.setBeautyServiceId(Integer.parseInt(roomSchema.beautyServiceID()));
 
     Room savedRoom = null;
 
@@ -54,22 +59,18 @@ public class RoomController {
 
     } catch (NoSuchFieldException e) {
 
-      logger.error(e.getMessage());
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 
     } catch (EntityNotFoundException e) {
       
-      logger.error(e.getMessage());
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
     } catch (EntityExistsException e) {
 
-      logger.error(e.getMessage());
       return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
       
     } catch (IllegalStateException e) {
 
-      logger.error(e.getMessage());
       return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(null);
 
     }
@@ -79,6 +80,7 @@ public class RoomController {
   }
 
   @GetMapping("/{id}")
+  @Operation(summary = "Get a room by ID", description = "Get a room by its ID.")
   public ResponseEntity<Room> getRoomById(@PathVariable long id) {
 
     logger.info("Getting room by ID");
@@ -92,7 +94,6 @@ public class RoomController {
 
     } catch (EntityNotFoundException e) {
 
-      logger.error(e.getMessage());
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
     }
@@ -102,6 +103,7 @@ public class RoomController {
   }
 
   @GetMapping("/all")
+  @Operation(summary = "Get all rooms", description = "Get all rooms in the system.")
   public ResponseEntity<Iterable<Room>> getAllRooms() {
 
     logger.info("Getting all rooms");
@@ -113,6 +115,7 @@ public class RoomController {
   }
 
   @GetMapping("/search")
+  @Operation(summary = "Search for a room", description = "Search for a room by its name and facility ID.")
   public ResponseEntity<List<Room>> searchRoom(@RequestParam(required = false) String roomName, @RequestParam(required = false) String facilityID) throws Exception {
 
     logger.info("Searching for room");
@@ -120,21 +123,17 @@ public class RoomController {
     long facilityIDLong = Long.parseLong(facilityID);
     List<Room> foundRoom = null;
 
-    logger.info("Facility ID: " + facilityIDLong);
-
     try {
 
       foundRoom = roomService.searchByFacilityInfo(roomName, facilityIDLong);
-      logger.info("Room found", foundRoom);
+      logger.info("Found a room");
 
     } catch (EntityNotFoundException e) {
 
-      logger.error(e.getMessage());
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
     } catch (NoSuchFieldException e) {
 
-      logger.error(e.getMessage());
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 
     }
@@ -144,6 +143,7 @@ public class RoomController {
   } 
 
   @PutMapping("/admin/update")
+  @Operation(summary = "Update a room", description = "An admin update a room in the system.")
   public ResponseEntity<Room> updateRoom(@RequestBody(required = true) RoomSchema roomSchema, @RequestParam(required = true) long id) {
 
     logger.info("Updating room");
@@ -181,6 +181,7 @@ public class RoomController {
   }
 
   @DeleteMapping("/admin/delete")
+  @Operation(summary = "Delete a room", description = "An admin delete a room in the system.")
   public ResponseEntity<Void> deleteRoom(@RequestParam(required = true) long id) {
 
     logger.info("Deleting room");
@@ -192,7 +193,6 @@ public class RoomController {
 
     } catch (EntityNotFoundException e) {
 
-      logger.error(e.getMessage());
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
     }

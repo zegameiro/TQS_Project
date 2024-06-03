@@ -15,7 +15,7 @@ import deti.tqs.backend.repositories.EmployeeRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 
 @DataJpaTest
-public class AddEmployeeRepositoryTests {
+class AddEmployeeRepositoryTests {
 
     private EmployeeRepository employeeRepository;
 

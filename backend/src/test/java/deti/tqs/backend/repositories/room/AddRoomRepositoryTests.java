@@ -49,6 +49,7 @@ class AddRoomRepositoryTests {
     r.setName("Room 1");
     r.setMaxChairsCapacity(10);
     r.setFacility(f);
+    r.setBeautyServiceId(1);
 
     roomRepository.save(r);
 

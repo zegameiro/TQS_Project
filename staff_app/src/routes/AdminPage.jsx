@@ -1,9 +1,11 @@
-import NavbarComponent from "../components/Navbar"
 import { Tabs } from "flowbite-react"
 import { HiUserCircle } from "react-icons/hi"
 import { IoIosBusiness } from "react-icons/io"
-import AdminStaffTable from "../components/AdminStaffTable"
+import { RiReservedLine } from "react-icons/ri"
 import AdminFacilitiesTable from "../components/AdminFacilitiesTable"
+import AdminReservationsTable from "../components/AdminReservationsTable"
+import AdminStaffTable from "../components/AdminStaffTable"
+import NavbarComponent from "../components/Navbar"
 
 export default function AdminPage() {
   return (
@@ -14,6 +16,9 @@ export default function AdminPage() {
           <Tabs aria-label="Tabs with underline" style="underline">
             <Tabs.Item active title="Staff" icon={HiUserCircle}>
               <AdminStaffTable />
+            </Tabs.Item>
+            <Tabs.Item title="Reservations" icon={RiReservedLine}>
+              <AdminReservationsTable />
             </Tabs.Item>
             <Tabs.Item title="Facilities" icon={IoIosBusiness}>
               <AdminFacilitiesTable />

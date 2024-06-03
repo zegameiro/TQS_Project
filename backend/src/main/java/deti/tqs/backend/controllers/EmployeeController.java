@@ -36,14 +36,15 @@ public class EmployeeController {
     @PostMapping("/admin/add")
     public ResponseEntity<Employee> createEmployee(@Valid @RequestBody(required = true) EmployeeSchema employeeSchema) {
 
-        
-
         logger.info("Creating employee");
 
         Employee employee;
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
 
+        ResponseEntity<Employee> response;
+
         try {
+
             employee = new Employee();
             employee.setFullName(employeeSchema.fullName());
             employee.setEmail(employeeSchema.email());
@@ -54,16 +55,28 @@ public class EmployeeController {
             
             status = HttpStatus.CREATED;
 
-            return new ResponseEntity<Employee>(employee, status);
+            response = new ResponseEntity<>(employee, status);
+
+            return response;
+
         } catch (EntityExistsException e) {
+            
             status = HttpStatus.CONFLICT;
+
         } catch (NoSuchFieldException e) {
+
             status = HttpStatus.BAD_REQUEST;
+
         } catch (Exception e) {
+
             status = HttpStatus.INTERNAL_SERVER_ERROR;
+
         }
 
-        return new ResponseEntity<Employee>(status);
+        response = new ResponseEntity<>(status);
+
+        return response;
+
     }
 
     @PostMapping("/admin/delete/{employeeId}")

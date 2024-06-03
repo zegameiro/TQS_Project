@@ -83,11 +83,13 @@ class UpdateRoomControllerTests {
     r1.setName("Room 1");
     r1.setMaxChairsCapacity(10);
     r1.setFacility(f1);
+    r1.setBeautyServiceId(0);
 
     r2.setId(2L);
     r2.setName("Room 2");
     r2.setMaxChairsCapacity(20);
     r2.setFacility(f2);
+    r2.setBeautyServiceId(2);
 
   }
 
@@ -119,7 +121,8 @@ class UpdateRoomControllerTests {
     RoomSchema roomSchema = new RoomSchema(
       "Room 1 updated",
       7,
-      1
+      1,
+      "1"
     );
 
     when(roomService.updateRoom(any(), anyLong(), anyLong())).thenThrow (new EntityNotFoundException("Room does not exist"));
@@ -143,7 +146,8 @@ class UpdateRoomControllerTests {
     RoomSchema roomSchema = new RoomSchema(
       "Room 2",
       7,
-      1
+      1,
+      "2"
     );
 
     when(roomService.updateRoom(any(), anyLong(), anyLong())).thenThrow (new EntityExistsException("Room with this name already exists in this facility"));
@@ -167,7 +171,8 @@ class UpdateRoomControllerTests {
     RoomSchema roomSchema = new RoomSchema(
       "",
       7,
-      1
+      1,
+      "3"
     );
 
     when(roomService.updateRoom(any(), anyLong(), anyLong())).thenThrow (new NoSuchFieldException("Room must have a name"));
@@ -191,7 +196,8 @@ class UpdateRoomControllerTests {
     RoomSchema roomSchema = new RoomSchema(
       "Room 2",
       0,
-      1
+      1,
+      "3"
     );
 
     when(roomService.updateRoom(any(), anyLong(), anyLong())).thenThrow (new NoSuchFieldException("Room must have a valid capacity value greater than 0"));
@@ -215,7 +221,8 @@ class UpdateRoomControllerTests {
     RoomSchema roomSchema = new RoomSchema(
       "Room 2",
       7,
-      19283
+      19283,
+      "0"
     );
 
     when(roomService.updateRoom(any(), anyLong(), anyLong())).thenThrow (new EntityNotFoundException("Facility does not exist"));
@@ -239,7 +246,8 @@ class UpdateRoomControllerTests {
     RoomSchema roomSchema = new RoomSchema(
       "Room 2",
       7,
-      1
+      1,
+      "2"
     );
 
     when(roomService.updateRoom(any(), anyLong(), anyLong())).thenThrow (new IllegalStateException("Facility is at full capacity"));

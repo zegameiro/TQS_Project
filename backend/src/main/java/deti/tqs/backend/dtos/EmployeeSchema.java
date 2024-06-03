@@ -1,7 +1,6 @@
 package deti.tqs.backend.dtos;
 
 import java.util.List;
-import java.lang.Long;
 
 import deti.tqs.backend.configs.Generated;
 import jakarta.validation.Valid;
@@ -15,5 +14,4 @@ public record EmployeeSchema(
         @Valid String phoneNumber,
         @Valid List<Long> specialitiesID
 
-) {
-}
+) {}

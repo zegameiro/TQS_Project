@@ -35,6 +35,7 @@ class DeleteRoomRepositoryTests {
     Room r = new Room();
     r.setName("Room 1");
     r.setMaxChairsCapacity(10);
+    r.setBeautyServiceId(2);
 
     roomRepository.save(r);
 

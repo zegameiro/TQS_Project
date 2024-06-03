@@ -2,7 +2,6 @@ package deti.tqs.backend.controllers.employee;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.calls;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -22,7 +21,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import deti.tqs.backend.JsonUtils;
 import deti.tqs.backend.controllers.EmployeeController;
-import deti.tqs.backend.dtos.EmployeeSchema;
 import deti.tqs.backend.models.Employee;
 import deti.tqs.backend.services.EmployeeService;
 import jakarta.persistence.EntityExistsException;
@@ -33,7 +31,7 @@ import java.util.stream.Stream;
 
 @WebMvcTest(EmployeeController.class)
 @AutoConfigureMockMvc(addFilters = false)
-public class CreateEmployeeControllerTests {
+class CreateEmployeeControllerTests {
     
     private MockMvc mvc;
 
@@ -219,5 +217,52 @@ public class CreateEmployeeControllerTests {
         .andExpect(status().isBadRequest());
     }
 
+    @Test
+    @DisplayName("Test save an employee with email containing more then one '@'")
+    void whenSaveEmployeeWithEmailContainingMoreThanOneAt_thenBadRequest() throws Exception {
+
+        employee.setEmail("johndoe@@gmail.com");
+
+        when(employeeService.save(any())).thenThrow(NoSuchFieldException.class);
+
+        mvc.perform(
+            post("/api/employee/admin/add")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(JsonUtils.toJson(employee)
+        ))
+        .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("Test save an employee with email containing only '@.'")
+    void whenSaveEmployeeWithEmailContainingOnlyAtDot_thenBadRequest() throws Exception {
+
+        employee.setEmail("@.");
+
+        when(employeeService.save(any())).thenThrow(NoSuchFieldException.class);
+
+        mvc.perform(
+            post("/api/employee/admin/add")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(JsonUtils.toJson(employee)
+        ))
+        .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("Test save an employee with a phoneNumber not containing only numbers")
+    void whenSaveEmployeeWithPhoneNumberNotOnlyNumbers_thenBadRequest() throws Exception {
+
+        employee.setPhoneNumber("123456789a");
+
+        when(employeeService.save(any())).thenThrow(NoSuchFieldException.class);
+
+        mvc.perform(
+            post("/api/employee/admin/add")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(JsonUtils.toJson(employee)
+        ))
+        .andExpect(status().isBadRequest());
+    }
 
 }

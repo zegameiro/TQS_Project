@@ -7,171 +7,28 @@ import { BasicHairDresser, ComplexHairDresser, Makeup, Depilation, Manicure, Mas
 import SwiperServices from "../components/SwiperServices";
 import ServiceCard from "../components/ServiceCard";
 
+import { useMutation, useQuery } from "@tanstack/react-query"
+import axios from "../../api"
+import { getAllFacilities, getAllRooms } from "../../actions/getActions";
 
-const HomePage = () => {
+
+export default function HomePage() {
+
+  const images = [BasicHairDresser, ComplexHairDresser, Makeup, Depilation, Manicure, Massager]
 
   const [selectedLocation, setSelectedLocation] = useState("")
 
+  const allFacilities = useQuery({
+    queryKey: ["allFacilities"],
+    queryFn: () => getAllFacilities(axios),
+  })
 
-  const categories = [
-    {
-      title: "Basic Hairdresser",
-      services: [
-        {
-          name: "Hair Cut",
-          price: 10,
-        },
-        {
-          name: "Beard Trimming",
-          price: 5,
-        },
-        {
-          name: "Washing",
-          price: 5,
-        },
-        {
-          name: "Brushing",
-          price: 5,
-        },
-      ],
-      image: BasicHairDresser,
-    },
-    {
-      title: "Complex Hairdresser",
-      services: [
-        {
-          name: "Extensions",
-          price: 50,
-        },
-        {
-          name: "Coloring",
-          price: 30,
-        },
-        {
-          name: "Discoloration",
-          price: 30,
-        },
-        {
-          name: "Straightening/Curling",
-          price: 30,
-        },
-        {
-          name: "Perm",
-          price: 30,
-        },
-      ],
-      image: ComplexHairDresser,
-    },
-    {
-      title: "Makeup",
-      services: [
-        {
-          name: "Eyebrows",
-          price: 5,
-        },
-        {
-          name: "Eyelashes",
-          price: 5,
-        },
-        {
-          name: "Lips",
-          price: 5,
-        },
-        {
-          name: "Full Face",
-          price: 20,
-        },
-        {
-          name: "Special Occasions",
-          price: 30,
-        },
-      ],
-      image: Makeup,
-    },
-    {
-      title: "Depilation",
-      services: [
-        {
-          name: "Wax hair removal",
-          price: 10,
-        },
-        {
-          name: "Laser hair removal",
-          price: 50,
-        },
-        {
-          name: "Tweezers",
-          price: 5,
-        },
-        {
-          name: "Thread",
-          price: 5,
-        },
-        {
-          name: "Epilator",
-          price: 5,
-        },
-        {
-          name: "Sugaring",
-          price: 10,
-        },
-      ],
-      image: Depilation,
-    },
-    {
-      title: "Manicure/Pedicure",
-      services: [
-        {
-          name: "Manicure",
-          price: 30,
-        },
-        {
-          name: "Pedicure",
-          price: 30,
-        },
-      ],
-      image: Manicure,
-    },
-    {
-      title: "Spa",
-      services: [
-        {
-          name: "Massages",
-          price: 20,
-        },
-        {
-          name: "Facial treatments",
-          price: 15,
-        },
-        {
-          name: "Body treatments",
-          price: 20,
-        },
-        {
-          name: "Dermatological treatments",
-          price: 30,
-        },
-        {
-          name: "Sauna",
-          price: 25,
-        },
-        {
-          name: "Jacuzzi",
-          price: 25,
-        },
-        {
-          name: "Turkish bath",
-          price: 25,
-        },
-        {
-          name: "Pools",
-          price: 20,
-        },
-      ],
-      image: Massager,
-    },
-  ]
-  localStorage.setItem("categories", JSON.stringify(categories));
+  const allRooms = useQuery({
+    queryKey: ["allRooms"],
+    queryFn: () => getAllRooms(axios),
+  })
+
+  console.log(allRooms.data)
 
   const locations = [
     {
@@ -188,10 +45,19 @@ const HomePage = () => {
     }
   ]
 
-  const services = locations.map(city => ({
-    location: city.name,
-    categories: categories,
-  }));
+  const services = allFacilities.data?.map(facility => {
+    const facilityRooms = allRooms.data?.filter(room => room.facility.city === facility.city);
+    const categories = facilityRooms?.map((room, index) => ({
+      title: room.name,
+      id: room.id,
+      image: images[index],
+    }));
+
+    return {
+      location: facility.city,
+      categories: categories,
+    };
+  });
 
 
   return (
@@ -210,7 +76,7 @@ const HomePage = () => {
             {(city) => <SelectItem key={city.id}>{city.name}</SelectItem>}
           </Select>
         </div>
-        {services.map((service, index) => (
+        {services?.map((service, index) => (
           (selectedLocation === "" || selectedLocation === service.location) &&
           <div key={index} className="mb-10">
             <h2 className="font-semibold text-4xl text-center">{service.location}</h2>
@@ -222,5 +88,3 @@ const HomePage = () => {
     </div >
   )
 }
-
-export default HomePage

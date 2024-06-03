@@ -1,6 +1,10 @@
 import { Avatar, Dropdown, Navbar } from "flowbite-react"
+import { useNavigate } from "react-router-dom"
 
 export default function NavbarComponent() {
+
+  const navigate = useNavigate()
+
   return (
     <Navbar fluid className="bg-[#1F0F53]">
       <Navbar.Brand href="/">
@@ -29,12 +33,11 @@ export default function NavbarComponent() {
             </span>
           </Dropdown.Header>
           <Dropdown.Divider />
-          <Dropdown.Item>Sign out</Dropdown.Item>
+          <Dropdown.Item onClick={() => navigate("/")}>Sign out</Dropdown.Item>
         </Dropdown>
         <Navbar.Toggle />
       </div>
       <Navbar.Collapse>
-        {/* TODO não usar href, apenas aqui para protótipo */}
         <Navbar.Link href="/dashboard" className="text-[#FFDB99]">
           Dashboard
         </Navbar.Link>

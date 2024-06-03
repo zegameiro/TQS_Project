@@ -19,7 +19,7 @@ const ServiceCard = ({ service, location }) => {
           src={service?.image}
           width={270}
         />
-        <Button color="primary" className="text-white" onClick={() => navigate('/reservation?'+location+'+'+service.title)}>
+        <Button color="primary" className="text-white" onClick={() => navigate('/reservation?'+service.id)}>
           Choose service
         </Button>
       </CardBody>

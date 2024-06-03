@@ -73,14 +73,17 @@ class SearchRoomServiceTests {
     r1.setName("Room 1");
     r1.setMaxChairsCapacity(10);
     r1.setFacility(f);
+    r1.setBeautyServiceId(0);
 
     r2.setName("Room 2");
     r2.setMaxChairsCapacity(20);
     r2.setFacility(f);
+    r2.setBeautyServiceId(1);
 
     r3.setName("Room 3");
     r3.setMaxChairsCapacity(30);
     r3.setFacility(f);
+    r3.setBeautyServiceId(2);
 
   }
 
